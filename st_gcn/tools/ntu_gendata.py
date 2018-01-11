@@ -3,6 +3,7 @@ import os
 import sys
 from ntu_read_skeleton import read_xyz
 from numpy.lib.format import open_memmap
+import pickle
 
 training_subjects = [
     1, 2, 4, 5, 8, 9, 13, 14, 15, 16, 17, 18, 19, 25, 27, 28, 31, 34, 35, 38
@@ -69,6 +70,10 @@ def gendata(data_path,
             sample_name.append(filename)
             sample_label.append(action_class - 1)
 
+    with open('{}/{}_label.pkl'.format(out_path, part), 'w') as f:
+        pickle.dump((sample_name,list(sample_label)), f)
+    # np.save('{}/{}_label.npy'.format(out_path, part), sample_label)
+
     fp = open_memmap(
         '{}/{}_data.npy'.format(out_path, part),
         dtype='float32',
@@ -83,15 +88,14 @@ def gendata(data_path,
             os.path.join(data_path, s), max_body=max_body, num_joint=num_joint)
         fp[i, :, 0:data.shape[1], :, :] = data
     end_toolbar()
-    np.save('{}/{}_label.npy'.format(out_path, part), sample_label)
 
 
 if __name__ == '__main__':
     data_path = '../../data/NTU-RGB-D/nturgb+d_skeletons'
     ignored_sample_path = '../../data/NTU-RGB-D/samples_with_missing_skeletons.txt'
-    out_folder = '../../data/NTU-RGB-D/gendata_test/'
+    out_folder = '../../data/NTU-RGB-D/gendata_test_2/'
     benchmark = ['xview', 'xsub']
-    part = ['train', 'eval']
+    part = ['train', 'val']
     for b in benchmark:
         for p in part:
             out_path = os.path.join(out_folder, b)

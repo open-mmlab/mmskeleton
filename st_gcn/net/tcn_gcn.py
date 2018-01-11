@@ -6,6 +6,10 @@ import numpy as np
 import math
 from net import Unit2D, conv_init, import_class
 
+default_backbone = [(64, 64, 1), (64, 64, 1), (64, 64, 1), (64, 128,
+                                                            2), (128, 128, 1),
+                    (128, 128, 1), (128, 256, 2), (256, 256, 1), (256, 256, 1)]
+
 
 class unit_gcn(nn.Module):
     def __init__(self,
@@ -105,7 +109,7 @@ class TCN_GCN_unit(nn.Module):
             kernel_size=kernel_size,
             dropout=dropout,
             stride=stride)
-        if in_channel != out_channel:
+        if (in_channel != out_channel) or (stride != 1):
             self.down1 = Unit2D(
                 in_channel, out_channel, kernel_size=1, stride=stride)
         else:
@@ -113,7 +117,7 @@ class TCN_GCN_unit(nn.Module):
 
     def forward(self, x):
         # N, C, T, V = x.size()
-        x = self.tcn1(self.gcn1(x)) + (x if self.down1 is None else
+        x = self.tcn1(self.gcn1(x)) + (x if (self.down1 is None) else
                                        self.down1(x))
         return x
 
@@ -126,8 +130,10 @@ class Model(nn.Module):
                  num_point,
                  graph=None,
                  graph_args=dict(),
+                 backbone_config=None,
                  use_data_bn=False,
                  use_global_bn=False,
+                 temporal_kernel_size=9,
                  mask_learning=False):
         super(Model, self).__init__()
 
@@ -143,37 +149,45 @@ class Model(nn.Module):
         self.data_bn = nn.BatchNorm1d(channel * num_point)
 
         kwargs = dict(
-            A=self.A, mask_learning=mask_learning, use_global_bn=use_global_bn)
+            A=self.A,
+            mask_learning=mask_learning,
+            use_global_bn=use_global_bn,
+            kernel_size=temporal_kernel_size)
         unit = TCN_GCN_unit
 
+        # backbone
+        if backbone_config is None:
+            backbone_config = default_backbone
+        self.backbone = nn.ModuleList([
+            unit(in_c, out_c, stride=stride, **kwargs)
+            for in_c, out_c, stride in backbone_config
+        ])
+        backbone_in_c = backbone_config[0][0]
+        backbone_out_c = backbone_config[-1][1]
+        backbone_out_t = window_size
+        backbone = []
+        for in_c, out_c, stride in backbone_config:
+            backbone.append(unit(in_c, out_c, stride=stride, **kwargs))
+            if backbone_out_t % stride == 0:
+                backbone_out_t = backbone_out_t // stride
+            else:
+                backbone_out_t = backbone_out_t // stride + 1
+        self.backbone = nn.ModuleList(backbone)
+
+        # head
         self.gcn0 = unit_gcn(
             channel,
-            64,
+            backbone_in_c,
             self.A,
             mask_learning=mask_learning,
             use_global_bn=use_global_bn)
-        self.tcn0 = Unit2D(64, 64, kernel_size=9)
+        self.tcn0 = Unit2D(backbone_in_c, backbone_in_c, kernel_size=9)
 
-        # net_config = [(64, 64, 1), (64, 64, 1), (64, 64, 1), (64, 128, 2),
-        #               (128, 128, 1), (128, 128, 1), (128, 256, 2),
-        #               (256, 256, 1), (256, 256, 1)]
-
-        self.unit1 = unit(64, 64, **kwargs)
-        self.unit2 = unit(64, 64, **kwargs)
-        self.unit3 = unit(64, 64, **kwargs)
-        self.unit4 = unit(64, 128, stride=2, **kwargs)
-        self.unit5 = unit(128, 128, **kwargs)
-        self.unit6 = unit(128, 128, **kwargs)
-        self.unit7 = unit(128, 256, stride=2, **kwargs)
-        self.unit8 = unit(256, 256, **kwargs)
-        self.unit9 = unit(256, 256, **kwargs)
-
-        # temporal receptive field = 40 + 8 = 48
-
-        self.person_bn = nn.BatchNorm1d(256)
-
-        self.gap_size = ((window_size + 1) / 2 + 1) / 2
-        self.fcn = nn.Conv1d(256, num_class, kernel_size=self.gap_size)
+        # tail
+        self.person_bn = nn.BatchNorm1d(backbone_out_c)
+        self.gap_size = backbone_out_t
+        self.fcn = nn.Conv1d(
+            backbone_out_c, num_class, kernel_size=self.gap_size)
         # self.fcn = nn.Conv1d(256, num_class, kernel_size=1)
         conv_init(self.fcn)
 
@@ -187,6 +201,7 @@ class Model(nn.Module):
                 x = x.permute(0, 4, 3, 1, 2).contiguous().view(N, M * V * C, T)
             else:
                 x = x.permute(0, 4, 3, 1, 2).contiguous().view(N * M, V * C, T)
+
             x = self.data_bn(x)
             # to (N*M, C, T, V)
             x = x.view(N, M, V, C, T).permute(0, 1, 3, 4, 2).contiguous().view(
@@ -198,16 +213,8 @@ class Model(nn.Module):
         # model
         x = self.gcn0(x)
         x = self.tcn0(x)
-
-        x = self.unit1(x)
-        x = self.unit2(x)
-        x = self.unit3(x)
-        x = self.unit4(x)
-        x = self.unit5(x)
-        x = self.unit6(x)
-        x = self.unit7(x)
-        x = self.unit8(x)
-        x = self.unit9(x)
+        for  m in self.backbone:
+            x = m(x)
 
         # V pooling
         x = F.avg_pool2d(x, kernel_size=(1, V))

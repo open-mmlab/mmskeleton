@@ -6,28 +6,6 @@ import numpy as np
 import math
 
 
-class Unit(nn.Module):
-    def __init__(self, D_in, D_out, kernel_size, stride=1, dropout=0):
-
-        super(Unit, self).__init__()
-        self.conv = nn.Conv1d(
-            D_in,
-            D_out,
-            kernel_size=kernel_size,
-            padding=(kernel_size - 1) / 2,
-            stride=stride)
-        self.bn = nn.BatchNorm1d(D_out)
-        self.relu = nn.ReLU()
-        self.drop = nn.Dropout(dropout)
-
-        # initialize
-        conv_init(self.conv)
-
-    def forward(self, x):
-        x = self.relu(self.bn(self.conv(x)))
-        x = self.drop(x)
-        return x
-
 
 class Unit2D(nn.Module):
     def __init__(self, D_in, D_out, kernel_size, stride=1, dim=2, dropout=0):

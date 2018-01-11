@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import argparse
-import cvbase
 import os
 import time
 import numpy as np
-
+import yaml
+import pickle
 # torch
 import torch
 import torch.nn as nn
@@ -42,21 +42,15 @@ class Processor():
         Feeder = import_class(self.arg.feeder)
         self.data_loader = dict()
         self.data_loader['train'] = torch.utils.data.DataLoader(
-            dataset=Feeder(mode='train', **self.arg.feeder_args),
+            dataset=Feeder(**self.arg.train_feeder_args),
             batch_size=self.arg.batch_size,
             shuffle=True,
             num_workers=self.arg.num_worker)
-        self.data_loader['eval'] = torch.utils.data.DataLoader(
-            dataset=Feeder(
-                mode='eval', num_sample=512, **self.arg.feeder_args),
+        self.data_loader['test'] = torch.utils.data.DataLoader(
+            dataset=Feeder(**self.arg.test_feeder_args),
             batch_size=self.arg.test_batch_size,
             shuffle=False,
             num_workers=self.arg.num_worker)
-        # self.data_loader['test'] = torch.utils.data.DataLoader(
-        #     dataset=Feeder(mode='test', **self.arg.feeder_args),
-        #     batch_size=self.arg.test_batch_size,
-        #     shuffle=False,
-        #     num_workers=self.arg.num_worker)
 
     def load_model(self):
         Model = import_class(self.arg.model)
@@ -72,7 +66,9 @@ class Processor():
 
         if self.arg.weights:
             print('Load weights from {}.'.format(self.arg.weights))
-            weights = cvbase.pickle_load(self.arg.weights)
+            with open(self.arg.weights, 'r') as f:
+                weights = pickle.load(f)
+
             for w in self.arg.ignore_weights:
                 if weights.pop(w, None) is not None:
                     print('Sucessfully Remove Weights: {}.'.format(w))
@@ -112,7 +108,8 @@ class Processor():
         arg_dict = vars(self.arg)
         if not os.path.exists(self.arg.work_dir):
             os.makedirs(self.arg.work_dir)
-        cvbase.yaml_dump(arg_dict, '{}/arg.yaml'.format(self.arg.work_dir))
+        with open('{}/arg.yaml'.format(self.arg.work_dir), 'w') as f:
+            yaml.dump(arg_dict, f)
 
     def adjust_learning_rate(self, epoch):
         if self.arg.optimizer == 'SGD' or self.arg.optimizer == 'Adam':
@@ -128,41 +125,76 @@ class Processor():
         localtime = time.asctime(time.localtime(time.time()))
         self.print_log("Local current time :  " + localtime)
 
-    def print_log(self, str):
+    def print_log(self, str, print_time=True):
+        if print_time:
+            localtime = time.asctime(time.localtime(time.time()))
+            str = "[ " + localtime + ' ] ' + str
         print(str)
         if self.arg.print_log:
             with open('{}/log.txt'.format(self.arg.work_dir), 'a') as f:
                 print(str, file=f)
 
+    def record_time(self):
+        self.cur_time = time.time()
+        return self.cur_time
+
+    def split_time(self):
+        split_time = time.time() - self.cur_time
+        self.record_time()
+        return split_time
+
     def train(self, epoch, save_model=False):
         self.model.train()
+        self.print_log('Training epoch: {}'.format(epoch + 1))
         loader = self.data_loader['train']
         lr = self.adjust_learning_rate(epoch)
         loss_value = []
+
+        self.record_time()
+        timer = dict(dataloader=0.001, model=0.001, statistics=0.001)
         for batch_idx, (data, label) in enumerate(loader):
+
+            # get data
             data = Variable(
                 data.float().cuda(self.arg.device), requires_grad=False)
             label = Variable(
                 label.long().cuda(self.arg.device), requires_grad=False)
+            timer['dataloader'] += self.split_time()
+
+            # forward
             output = self.model(data)
             loss = self.loss(output, label)
+
+            # backward
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
+            timer['model'] += self.split_time() 
+
+            # statistics           
             loss_value.append(loss.data[0])
             if batch_idx % self.arg.log_interval == 0:
                 self.print_log(
-                    'Train epoch: {} {}/{} Loss: {:.6f}  lr:{}'.format(
-                        epoch + 1, batch_idx, len(loader), loss.data[0], lr))
-        self.print_log('Mean loss: {}.'.format(np.mean(loss_value)))
+                    '\tBatch({}/{}) done. Loss: {:.4f}  lr:{}'.format(
+                        batch_idx, len(loader), loss.data[0], lr))
+            timer['statistics'] += self.split_time() 
+
+        # statistics of time consumption and loss 
+        proportion = { k:'{:02d}%'.format(int(round(v*100/sum(timer.values())))) for k, v in timer.items()}
+        self.print_log('\tMean training loss: {}.'.format(np.mean(loss_value)))
+        self.print_log('\tTime consumption: [Data]{dataloader}, [Network]{model}'.format(**proportion))
+
         if save_model:
             model_path = '{}/epoch{}_model.pkl'.format(self.arg.work_dir,
                                                        epoch + 1)
-            cvbase.pickle_dump(self.model.state_dict(), model_path)
+            with open(model_path, 'w') as f:
+                pickle.dump(self.model.state_dict(), f)
+
             self.print_log('The model was saved in {}'.format(model_path))
 
-    def eval(self, epoch, save_score=False, loader_name=['eval']):
+    def eval(self, epoch, save_score=False, loader_name=['test']):
         self.model.eval()
+        self.print_log('Eval epoch: {}'.format(epoch + 1))
         for ln in loader_name:
             loss_value = []
             score_frag = []
@@ -182,15 +214,16 @@ class Processor():
             score = np.concatenate(score_frag)
             score_dict = dict(
                 zip(self.data_loader[ln].dataset.sample_name, score))
-            self.print_log('Mean {} loss of {} samples: {}.'.format(
+            self.print_log('\tMean {} loss of {} batches: {}.'.format(
                 ln, len(self.data_loader[ln]), np.mean(loss_value)))
             for k in self.arg.show_topk:
                 self.print_log('\tTop{}: {:.2f}%'.format(
                     k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
 
-        if save_score:
-            cvbase.pickle_dump(score_dict, '{}/epoch{}_{}_score.pkl'.format(
-                self.arg.work_dir, epoch + 1, ln))
+            if save_score:
+                with open('{}/epoch{}_{}_score.pkl'.format(
+                        self.arg.work_dir, epoch + 1, ln), 'w') as f:
+                    pickle.dump(score_dict, f)
 
     def start(self):
         if self.arg.phase == 'train':
@@ -200,19 +233,18 @@ class Processor():
                 eval_model = ((epoch + 1) % self.arg.eval_interval == 0) or (
                     epoch + 1 == self.arg.num_epoch)
 
-                self.print_time()
                 self.train(epoch, save_model=save_model)
 
                 if eval_model:
-                    self.print_time()
-                    self.eval(epoch, save_score=True)
+                    self.eval(epoch, save_score=True, loader_name=['test'])
                 else:
-                    self.print_time()
-                    self.eval(epoch, save_score=False, loader_name=['eval'])
+                    pass
+                    # self.print_time()
+                    # self.eval(epoch, save_score=False, loader_name=['eval'])
 
         elif self.arg.phase == 'test':
             epoch = self.arg.start_epoch
-            self.eval(epoch, save_score=True)
+            self.eval(epoch, save_score=True, loader_name=['test'])
 
 
 if __name__ == '__main__':
@@ -227,7 +259,7 @@ if __name__ == '__main__':
     # visulize and debug
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--log-interval', type=int, default=100)
-    parser.add_argument('--save-interval', type=int, default=5, metavar='N')
+    parser.add_argument('--save-interval', type=int, default=10, metavar='N')
     parser.add_argument('--eval-interval', type=int, default=5, metavar='N')
     parser.add_argument('--print-log', type=str2bool, default=True)
     parser.add_argument('--show-topk', type=int, default=[1, 5], nargs='+')
@@ -242,7 +274,8 @@ if __name__ == '__main__':
     # feeder
     parser.add_argument('--feeder', default='feeder.feeder')
     parser.add_argument('--num-worker', type=int, default=128)
-    parser.add_argument('--feeder-args', default=dict())
+    parser.add_argument('--train-feeder-args', default=dict())
+    parser.add_argument('--test-feeder-args', default=dict())
 
     # processor
     parser.add_argument('--phase', default='train')
@@ -263,7 +296,8 @@ if __name__ == '__main__':
     # load arg form config file
     p = parser.parse_args()
     if p.config is not None:
-        default_arg = cvbase.yaml_load(p.config)  # load default arg
+        with open(p.config, 'r') as f:
+            default_arg = yaml.load(f)
         key = vars(p).keys()
         for k in default_arg.keys():
             if k not in key:
@@ -272,7 +306,7 @@ if __name__ == '__main__':
         parser.set_defaults(**default_arg)
 
     arg = parser.parse_args()
-    print(arg)
+    print(vars(arg))
 
     processor = Processor(arg)
     processor.start()
