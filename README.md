@@ -1,4 +1,4 @@
-#Spatial Temporal Graph Convolutional Networks (ST-GCN)
+# Spatial Temporal Graph Convolutional Networks (ST-GCN)
 A graph convolutional network for skeleton based action recognition.
 
 ## Introduction
@@ -9,12 +9,12 @@ This repository holds the codes and models for the paper
 [Arxiv Preprint]
 
 ## Usage Guide
-###Prerequisites
+### Prerequisites
 There are a few dependencies to run the code. The major libraries we used are
 - [Pytorch](http://pytorch.org/)
 - NumPy
 
-###Data Preparation
+### Data Preparation
 We experimented on two action recognition datasts: [NTU-RGB-D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and [Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/). 
 #### NTU-RGB-D
 NTU-RGB-D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, ```tools/ntu_gendata.py``` should be used to build the database for training or evaluation:
