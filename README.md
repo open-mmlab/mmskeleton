@@ -57,10 +57,7 @@ main.py --config config/Kinetics/ST-GCN.yaml
 ```
 We have provided the necessary solver configs under the ```./config```. The training results will be saved under the ```./work_dir``` by default.
 
-You can modify the training parameters such as ```batch-size``` and ```device``` in the command line or config files. The order of priority is:  command line > config file > default parameter. For more information, use 
-```
-main.py -h
-```
+You can modify the training parameters such as ```batch-size``` and ```device``` in the command line or config files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
 Custom model evaluation can be achieved by this command:
 ```
