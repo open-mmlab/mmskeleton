@@ -58,7 +58,7 @@ We have provided the necessary solver configs under the ```./config```. The trai
 
 You can modify the training parameters such as ```batch-size``` and ```device``` in the command line or config files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
-Custom model evaluation can be achieved by this command:
+Finally, custom model evaluation can be achieved by this command:
 ```
 main.py --phase test --config <path to training config> --weights <path to model weights>
 ```
