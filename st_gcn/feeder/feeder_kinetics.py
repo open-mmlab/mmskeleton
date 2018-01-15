@@ -30,6 +30,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
                  random_choose=False,
                  window_size=-1,
                  random_shift=False,
+                 random_move=False,
                  pose_matching=False,
                  num_person=1,
                  num_match_trace=2,
@@ -42,6 +43,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         self.label_path = label_path
         self.random_choose = random_choose
         self.random_shift = random_shift
+        self.random_move = random_move
         self.window_size = window_size
         self.temporal_downsample_step = temporal_downsample_step
         self.num_sample = num_sample
@@ -73,7 +75,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
 
         # ignore the samples which does not has skeleton sequence 
         if self.ignore_empty_sample:
-            self.sample_name = self.sample_name[has_skeleton]
+            self.sample_name = [s for h, s in zip(has_skeleton, self.sample_name) if h]
             self.label = self.label[has_skeleton]
 
         # output data shape (N, C, T, V, M)
@@ -128,13 +130,15 @@ class Feeder_kinetics(torch.utils.data.Dataset):
             else:
                 data_numpy = tools.temporal_slice(data_numpy,
                                              self.temporal_downsample_step)
-
+        # data augmentation
         if self.random_shift:
             data_numpy = tools.random_shift(data_numpy)
         if self.random_choose:
             data_numpy = tools.random_choose(data_numpy, self.window_size)
         elif self.window_size>0:
             data_numpy = tools.auto_pading(data_numpy, self.window_size)
+        if self.random_move:
+            data_numpy = tools.random_move(data_numpy)
 
         # match poses between 2 frames
         if self.pose_matching:

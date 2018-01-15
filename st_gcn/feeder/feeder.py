@@ -30,8 +30,6 @@ class Feeder(torch.utils.data.Dataset):
                  window_size=-1,
                  temporal_downsample_step=1,
                  mean_subtraction=0,
-                 num_sample=-1,
-                 sample_name=None,
                  debug=False):
         self.debug = debug
         self.mode = mode
@@ -42,21 +40,14 @@ class Feeder(torch.utils.data.Dataset):
         self.window_size = window_size
         self.mean_subtraction = mean_subtraction
         self.temporal_downsample_step = temporal_downsample_step
-        self.num_sample = num_sample
-        self.sample_name = sample_name
 
         self.load_data()
 
     def load_data(self):
         # data: N C V T M
-        self.label = np.load(self.label_path)[0:self.num_sample]
-        self.data = np.load(self.data_path)[0:self.num_sample]
-
-        if self.sample_name != None:
-            with open(self.sample_name, 'r') as f:
-                self.sample_name = pickle.load(f)
-        else:
-            self.sample_name = [str(i) for i in range(len(self.label))]
+        with open(self.label_path, 'r') as f:
+            self.sample_name, self.label = pickle.load(f)
+        self.data = np.load(self.data_path)
 
         if self.debug:
             self.label = self.label[0:100]

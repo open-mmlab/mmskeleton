@@ -38,6 +38,8 @@ class Processor():
         self.load_optimizer()
         self.save_arg()
 
+        self.print_log('Parameters:\n{}\n'.format(str(vars(arg))))
+
     def load_data(self):
         Feeder = import_class(self.arg.feeder)
         self.data_loader = dict()
@@ -54,20 +56,22 @@ class Processor():
 
     def load_model(self):
         Model = import_class(self.arg.model)
-        self.model = Model(**self.arg.model_args).cuda(self.arg.device)
-        self.loss = nn.CrossEntropyLoss().cuda(self.arg.device)
+        self.model = Model(**self.arg.model_args).cuda(self.arg.device[0])
+        self.loss = nn.CrossEntropyLoss().cuda(self.arg.device[0])
 
-        if self.arg.parallel_device:
-            if len(self.arg.parallel_device) > 1:
-                self.model = nn.DataParallel(
-                    self.model,
-                    device_ids=self.arg.parallel_device,
-                    output_device=self.arg.device)
+        if len(self.arg.device) > 1:
+            self.model = nn.DataParallel(
+                self.model,
+                device_ids=self.arg.device,
+                output_device=self.arg.device[0])
 
         if self.arg.weights:
             print('Load weights from {}.'.format(self.arg.weights))
-            with open(self.arg.weights, 'r') as f:
-                weights = pickle.load(f)
+            if '.pkl' in self.arg.weights:
+                with open(self.arg.weights, 'r') as f:
+                    weights = pickle.load(f)
+            else:
+                weights = torch.load(self.arg.weights)
 
             for w in self.arg.ignore_weights:
                 if weights.pop(w, None) is not None:
@@ -86,6 +90,7 @@ class Processor():
                 state.update(weights)
                 self.model.load_state_dict(state)
 
+            print('Done.')
     def load_optimizer(self):
         if self.arg.optimizer == 'SGD':
             self.optimizer = optim.SGD(
@@ -156,9 +161,9 @@ class Processor():
 
             # get data
             data = Variable(
-                data.float().cuda(self.arg.device), requires_grad=False)
+                data.float().cuda(self.arg.device[0]), requires_grad=False)
             label = Variable(
-                label.long().cuda(self.arg.device), requires_grad=False)
+                label.long().cuda(self.arg.device[0]), requires_grad=False)
             timer['dataloader'] += self.split_time()
 
             # forward
@@ -185,10 +190,11 @@ class Processor():
         self.print_log('\tTime consumption: [Data]{dataloader}, [Network]{model}'.format(**proportion))
 
         if save_model:
-            model_path = '{}/epoch{}_model.pkl'.format(self.arg.work_dir,
+            model_path = '{}/epoch{}_model.pt'.format(self.arg.work_dir,
                                                        epoch + 1)
-            with open(model_path, 'w') as f:
-                pickle.dump(self.model.state_dict(), f)
+            #with open(model_path, 'w') as f:
+            #    pickle.dump(self.model.state_dict(), f)
+            torch.save(self.model.state_dict(), model_path)
 
             self.print_log('The model was saved in {}'.format(model_path))
 
@@ -200,11 +206,11 @@ class Processor():
             score_frag = []
             for batch_idx, (data, label) in enumerate(self.data_loader[ln]):
                 data = Variable(
-                    data.float().cuda(self.arg.device),
+                    data.float().cuda(self.arg.device[0]),
                     requires_grad=False,
                     volatile=True)
                 label = Variable(
-                    label.long().cuda(self.arg.device),
+                    label.long().cuda(self.arg.device[0]),
                     requires_grad=False,
                     volatile=True)
                 output = self.model(data)
@@ -282,8 +288,7 @@ if __name__ == '__main__':
 
     # optim
     parser.add_argument('--step', type=int, default=[20, 40, 60], nargs='+')
-    parser.add_argument('--device', type=int, default=0)
-    parser.add_argument('--parallel-device', type=int, default=None, nargs='+')
+    parser.add_argument('--device', type=int, default=0, nargs='+')
     parser.add_argument('--optimizer', default='SGD')
     parser.add_argument('--nesterov', type=str2bool, default=False)
     parser.add_argument('--batch-size', type=int, default=256)
@@ -306,7 +311,8 @@ if __name__ == '__main__':
         parser.set_defaults(**default_arg)
 
     arg = parser.parse_args()
-    print(vars(arg))
+
+
 
     processor = Processor(arg)
     processor.start()

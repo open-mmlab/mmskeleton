@@ -58,14 +58,12 @@ class Model(nn.Module):
                  channel,
                  num_class,
                  window_size,
-                 use_data_bn=False,
-                 global_pooling=True):
+                 use_data_bn=False):
         super(Model, self).__init__()
         self.num_class = num_class
         self.use_data_bn = use_data_bn
         self.data_bn = nn.BatchNorm1d(channel)
         self.conv0 = nn.Conv1d(channel, 64, kernel_size=9, padding=4)
-        self.global_pooling = global_pooling
         conv_init(self.conv0)
 
         self.unit1 = TCN_unit(64, 64)
@@ -81,11 +79,6 @@ class Model(nn.Module):
         self.relu = nn.ReLU()
 
         self.gap_size = ((window_size + 1) / 2 + 1) / 2
-        if self.global_pooling:
-            self.fcn = nn.Conv1d(256, num_class, kernel_size=1)
-        else:
-            self.fcn = nn.Conv1d(256, num_class, kernel_size=self.gap_size)
-        conv_init(self.fcn)
 
     def forward(self, x):
         N, C, T, V, M = x.size()
@@ -107,8 +100,7 @@ class Model(nn.Module):
         x = self.bn(x)
         x = self.relu(x)
 
-        if self.global_pooling:
-            x = F.avg_pool1d(x, kernel_size=self.gap_size)
+        x = F.avg_pool1d(x, kernel_size=x.size[2])
 
         x = self.fcn(x)
         x = x.view(-1, self.num_class)

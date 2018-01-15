@@ -1,2 +1,2 @@
-from tcn_gcn import Model as TCN_GCN
+from st_gcn import Model as ST_GCN
 from tcn import Model as TCN

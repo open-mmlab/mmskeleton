@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 import os
 import sys
 from ntu_read_skeleton import read_xyz
@@ -33,13 +34,16 @@ def end_toolbar():
 
 def gendata(data_path,
             out_path,
-            ignored_sample_path,
+            ignored_sample_path=None,
             benchmark='xview',
             part='eval'):
-    with open(ignored_sample_path, 'r') as f:
-        ignored_samples = [
-            line.strip() + '.skeleton' for line in f.readlines()
-        ]
+    if ignored_sample_path != None:
+        with open(ignored_sample_path, 'r') as f:
+            ignored_samples = [
+                line.strip() + '.skeleton' for line in f.readlines()
+            ]
+    else:
+        ignored_samples = [] 
     sample_name = []
     sample_label = []
     for filename in os.listdir(data_path):
@@ -61,7 +65,7 @@ def gendata(data_path,
 
         if part == 'train':
             issample = istraining
-        elif part == 'eval':
+        elif part == 'val':
             issample = not (istraining)
         else:
             raise ValueError()
@@ -91,15 +95,22 @@ def gendata(data_path,
 
 
 if __name__ == '__main__':
-    data_path = '../../data/NTU-RGB-D/nturgb+d_skeletons'
-    ignored_sample_path = '../../data/NTU-RGB-D/samples_with_missing_skeletons.txt'
-    out_folder = '../../data/NTU-RGB-D/gendata_test_2/'
-    benchmark = ['xview', 'xsub']
+
+    parser = argparse.ArgumentParser(
+        description='NTU-RGB-D Data Converter.')
+    parser.add_argument('--data_path', default='data/NTU-RGB-D/nturgb+d_skeletons')
+    parser.add_argument('--ignored_sample_path', default='data/NTU-RGB-D/samples_with_missing_skeletons.txt')
+    parser.add_argument('--out_folder', default='data/NTU-RGB-D')
+
+    benchmark = [ 'xsub', 'xview']
     part = ['train', 'val']
+
+    arg = parser.parse_args()
+
     for b in benchmark:
         for p in part:
-            out_path = os.path.join(out_folder, b)
+            out_path = os.path.join(arg.out_folder, b)
             if not os.path.exists(out_path):
                 os.makedirs(out_path)
             gendata(
-                data_path, out_path, ignored_sample_path, benchmark=b, part=p)
+                arg.data_path, out_path, arg.ignored_sample_path, benchmark=b, part=p)
