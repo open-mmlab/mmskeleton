@@ -14,7 +14,6 @@ from torch.autograd import Variable
 from torchvision import datasets, transforms
 
 # visualization
-import matplotlib.pyplot as plt
 import time
 
 # operation

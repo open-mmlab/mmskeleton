@@ -14,7 +14,6 @@ from torch.autograd import Variable
 from torchvision import datasets, transforms
 
 # visualization
-import matplotlib.pyplot as plt
 import time
 
 # operation
@@ -208,6 +207,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
 
 
 def test(data_path, label_path, vid=None):
+    import matplotlib.pyplot as plt
     loader = torch.utils.data.DataLoader(
         dataset=Feeder_kinetics(data_path, label_path, mode='val',pose_matching=False, max_person=10),
         batch_size=64,
