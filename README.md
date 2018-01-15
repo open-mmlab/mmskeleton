@@ -29,18 +29,18 @@ It is highly recommended storing data in the **SSD** rather than HDD for efficie
 
 
 ##  Testing Provided Models
-##### Get trained models
+### Get trained models
 We provided the trained model weithts of  **Temporal Conv** [1] and our **ST-GCN**. The model weights can be downloaded by running the script
 ```
 bash tools/get_reference_models.sh
 ```
 
-##### Evaluation
+### Evaluation
 Model evaluation can be achieved by this command:
 ```
 main.py --phase test --config <path to training config> --weights <path to model weights>
 ```
-##### Results
+### Results
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
 |[Temporal Conv](https://arxiv.org/abs/1704.04516) [1] | 20.3    | 83.1     |  74.3    |
