@@ -41,7 +41,6 @@ Once datasets and models ready, we can start the evaluation. To evaluate all pro
 bash tools/evaluate_models.sh
 ```
 
-### Results
 The expected **Top-1** **accuracy** of provided models are shown here:
 
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
