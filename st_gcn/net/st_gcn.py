@@ -10,7 +10,21 @@ default_backbone = [(64, 64, 1), (64, 64, 1), (64, 64, 1), (64, 128,
                                                             2), (128, 128, 1),
                     (128, 128, 1), (128, 256, 2), (256, 256, 1), (256, 256, 1)]
 
+class TCN_GCN_unit_multiscale(nn.Module):
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 A,
+                 kernel_size=9,
+                 stride=1,
+                 **kwargs):
+        super(TCN_GCN_unit_multiscale, self).__init__()
+        self.unit_1 = TCN_GCN_unit(in_channels, out_channels/2, A, kernel_size=kernel_size, stride=stride, **kwargs)
+        self.unit_2 = TCN_GCN_unit(in_channels, out_channels-out_channels/2, A, kernel_size=kernel_size*2-1, stride=stride, **kwargs)
 
+    def forward(self, x):
+        return torch.cat((self.unit_1(x), self.unit_2(x)), dim=1)
+ 
 class unit_gcn(nn.Module):
     def __init__(self,
                  in_channels,
@@ -131,6 +145,7 @@ class Model(nn.Module):
                  graph=None,
                  graph_args=dict(),
                  backbone_config=None,
+                 multiscale=False,
                  use_data_bn=False,
                  use_global_bn=False,
                  temporal_kernel_size=9,
@@ -147,13 +162,18 @@ class Model(nn.Module):
         self.num_class = num_class
         self.use_data_bn = use_data_bn
         self.data_bn = nn.BatchNorm1d(channel * num_point)
+        self.multiscale = multiscale
 
         kwargs = dict(
             A=self.A,
             mask_learning=mask_learning,
             use_global_bn=use_global_bn,
             kernel_size=temporal_kernel_size)
-        unit = TCN_GCN_unit
+
+        if self.multiscale:
+            unit = TCN_GCN_unit_multiscale
+        else:
+            unit = TCN_GCN_unit
 
         # backbone
         if backbone_config is None:
@@ -186,9 +206,9 @@ class Model(nn.Module):
         # tail
         self.person_bn = nn.BatchNorm1d(backbone_out_c)
         self.gap_size = backbone_out_t
-        self.fcn = nn.Conv1d(
-            backbone_out_c, num_class, kernel_size=self.gap_size)
-        # self.fcn = nn.Conv1d(256, num_class, kernel_size=1)
+        #self.fcn = nn.Conv1d(
+        #    backbone_out_c, num_class, kernel_size=self.gap_size)
+        self.fcn = nn.Conv1d(backbone_out_c, num_class, kernel_size=1)
         conv_init(self.fcn)
 
     def forward(self, x):
@@ -218,13 +238,14 @@ class Model(nn.Module):
 
         # V pooling
         x = F.avg_pool2d(x, kernel_size=(1, V))
-        x = x.view(N, M, x.size(1), x.size(2))
 
         # M pooling
+        x = x.view(N, M, x.size(1), x.size(2))
         x = x.mean(dim=1)
 
         # T pooling
-        # x = F.avg_pool1d(x, kernel_size=self.gap_size)
+        # x = F.avg_pool1d(x, kernel_size=x.size()[2])
+        x = F.avg_pool1d(x, kernel_size=self.gap_size)
 
         # C fcn
         x = self.fcn(x)
