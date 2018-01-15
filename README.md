@@ -30,7 +30,8 @@ It is highly recommended storing data in the **SSD** rather than HDD for efficie
 
 ##  Testing Provided Models
 ### Get trained models
-We provided the trained model weithts of  **Temporal Conv** [1] and our **ST-GCN**. The model weights can be downloaded by running the script
+We provided the trained model weithts of  **Temporal Conv** [1] and our **ST-
+GCN**. The model weights can be downloaded by running the script
 ```
 bash tools/get_reference_models.sh
 ```
@@ -42,9 +43,10 @@ bash tools/evaluate_models.sh
 
 ### Results
 The expected **Top-1** **accuracy** of provided models are shown here:
+
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
-|[Temporal Conv](https://arxiv.org/abs/1704.04516) [1]| 20.3    | 83.1     |  74.3    |
+|[Temporal Conv](https://arxiv.org/abs/1704.04516) [1] | 20.3    | 83.1     |  74.3    |
 |**ST-GCN** (Ours)| **30.7**| **88.3** | **80.5** | 
 
 [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
