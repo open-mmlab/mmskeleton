@@ -34,13 +34,14 @@ We provided the trained model weithts of  **Temporal Conv** [1] and our **ST-GCN
 ```
 bash tools/get_reference_models.sh
 ```
-
 ### Evaluation
-Model evaluation can be achieved by this command:
+Once datasets and models ready, we can start the evaluation. To evaluate all provided models, run
 ```
-main.py --phase test --config <path to training config> --weights <path to model weights>
+bash tools/evaluate_models.sh
 ```
+
 ### Results
+The expected **Top-1** **accuracy** of provided models are shown here:
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
 |[Temporal Conv](https://arxiv.org/abs/1704.04516) [1] | 20.3    | 83.1     |  74.3    |
@@ -60,5 +61,9 @@ You can modify the training parameters such as ```batch-size``` and ```device```
 main.py -h
 ```
 
+Custom model evaluation can be achieved by this command:
+```
+main.py --phase test --config <path to training config> --weights <path to model weights>
+```
 
 
