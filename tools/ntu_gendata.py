@@ -104,7 +104,6 @@ if __name__ == '__main__':
 
     benchmark = [ 'xsub', 'xview']
     part = ['train', 'val']
-
     arg = parser.parse_args()
 
     for b in benchmark:
