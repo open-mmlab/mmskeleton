@@ -1,0 +1,36 @@
+work_dir: ./work_dir/NTU-RGB-D/xsub/TCN
+# feeder
+feeder: st_gcn.feeder.Feeder
+train_feeder_args:
+  mode: train
+  window_size: 300
+  data_path: ./data/NTU-RGB-D/xsub/train_data.npy
+  label_path: ./data/NTU-RGB-D/xsub/train_label.pkl
+test_feeder_args:
+  mode: test
+  window_size: 300
+  data_path: ./data/NTU-RGB-D/xsub/val_data.npy
+  label_path: ./data/NTU-RGB-D/xsub/val_label.pkl
+
+# model
+model: st_gcn.net.TCN
+model_args:
+  num_class: 60
+  channel: 150
+  window_size: 300
+  use_data_bn: True
+
+#optim
+weight_decay: 0.0001
+base_lr: 0.1
+step: [10, 70]
+
+# training
+device: 0
+batch_size: 64 
+test_batch_size: 64 
+num_epoch: 80
+nesterov: True
+
+
+

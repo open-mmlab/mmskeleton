@@ -79,6 +79,7 @@ class Model(nn.Module):
         self.relu = nn.ReLU()
 
         self.gap_size = ((window_size + 1) / 2 + 1) / 2
+        self.fcn = nn.Conv1d(256, num_class, kernel_size=1)
 
     def forward(self, x):
         N, C, T, V, M = x.size()
@@ -100,7 +101,7 @@ class Model(nn.Module):
         x = self.bn(x)
         x = self.relu(x)
 
-        x = F.avg_pool1d(x, kernel_size=x.size[2])
+        x = F.avg_pool1d(x, kernel_size=x.size()[2])
 
         x = self.fcn(x)
         x = x.view(-1, self.num_class)

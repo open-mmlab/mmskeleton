@@ -38,7 +38,8 @@ class Processor():
         self.load_optimizer()
         self.save_arg()
 
-        self.print_log('Parameters:\n{}\n'.format(str(vars(arg))))
+        if self.arg.phase == 'train':
+            self.print_log('Parameters:\n{}\n'.format(str(vars(arg))))
 
     def load_data(self):
         Feeder = import_class(self.arg.feeder)
@@ -55,18 +56,21 @@ class Processor():
             num_workers=self.arg.num_worker)
 
     def load_model(self):
+        output_device = self.arg.device[0] if type(self.arg.device) is list else self.arg.device
+        self.output_device = output_device
         Model = import_class(self.arg.model)
-        self.model = Model(**self.arg.model_args).cuda(self.arg.device[0])
-        self.loss = nn.CrossEntropyLoss().cuda(self.arg.device[0])
+        self.model = Model(**self.arg.model_args).cuda(output_device)
+        self.loss = nn.CrossEntropyLoss().cuda(output_device)
 
-        if len(self.arg.device) > 1:
-            self.model = nn.DataParallel(
-                self.model,
-                device_ids=self.arg.device,
-                output_device=self.arg.device[0])
+        if type(self.arg.device) is list:
+            if len(self.arg.device) > 1:
+                self.model = nn.DataParallel(
+                    self.model,
+                    device_ids=self.arg.device,
+                    output_device=output_device)
 
         if self.arg.weights:
-            print('Load weights from {}.'.format(self.arg.weights))
+            self.print_log('Load weights from {}.'.format(self.arg.weights))
             if '.pkl' in self.arg.weights:
                 with open(self.arg.weights, 'r') as f:
                     weights = pickle.load(f)
@@ -75,9 +79,9 @@ class Processor():
 
             for w in self.arg.ignore_weights:
                 if weights.pop(w, None) is not None:
-                    print('Sucessfully Remove Weights: {}.'.format(w))
+                    self.print_log('Sucessfully Remove Weights: {}.'.format(w))
                 else:
-                    print('Can Not Remove Weights: {}.'.format(w))
+                    self.print_log('Can Not Remove Weights: {}.'.format(w))
 
             try:
                 self.model.load_state_dict(weights)
@@ -90,7 +94,6 @@ class Processor():
                 state.update(weights)
                 self.model.load_state_dict(state)
 
-            print('Done.')
     def load_optimizer(self):
         if self.arg.optimizer == 'SGD':
             self.optimizer = optim.SGD(
@@ -161,9 +164,9 @@ class Processor():
 
             # get data
             data = Variable(
-                data.float().cuda(self.arg.device[0]), requires_grad=False)
+                data.float().cuda(self.output_device), requires_grad=False)
             label = Variable(
-                label.long().cuda(self.arg.device[0]), requires_grad=False)
+                label.long().cuda(self.output_device), requires_grad=False)
             timer['dataloader'] += self.split_time()
 
             # forward
@@ -174,10 +177,10 @@ class Processor():
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
+            loss_value.append(loss.data[0])
             timer['model'] += self.split_time() 
 
             # statistics           
-            loss_value.append(loss.data[0])
             if batch_idx % self.arg.log_interval == 0:
                 self.print_log(
                     '\tBatch({}/{}) done. Loss: {:.4f}  lr:{}'.format(
@@ -206,11 +209,11 @@ class Processor():
             score_frag = []
             for batch_idx, (data, label) in enumerate(self.data_loader[ln]):
                 data = Variable(
-                    data.float().cuda(self.arg.device[0]),
+                    data.float().cuda(self.output_device),
                     requires_grad=False,
                     volatile=True)
                 label = Variable(
-                    label.long().cuda(self.arg.device[0]),
+                    label.long().cuda(self.output_device),
                     requires_grad=False,
                     volatile=True)
                 output = self.model(data)
@@ -249,8 +252,13 @@ class Processor():
                     # self.eval(epoch, save_score=False, loader_name=['eval'])
 
         elif self.arg.phase == 'test':
-            epoch = self.arg.start_epoch
-            self.eval(epoch, save_score=True, loader_name=['test'])
+            if self.arg.weights is None:
+                raise ValueError('Please appoint --weights.')
+            self.arg.print_log = False
+            self.print_log('Model:   {}.'.format(self.arg.model))
+            self.print_log('Weights: {}.'.format(self.arg.weights))
+            self.eval(epoch=0, save_score=False, loader_name=['test'])
+            self.print_log('Done.\n')
 
 
 if __name__ == '__main__':

@@ -142,6 +142,7 @@ class Model(nn.Module):
                  num_class,
                  window_size,
                  num_point,
+                 num_person=1,
                  graph=None,
                  graph_args=dict(),
                  backbone_config=None,
@@ -161,8 +162,15 @@ class Model(nn.Module):
 
         self.num_class = num_class
         self.use_data_bn = use_data_bn
-        self.data_bn = nn.BatchNorm1d(channel * num_point)
         self.multiscale = multiscale
+
+        # Different bodies share batchNorma parameters or not
+        self.M_dim_bn = False 
+
+        if self.M_dim_bn:
+            self.data_bn = nn.BatchNorm1d(channel * num_point * num_person)
+        else:
+            self.data_bn = nn.BatchNorm1d(channel * num_point)
 
         kwargs = dict(
             A=self.A,
@@ -213,11 +221,10 @@ class Model(nn.Module):
 
     def forward(self, x):
         N, C, T, V, M = x.size()  # Batch
-        M_dim_bn = False
 
         # data bn
         if self.use_data_bn:
-            if M_dim_bn:
+            if self.M_dim_bn:
                 x = x.permute(0, 4, 3, 1, 2).contiguous().view(N, M * V * C, T)
             else:
                 x = x.permute(0, 4, 3, 1, 2).contiguous().view(N * M, V * C, T)
