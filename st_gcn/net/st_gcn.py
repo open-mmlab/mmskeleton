@@ -220,7 +220,7 @@ class Model(nn.Module):
         conv_init(self.fcn)
 
     def forward(self, x):
-        N, C, T, V, M = x.size()  # Batch
+        N, C, T, V, M = x.size()  
 
         # data bn
         if self.use_data_bn:
