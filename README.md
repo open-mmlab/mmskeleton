@@ -2,7 +2,7 @@
 A graph convolutional network for skeleton based action recognition.
 
 <div align="center">
-    <img src="tools/.info/pipeline.png", width="300">
+    <img src="tools/.info/pipeline.png">
 </div>
 
 ## Introduction
