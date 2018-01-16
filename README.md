@@ -1,6 +1,10 @@
 # Spatial Temporal Graph Convolutional Networks (ST-GCN)
 A graph convolutional network for skeleton based action recognition.
 
+<div align="center">
+    <img src=".github/pipeline.png", width="300">
+</div>
+
 ## Introduction
 This repository holds the codebase, dataset and models for the paper
 
