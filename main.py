@@ -33,13 +33,11 @@ def import_class(name):
 class Processor():
     def __init__(self, arg):
         self.arg = arg
+        self.save_arg()
         self.load_data()
         self.load_model()
         self.load_optimizer()
-        self.save_arg()
 
-        if self.arg.phase == 'train':
-            self.print_log('Parameters:\n{}\n'.format(str(vars(arg))))
 
     def load_data(self):
         Feeder = import_class(self.arg.feeder)
@@ -116,7 +114,7 @@ class Processor():
         arg_dict = vars(self.arg)
         if not os.path.exists(self.arg.work_dir):
             os.makedirs(self.arg.work_dir)
-        with open('{}/arg.yaml'.format(self.arg.work_dir), 'w') as f:
+        with open('{}/config.yaml'.format(self.arg.work_dir), 'w') as f:
             yaml.dump(arg_dict, f)
 
     def adjust_learning_rate(self, epoch):
@@ -236,6 +234,7 @@ class Processor():
 
     def start(self):
         if self.arg.phase == 'train':
+            self.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
             for epoch in range(self.arg.start_epoch, self.arg.num_epoch):
                 save_model = ((epoch + 1) % self.arg.save_interval == 0) or (
                     epoch + 1 == self.arg.num_epoch)
@@ -245,11 +244,9 @@ class Processor():
                 self.train(epoch, save_model=save_model)
 
                 if eval_model:
-                    self.eval(epoch, save_score=True, loader_name=['test'])
+                    self.eval(epoch, save_score=self.arg.save_score, loader_name=['test'])
                 else:
                     pass
-                    # self.print_time()
-                    # self.eval(epoch, save_score=False, loader_name=['eval'])
 
         elif self.arg.phase == 'test':
             if self.arg.weights is None:
@@ -257,7 +254,7 @@ class Processor():
             self.arg.print_log = False
             self.print_log('Model:   {}.'.format(self.arg.model))
             self.print_log('Weights: {}.'.format(self.arg.weights))
-            self.eval(epoch=0, save_score=False, loader_name=['test'])
+            self.eval(epoch=0, save_score=self.arg.save_score, loader_name=['test'])
             self.print_log('Done.\n')
 
 
@@ -267,9 +264,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
         description='Spatial Temporal Graph Convolution Network')
-    parser.add_argument('--work-dir', default=None)
+    parser.add_argument('--work-dir', default='../work_dir/temp')
     parser.add_argument('--config', default=None)
 
+    # processor
+    parser.add_argument('--phase', default='train')
+    parser.add_argument('--save-score', type=str2bool, default=False)
     # visulize and debug
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--log-interval', type=int, default=100)
@@ -278,21 +278,17 @@ if __name__ == '__main__':
     parser.add_argument('--print-log', type=str2bool, default=True)
     parser.add_argument('--show-topk', type=int, default=[1, 5], nargs='+')
 
+    # feeder
+    parser.add_argument('--feeder', default='feeder.feeder')
+    parser.add_argument('--num-worker', type=int, default=128)
+    parser.add_argument('--train-feeder-args', default=dict())
+    parser.add_argument('--test-feeder-args', default=dict())
     # model
     parser.add_argument('--num-class', type=int, default=400)
     parser.add_argument('--model', default=None)
     parser.add_argument('--model-args', type=dict, default=dict())
     parser.add_argument('--weights', default=None)
     parser.add_argument('--ignore-weights', type=str, default=[], nargs='+')
-
-    # feeder
-    parser.add_argument('--feeder', default='feeder.feeder')
-    parser.add_argument('--num-worker', type=int, default=128)
-    parser.add_argument('--train-feeder-args', default=dict())
-    parser.add_argument('--test-feeder-args', default=dict())
-
-    # processor
-    parser.add_argument('--phase', default='train')
 
     # optim
     parser.add_argument('--step', type=int, default=[20, 40, 60], nargs='+')
@@ -302,8 +298,8 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, default=256)
     parser.add_argument('--test-batch-size', type=int, default=256)
     parser.add_argument('--start-epoch', type=int, default=0)
-    parser.add_argument('--num_epoch', type=int, default=80)
-    parser.add_argument('--base_lr', type=float, default=0.01)
+    parser.add_argument('--num-epoch', type=int, default=80)
+    parser.add_argument('--base-lr', type=float, default=0.01)
     parser.add_argument('--weight-decay', type=float, default=0.0005)
 
     # load arg form config file
