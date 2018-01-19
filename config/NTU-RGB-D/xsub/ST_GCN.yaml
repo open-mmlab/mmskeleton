@@ -1,0 +1,43 @@
+work_dir: ./work_dir/NTU-RGB-D/xsub/ST_GCN
+
+# feeder
+feeder: st_gcn.feeder.Feeder
+train_feeder_args:
+  mode: train
+  window_size: 300
+  data_path: ./data/NTU-RGB-D/xsub/train_data.npy
+  label_path: ./data/NTU-RGB-D/xsub/train_label.pkl
+test_feeder_args:
+  mode: test
+  window_size: 300
+  data_path: ./data/NTU-RGB-D/xsub/val_data.npy
+  label_path: ./data/NTU-RGB-D/xsub/val_label.pkl
+
+# model
+model: st_gcn.net.ST_GCN
+model_args:
+  num_class: 60
+  channel: 3
+  window_size: 300
+  num_point: 25
+  num_person: 2
+  graph: st_gcn.graph.NTU_RGB_D
+  graph_args:
+    labeling_mode: 'spatial'
+  mask_learning: True
+  use_data_bn: True 
+
+#optim
+weight_decay: 0.0001
+base_lr: 0.1
+step: [10, 50]
+
+# training
+device: [0,1,2,3]
+batch_size: 64 
+test_batch_size: 64
+num_epoch: 80
+nesterov: True
+
+
+

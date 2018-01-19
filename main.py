@@ -6,6 +6,7 @@ import time
 import numpy as np
 import yaml
 import pickle
+from collections import OrderedDict
 # torch
 import torch
 import torch.nn as nn
@@ -38,15 +39,15 @@ class Processor():
         self.load_model()
         self.load_optimizer()
 
-
     def load_data(self):
         Feeder = import_class(self.arg.feeder)
         self.data_loader = dict()
-        self.data_loader['train'] = torch.utils.data.DataLoader(
-            dataset=Feeder(**self.arg.train_feeder_args),
-            batch_size=self.arg.batch_size,
-            shuffle=True,
-            num_workers=self.arg.num_worker)
+        if self.arg.phase == 'train':
+            self.data_loader['train'] = torch.utils.data.DataLoader(
+                dataset=Feeder(**self.arg.train_feeder_args),
+                batch_size=self.arg.batch_size,
+                shuffle=True,
+                num_workers=self.arg.num_worker)
         self.data_loader['test'] = torch.utils.data.DataLoader(
             dataset=Feeder(**self.arg.test_feeder_args),
             batch_size=self.arg.test_batch_size,
@@ -60,13 +61,6 @@ class Processor():
         self.model = Model(**self.arg.model_args).cuda(output_device)
         self.loss = nn.CrossEntropyLoss().cuda(output_device)
 
-        if type(self.arg.device) is list:
-            if len(self.arg.device) > 1:
-                self.model = nn.DataParallel(
-                    self.model,
-                    device_ids=self.arg.device,
-                    output_device=output_device)
-
         if self.arg.weights:
             self.print_log('Load weights from {}.'.format(self.arg.weights))
             if '.pkl' in self.arg.weights:
@@ -74,6 +68,8 @@ class Processor():
                     weights = pickle.load(f)
             else:
                 weights = torch.load(self.arg.weights)
+
+            weights= OrderedDict([[k.split('module.')[-1],v.cuda(output_device)] for k, v in weights.items()])
 
             for w in self.arg.ignore_weights:
                 if weights.pop(w, None) is not None:
@@ -91,6 +87,14 @@ class Processor():
                     print('  ' + d)
                 state.update(weights)
                 self.model.load_state_dict(state)
+
+
+        if type(self.arg.device) is list:
+            if len(self.arg.device) > 1:
+                self.model = nn.DataParallel(
+                    self.model,
+                    device_ids=self.arg.device,
+                    output_device=output_device)
 
     def load_optimizer(self):
         if self.arg.optimizer == 'SGD':
@@ -193,11 +197,15 @@ class Processor():
         if save_model:
             model_path = '{}/epoch{}_model.pt'.format(self.arg.work_dir,
                                                        epoch + 1)
+            state_dict = self.model.module.state_dict()
+            for k in state_dict:
+                state_dict[k] = state_dict[k].cpu()
+            torch.save(state_dict, model_path)
+            
             #with open(model_path, 'w') as f:
             #    pickle.dump(self.model.state_dict(), f)
-            torch.save(self.model.state_dict(), model_path)
-
-            self.print_log('The model was saved in {}'.format(model_path))
+            # torch.save(self.model.module.state_dict(), model_path)
+            # self.print_log('The model was saved in {}'.format(model_path))
 
     def eval(self, epoch, save_score=False, loader_name=['test']):
         self.model.eval()
@@ -264,8 +272,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
         description='Spatial Temporal Graph Convolution Network')
-    parser.add_argument('--work-dir', default='../work_dir/temp')
-    parser.add_argument('--config', default=None)
+    parser.add_argument('--work-dir', default='./work_dir/temp')
+    parser.add_argument('--config', default='./config/NTU-RGB-D/xview/ST_GCN.yaml')
 
     # processor
     parser.add_argument('--phase', default='train')

@@ -16,9 +16,13 @@ neighbor = inward + outward
 
 
 class Graph():
-    def __init__(self, labeling_mode):
+    def __init__(self, labeling_mode='uniform'):
         self.A = self.get_adjacency_matrix(labeling_mode)
         self.num_node = num_node
+        self.self_link = self_link
+        self.inward = inward
+        self.outward = outward
+        self.neighbor = neighbor
 
     def get_adjacency_matrix(self, labeling_mode=None):
         if labeling_mode is None:

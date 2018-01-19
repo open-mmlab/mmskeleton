@@ -1,8 +1,7 @@
 import numpy as np
 import tools
 
-# edge format: (origin, neighbor)
-
+# Joint index:
 # {0,  "Nose"}
 # {1,  "Neck"},
 # {2,  "RShoulder"},
@@ -22,6 +21,7 @@ import tools
 # {16, "REar"},
 # {17, "LEar"},
 
+# Edge format: (origin, neighbor)
 num_node = 18
 self_link = [(i, i) for i in range(num_node)]
 inward = [(4, 3), (3, 2), (7, 6), (6, 5), (13, 12), (12, 11), (10, 9), (9, 8),
@@ -32,9 +32,13 @@ neighbor = inward + outward
 
 
 class Graph():
-    def __init__(self, labeling_mode):
+    def __init__(self, labeling_mode='uniform'):
         self.A = self.get_adjacency_matrix(labeling_mode)
         self.num_node = num_node
+        self.self_link = self_link
+        self.inward = inward
+        self.outward = outward
+        self.neighbor = neighbor
 
     def get_adjacency_matrix(self, labeling_mode=None):
         if labeling_mode is None:
