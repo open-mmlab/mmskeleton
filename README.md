@@ -31,18 +31,24 @@ where the ```<path to nturgbd>``` points to the 3D skeletons modality of NTU RGB
 It is highly recommended storing data in the **SSD** rather than HDD for efficiency.
 
 
-##  Testing Provided Models
+##  Testing Pretrained Models
 ### Get trained models
 We provided the trained model weithts of  **Temporal Conv** [1] and our **ST-
 GCN**. The model weights can be downloaded by running the script
 ```
-bash tools/get_reference_models.sh
+bash tools/get_pretrained_models.sh
 ```
+The downloaded models will be stored under the ```./model```.
 ### Evaluation
-Once datasets and models ready, we can start the evaluation. To evaluate all provided models, run
+Once datasets and models ready, we can start the evaluation. To evaluate one specific model, run
 ```
-bash tools/evaluate_models.sh
+main.py --phase test --config <path to training config> --weights <path to model weights>
 ```
+where the ```<path to model weights>``` is the model you want to test. You should also assign the corresponding config file ```<path to training config>```. To avoid confusion, we listed the correct command for testing each model in the ```tools/test_pretrained_model.sh```. Directly run
+```
+bash tools/test_pretrained_model.sh
+```
+to evaluate all pretrained models.
 
 The expected **Top-1** **accuracy** of provided models are shown here:
 
@@ -62,7 +68,7 @@ We have provided the necessary solver configs under the ```./config```. The trai
 
 You can modify the training parameters such as ```batch-size``` and ```device``` in the command line or config files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
-Finally, custom model evaluation can be achieved by this command:
+Finally, custom model evaluation can be achieved by this command as we mentioned above:
 ```
 main.py --phase test --config <path to training config> --weights <path to model weights>
 ```
