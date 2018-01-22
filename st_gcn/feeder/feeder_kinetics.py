@@ -31,7 +31,8 @@ class Feeder_kinetics(torch.utils.data.Dataset):
                  random_shift=False,
                  random_move=False,
                  pose_matching=False,
-                 num_person=1,
+                 num_person_in=5,
+                 num_person_out=2,
                  num_match_trace=2,
                  temporal_downsample_step=1,
                  num_sample=-1,
@@ -46,7 +47,8 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         self.window_size = window_size
         self.temporal_downsample_step = temporal_downsample_step
         self.num_sample = num_sample
-        self.num_person = num_person
+        self.num_person_in = num_person_in
+        self.num_person_out = num_person_out
         self.num_match_trace = num_match_trace
         self.pose_matching = pose_matching
         self.ignore_empty_sample = ignore_empty_sample
@@ -83,7 +85,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         self.C = 3  #channel
         self.T = 300  #frame
         self.V = 18  #joint
-        self.M = self.num_person  #person
+        self.M = self.num_person_out  #person
 
     def __len__(self):
         return len(self.sample_name)
@@ -101,11 +103,11 @@ class Feeder_kinetics(torch.utils.data.Dataset):
             video_info = json.load(f)
 
         # fill data_numpy
-        data_numpy = np.zeros((self.C, self.T, self.V, self.M))
+        data_numpy = np.zeros((self.C, self.T, self.V, self.num_person_in))
         for frame_info in video_info['data']:
             frame_index = frame_info['frame_index']
             for m, skeleton_info in enumerate(frame_info["skeleton"]):
-                if m >= self.M:
+                if m >= self.num_person_in:
                     break
                 pose = skeleton_info['pose']
                 score = skeleton_info['score']
@@ -144,6 +146,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         sort_index = (-data_numpy[2, :, :, :].sum(axis=1)).argsort(axis=1)
         for t, s in enumerate(sort_index):
             data_numpy[:, t, :, :] =data_numpy[:, t, :, s].transpose((1,2,0))
+        data_numpy = data_numpy[:,:,:,0:self.num_person_out]
 
         # match poses between 2 frames
         if self.pose_matching:

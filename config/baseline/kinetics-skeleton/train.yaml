@@ -1,4 +1,4 @@
-work_dir: ./work_dir/Kinetics/TCN
+work_dir: ./work_dir/Kinetics/TCN-p2
 
 # feeder
 feeder: st_gcn.feeder.Feeder_kinetics
@@ -7,12 +7,11 @@ train_feeder_args:
   random_choose: True
   random_move: True
   window_size: 300 
-  num_person: 1
   data_path: ./data/kinetics-skeleton/kinetics_train
   label_path : ./data/kinetics-skeleton/kinetics_train_label.json
 test_feeder_args:
   mode: test 
-  num_person: 1
+  window_size: 300 
   data_path: ./data/kinetics-skeleton/kinetics_val
   label_path : ./data/kinetics-skeleton/kinetics_val_label.json
 
@@ -21,20 +20,20 @@ test_feeder_args:
 model: st_gcn.net.TCN
 model_args:
   num_class: 400
-  channel: 54 
+  channel: 108 
   window_size: 300
   use_data_bn: True
 
 #optim
 weight_decay: 0.0001
 base_lr: 0.1
-step: [10, 70]
+step: [10, 60]
 
 # training
-device: 0  
+device: [0,1,2,3]  
 batch_size: 512 
 test_batch_size: 512 
-num_epoch: 80
+num_epoch: 60
 nesterov: True
 
 

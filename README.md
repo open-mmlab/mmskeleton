@@ -33,44 +33,61 @@ It is highly recommended storing data in the **SSD** rather than HDD for efficie
 
 ##  Testing Pretrained Models
 ### Get trained models
-We provided the trained model weithts of  **Temporal Conv** [1] and our **ST-
-GCN**. The model weights can be downloaded by running the script
+We provided the trained model weithts of our **ST-GCN** and the baseline model Temporal-Conv[1]. The model weights can be downloaded by running the script
 ```
 bash tools/get_pretrained_models.sh
 ```
 The downloaded models will be stored under the ```./model```.
+
 ### Evaluation
-Once datasets and models ready, we can start the evaluation. To evaluate one specific model, run
+Once datasets and models ready, we can start the evaluation.
+<!-- Use the folloing command to evaluate our **ST-GCN** model:
 ```
-main.py --phase test --config <path to training config> --weights <path to model weights>
+python main.py --config config/st_gcn/<dataset>/test.yaml
 ```
-where the ```<path to model weights>``` is the model you want to test. You should also assign the corresponding config file ```<path to training config>```. To avoid confusion, we listed the correct command for testing each model in the ```tools/test_pretrained_model.sh```. Directly run
+where the ```<dataset>``` can be  -->
+
+For cross-view evaluation in NTU RGB+D, run
 ```
-bash tools/test_pretrained_model.sh
+python main.py --config config/st_gcn/nturgbd-cross-view/test.yaml
 ```
-to evaluate all pretrained models.
+For  cross-subject evaluation in NTU RGB+D, run
+```
+python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
+```
+To evaluate ST-GCN model pretrained on Kinetcis-skeleton, run
+```
+python main.py --config config/st_gcn/kinetics-skeleton/test.yaml
+```
+Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```.
+
+To speed up evaluation by multi-gpu inference or modify batch size for reducing memory cost, use
+```
+python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> <gpu2> ...
+```
+
 
 The expected **Top-1** **accuracy** of provided models are shown here:
 
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
-|[Temporal Conv](https://arxiv.org/abs/1704.04516) [1] | 20.3    | 83.1     |  74.3    |
-|**ST-GCN** (Ours)| **30.7**| **88.3** | **80.5** | 
+|Baseline| 20.3    | 83.1     |  74.3    |
+|**ST-GCN** (Ours)| **30.6**| **88.9** | **80.7** | 
 
 [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
 
 ## Training
-To train a new model, use the ```main.py``` script. For example: 
+To train a new model, run 
 ```
-main.py --config config/Kinetics/ST-GCN.yaml
+python main.py --config config/st_gcn/<dataset>/train.yaml
 ```
-We have provided the necessary solver configs under the ```./config```. The training results will be saved under the ```./work_dir``` by default.
+where the ```<dataset>``` should be one of ```nturgbd-cross-view```, ```nturgbd-cross-subject``` and ```kinetics-skeleton```. The training results will be saved under the ```./work_dir``` by default, including weights, configurations and logging files.
 
-You can modify the training parameters such as ```batch-size``` and ```device``` in the command line or config files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
+You can modify the training parameters such as ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
-Finally, custom model evaluation can be achieved by this command as we mentioned above:
+Finally, custom model evaluation can be achieved by this command:
 ```
-main.py --phase test --config <path to training config> --weights <path to model weights>
+python main.py --phase test --config <path to training config> --weights <path to model weights>
 ```
 
 

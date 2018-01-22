@@ -197,10 +197,9 @@ class Processor():
         if save_model:
             model_path = '{}/epoch{}_model.pt'.format(self.arg.work_dir,
                                                        epoch + 1)
-            state_dict = self.model.module.state_dict()
-            for k in state_dict:
-                state_dict[k] = state_dict[k].cpu()
-            torch.save(state_dict, model_path)
+            state_dict = self.model.state_dict()
+            weights= OrderedDict([[k.split('module.')[-1],v.cpu()] for k, v in state_dict.items()])
+            torch.save(weights, model_path)
             
             #with open(model_path, 'w') as f:
             #    pickle.dump(self.model.state_dict(), f)
@@ -266,10 +265,8 @@ class Processor():
             self.print_log('Done.\n')
 
 
-if __name__ == '__main__':
-
+def get_parser():
     # parameter priority: command line > config > default
-
     parser = argparse.ArgumentParser(
         description='Spatial Temporal Graph Convolution Network')
     parser.add_argument('--work-dir', default='./work_dir/temp')
@@ -310,6 +307,11 @@ if __name__ == '__main__':
     parser.add_argument('--base-lr', type=float, default=0.01)
     parser.add_argument('--weight-decay', type=float, default=0.0005)
 
+    return parser
+
+if __name__ == '__main__':
+    parser = get_parser()
+
     # load arg form config file
     p = parser.parse_args()
     if p.config is not None:
@@ -323,8 +325,5 @@ if __name__ == '__main__':
         parser.set_defaults(**default_arg)
 
     arg = parser.parse_args()
-
-
-
     processor = Processor(arg)
     processor.start()

@@ -1,0 +1,32 @@
+# feeder
+feeder: st_gcn.feeder.Feeder_kinetics
+test_feeder_args:
+  mode: test 
+  data_path: ./data/kinetics-skeleton/kinetics_val
+  label_path : ./data/kinetics-skeleton/kinetics_val_label.json
+  window_size: 150 
+
+# model
+model: st_gcn.net.ST_GCN
+model_args:
+  num_class: 400
+  channel: 3
+  window_size: 150
+  num_person: 2
+  num_point: 18
+  dropout: 0
+  graph: st_gcn.graph.Kinetics
+  graph_args:
+    labeling_mode: 'spatial'
+  mask_learning: True
+  use_data_bn: True
+
+
+# test 
+phase: test
+device: 0
+test_batch_size: 64
+weights: ./model/kinetics-st_gcn.pt
+
+
+
