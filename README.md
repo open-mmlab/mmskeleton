@@ -36,7 +36,7 @@ It is highly recommended storing data in the **SSD** rather than HDD for efficie
 ### Get trained models
 We provided the pretrained model weithts of our **ST-GCN** and the baseline model Temporal-Conv[1]. The model weights can be downloaded by running the script
 ```
-bash tools/get_pretrained_models.sh
+bash tools/get_models.sh
 ```
 The downloaded models will be stored under the ```./model```.
 
@@ -56,14 +56,14 @@ For **cross-view** evaluation in **NTU RGB+D**, run
 ```
 python main.py --config config/st_gcn/nturgbd-cross-view/test.yaml
 ```
-For **cross-subject** evaluation **in NTU RGB+D**, run
+For **cross-subject** evaluation in **NTU RGB+D**, run
 ```
 python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
 ```
 
 Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```.
 
-To speed up evaluation by multi-gpu inference or modify batch size for reducing memory cost, use
+To speed up evaluation by multi-gpu inference or modify batch size for reducing memory cost, set ```--test-batch-size``` and ```--device``` like:
 ```
 python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
 ```
