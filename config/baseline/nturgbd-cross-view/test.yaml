@@ -1,0 +1,22 @@
+# feeder
+feeder: st_gcn.feeder.Feeder
+test_feeder_args:
+  mode: test
+  window_size: 300
+  data_path: ./data/NTU-RGB-D/xview/val_data.npy
+  label_path: ./data/NTU-RGB-D/xview/val_label.pkl
+
+# model
+model: st_gcn.net.TCN
+model_args:
+  num_class: 60
+  channel: 150
+  window_size: 300
+  use_data_bn: True
+
+# test 
+phase: test
+device: 0
+test_batch_size: 64
+weights: ./model/ntuxview-tcn.pt
+

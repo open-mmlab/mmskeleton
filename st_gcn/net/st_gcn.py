@@ -26,6 +26,7 @@ class Model(nn.Module):
                  use_data_bn=False,
                  use_local_bn=False,
                  temporal_kernel_size=9,
+                 dropout=0.5,
                  mask_learning=False):
         super(Model, self).__init__()
 
@@ -52,6 +53,7 @@ class Model(nn.Module):
             A=self.A,
             mask_learning=mask_learning,
             use_local_bn=use_local_bn,
+            dropout=dropout,
             kernel_size=temporal_kernel_size)
 
         if self.multiscale:

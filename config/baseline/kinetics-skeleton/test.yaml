@@ -1,0 +1,26 @@
+# feeder
+feeder: st_gcn.feeder.Feeder_kinetics
+test_feeder_args:
+  mode: test 
+  window_size: 300 
+  data_path: ./data/kinetics-skeleton/kinetics_val
+  label_path : ./data/kinetics-skeleton/kinetics_val_label.json
+
+
+# model
+model: st_gcn.net.TCN
+model_args:
+  num_class: 400
+  channel: 108 
+  window_size: 300
+  use_data_bn: True
+
+
+# test 
+phase: test
+device: 0
+test_batch_size: 64
+weights: ./model/kinetics-tcn.pt
+
+
+
