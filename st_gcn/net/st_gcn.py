@@ -20,7 +20,7 @@ class Model(nn.Module):
         Input shape should be (N, C, T, V, M)
         where N is the number of samples,
               C is the number of input channels,
-              T is the length of sequence,
+              T is the length of the sequence,
               V is the number of joints or graph nodes,
           and M is the number of people.
     
