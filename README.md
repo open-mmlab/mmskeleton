@@ -48,6 +48,10 @@ python main.py --config config/st_gcn/<dataset>/test.yaml
 ```
 where the ```<dataset>``` can be  -->
 
+To evaluate ST-GCN model pretrained on Kinetcis-skeleton, run
+```
+python main.py --config config/st_gcn/kinetics-skeleton/test.yaml
+```
 For cross-view evaluation in NTU RGB+D, run
 ```
 python main.py --config config/st_gcn/nturgbd-cross-view/test.yaml
@@ -56,10 +60,7 @@ For  cross-subject evaluation in NTU RGB+D, run
 ```
 python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
 ```
-To evaluate ST-GCN model pretrained on Kinetcis-skeleton, run
-```
-python main.py --config config/st_gcn/kinetics-skeleton/test.yaml
-```
+
 Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```.
 
 To speed up evaluation by multi-gpu inference or modify batch size for reducing memory cost, use
