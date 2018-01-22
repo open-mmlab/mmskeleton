@@ -83,7 +83,7 @@ To train a new ST-GCN model, run
 ```
 python main.py --config config/st_gcn/<dataset>/train.yaml [--work-dir <work folder>]
 ```
-where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, according to the dataset you want to use. The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
+where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, depending on the dataset you want to use. The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
 
 You can modify the training parameters such as ```work-dir```, ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
@@ -106,6 +106,6 @@ Please cite the following paper if you feel this repository useful.
 ## Contact
 For any question, feel free to contact
 ```
-Sijie Yan: ys016@ie.cuhk.edu.hk
-Yuanjun Xiong: bitxiong@gmail.com
+Sijie Yan     : ys016@ie.cuhk.edu.hk
+Yuanjun Xiong : bitxiong@gmail.com
 ```
