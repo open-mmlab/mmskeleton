@@ -16,7 +16,8 @@ This repository holds the codebase, dataset and models for the paper
 Our codebase is based on **Python 2.7**. There are a few dependencies to run the code. The major python libraries we used are
 - [PyTorch](http://pytorch.org/)
 - NumPy
-- Argparse
+- argparse
+- pyyaml
 
 ## Data Preparation
 We experimented on two skeleton-based action recognition datasts: [NTU RGB+D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and [Kinetics-skeleton](https://s3-us-west-1.amazonaws.com/yysijie-data/public/kinetics-skeleton/kinetics-skeleton.zip). 
