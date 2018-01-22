@@ -21,21 +21,34 @@ import tools
 
 
 class Feeder_kinetics(torch.utils.data.Dataset):
+    """ Feeder for skeleton-based action recognition in kinetics-skeleton dataset
+    Arguments:
+        data_path: the path to '.npy' data, the shape of data should be (N, C, T, V, M)
+        label_path: the path to label
+        mode: must be train or test
+        random_choose: If true, randomly choose a portion of the input sequence
+        random_shift: If true, randomly pad zeros at the begining or end of sequence
+        random_move: If true, perform randomly but continuously changed transformation to input sequence
+        window_size: The length of the output sequence
+        pose_matching: If ture, match the pose between two frames
+        num_person_in: The number of people the feeder can observe in the input sequence
+        num_person_out: The number of people the feeder in the output sequence
+        temporal_downsample_step: Step for down sampling the output sequence
+        debug: If true, only use the first 100 samples
+    """
     def __init__(self,
                  data_path,
                  label_path,
                  mode,
                  ignore_empty_sample=True,
                  random_choose=False,
-                 window_size=-1,
                  random_shift=False,
                  random_move=False,
+                 window_size=-1,
                  pose_matching=False,
                  num_person_in=5,
                  num_person_out=2,
-                 num_match_trace=2,
                  temporal_downsample_step=1,
-                 num_sample=-1,
                  debug=False):
         self.debug = debug
         self.mode = mode
@@ -46,10 +59,8 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         self.random_move = random_move
         self.window_size = window_size
         self.temporal_downsample_step = temporal_downsample_step
-        self.num_sample = num_sample
         self.num_person_in = num_person_in
         self.num_person_out = num_person_out
-        self.num_match_trace = num_match_trace
         self.pose_matching = pose_matching
         self.ignore_empty_sample = ignore_empty_sample
 
@@ -169,7 +180,6 @@ def test(data_path, label_path, vid=None, graph=None):
             data_path,
             label_path,
             mode='val',
-            num_match_trace=2,
             pose_matching=False,
             num_person=10),
         batch_size=64,

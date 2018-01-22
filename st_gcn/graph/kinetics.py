@@ -32,6 +32,20 @@ neighbor = inward + outward
 
 
 class Graph():
+    """ The Graph to model the skeletons extracted by the openpose
+
+    Arguments:
+        labeling_mode: must be one of the follow candidates
+            uniform: Uniform Labeling
+            dastance*: Distance Partitioning*
+            dastance: Distance Partitioning
+            spatial: Spatial Configuration
+            DAD: normalized graph adjacency matrix
+            DLD: normalized graph laplacian matrix
+
+    For more information, please refer to the section 'Partition Strategies' in our paper.
+
+    """
     def __init__(self, labeling_mode='uniform'):
         self.A = self.get_adjacency_matrix(labeling_mode)
         self.num_node = num_node
