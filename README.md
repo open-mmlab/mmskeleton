@@ -63,7 +63,7 @@ python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
 
 Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```.
 
-To speed up evaluation by multi-gpu inference or modify batch size for reducing memory cost, set ```--test-batch-size``` and ```--device``` like:
+To speed up evaluation by multi-gpu inference or modify batch size for reducing the memory cost, set ```--test-batch-size``` and ```--device``` like:
 ```
 python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
 ```
