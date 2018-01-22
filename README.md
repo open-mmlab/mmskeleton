@@ -19,7 +19,7 @@ Our codebase is based on **Python 2.7**. There are a few dependencies to run the
 - Argparse
 
 ## Data Preparation
-We experimented on two skeleton-based action recognition datasts: [NTU RGB+D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and [Kinetics-skeleton](https://s3-us-west-1.amazonaws.com/yysijie-data/kinetics-skeleton.zip). 
+We experimented on two skeleton-based action recognition datasts: [NTU RGB+D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and [Kinetics-skeleton](https://s3-us-west-1.amazonaws.com/yysijie-data/public/kinetics-skeleton/kinetics-skeleton.zip). 
 ### NTU RGB+D
 NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
 ```
@@ -27,7 +27,7 @@ python tools/ntu_gendata.py --data_path <path to nturgbd>
 ```
 where the ```<path to nturgbd>``` points to the 3D skeletons modality of NTU RGB+D dataset you download, for example ```data/NTU-RGB-D/nturgbd+d_skeletons```.
 ### Kinetics-skeleton
-[Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/) is a video-based dataset for action recognition which only provide raw video clips without skeleton data. To obatin the joint locations, we first resized all videos to the resolution of 340x256 and converted the frame rate to 30 fps.  Then, we extracted skeletons from each frame in Kinetics by [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose). The extracted skeleton data we called **Kinetics-skeleton**(7.5GB) can be directly downloaded from [here](https://s3-us-west-1.amazonaws.com/yysijie-data/kinetics-skeleton.zip).
+[Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/) is a video-based dataset for action recognition which only provide raw video clips without skeleton data. To obatin the joint locations, we first resized all videos to the resolution of 340x256 and converted the frame rate to 30 fps.  Then, we extracted skeletons from each frame in Kinetics by [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose). The extracted skeleton data we called **Kinetics-skeleton**(7.5GB) can be directly downloaded from [here](https://s3-us-west-1.amazonaws.com/yysijie-data/public/kinetics-skeleton/kinetics-skeleton.zip).
 
 It is highly recommended storing data in the **SSD** rather than HDD for efficiency.
 
