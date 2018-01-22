@@ -16,8 +16,7 @@ This repository holds the codebase, dataset and models for the paper
 Our codebase is based on **Python 2.7**. There are a few dependencies to run the code. The major python libraries we used are
 - [PyTorch](http://pytorch.org/)
 - NumPy
-- argparse
-- pyyaml
+- Other Python libraries can be installed by `pip install -r requirements.txt`
 
 ## Data Preparation
 We experimented on two skeleton-based action recognition datasts: [NTU RGB+D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and [Kinetics-skeleton](https://s3-us-west-1.amazonaws.com/yysijie-data/public/kinetics-skeleton/kinetics-skeleton.zip). 
@@ -94,7 +93,7 @@ python main.py --config config/st_gcn/<dataset>/test.yaml --weights <path to mod
 ```
 
 ## Citation
-Please cite the following paper if you feel this repository useful.
+Please cite the following paper if you use this repository in your reseach.
 ```
 @inproceedings{stgcn2018aaai,
   title     = {Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition},
