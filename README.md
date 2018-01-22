@@ -34,7 +34,7 @@ It is highly recommended storing data in the **SSD** rather than HDD for efficie
 
 ##  Testing Pretrained Models
 ### Get trained models
-We provided the trained model weithts of our **ST-GCN** and the baseline model Temporal-Conv[1]. The model weights can be downloaded by running the script
+We provided the pretrained model weithts of our **ST-GCN** and the baseline model Temporal-Conv[1]. The model weights can be downloaded by running the script
 ```
 bash tools/get_pretrained_models.sh
 ```
@@ -68,7 +68,7 @@ To speed up evaluation by multi-gpu inference or modify batch size for reducing 
 python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
 ```
 
-
+### Results
 The expected **Top-1** **accuracy** of provided models are shown here:
 
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
@@ -81,15 +81,31 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 ## Training
 To train a new ST-GCN model, run 
 ```
-python main.py --config config/st_gcn/<dataset>/train.yaml
+python main.py --config config/st_gcn/<dataset>/train.yaml [--work-dir <work folder>]
 ```
-where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, according to the dataset you want to use. The training results will be saved under the ```./work_dir``` by default, including weights, configurations and logging files.
+where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, according to the dataset you want to use. The training results will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it, including **model weights**, configurations and logging files.
 
-You can modify the training parameters such as ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
+You can modify the training parameters such as ```work-dir```, ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
-Finally, custom model evaluation can be achieved by this command:
+Finally, custom model evaluation can be achieved by this command as we mentioned above:
 ```
-python main.py --phase test --config <path to training config> --weights <path to model weights>
+python main.py --config config/st_gcn/<dataset>/test.yaml --weights <path to model weights>
 ```
 
+## Citation
+Please cite the following paper if you feel this repository useful.
+```
+@inproceedings{stgcn2018aaai,
+  title     = {Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition},
+  author    = {Sijie Yan and Yuanjun Xiong and Dahua Lin},
+  booktitle = {AAAI},
+  year      = {2018},
+}
+```
 
+## Contact
+For any question, feel free to contact
+```
+Sijie Yan: ys016@ie.cuhk.edu.hk
+Yuanjun Xiong: bitxiong@gmail.com
+```
