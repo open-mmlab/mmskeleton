@@ -13,16 +13,17 @@ This repository holds the codebase, dataset and models for the paper
 [Arxiv Preprint]
 
 ## Prerequisites
-Our codebase is based on **Python 2.7**. There are a few dependencies to run the code. The major libraries we used are
+Our codebase is based on **Python 2.7**. There are a few dependencies to run the code. The major python libraries we used are
 - [PyTorch](http://pytorch.org/)
 - NumPy
+- Argparse
 
 ## Data Preparation
 We experimented on two skeleton-based action recognition datasts: [NTU RGB+D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and [Kinetics-skeleton](https://s3-us-west-1.amazonaws.com/yysijie-data/kinetics-skeleton.zip). 
 ### NTU RGB+D
-NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, ```tools/ntu_gendata.py``` should be used to build the database for training or evaluation:
+NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
 ```
-tools/ntu_gendata.py --data_path <path to nturgbd>
+python tools/ntu_gendata.py --data_path <path to nturgbd>
 ```
 where the ```<path to nturgbd>``` points to the 3D skeletons modality of NTU RGB+D dataset you download, for example ```data/NTU-RGB-D/nturgbd+d_skeletons```.
 ### Kinetics-skeleton
@@ -63,7 +64,7 @@ Similary, the configuration file for testing baseline models can be found under 
 
 To speed up evaluation by multi-gpu inference or modify batch size for reducing memory cost, use
 ```
-python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> <gpu2> ...
+python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
 ```
 
 
@@ -71,17 +72,17 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
-|Baseline| 20.3    | 83.1     |  74.3    |
+|Baseline[1]| 20.3    | 83.1     |  74.3    |
 |**ST-GCN** (Ours)| **30.6**| **88.9** | **80.7** | 
 
 [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
 
 ## Training
-To train a new model, run 
+To train a new ST-GCN model, run 
 ```
 python main.py --config config/st_gcn/<dataset>/train.yaml
 ```
-where the ```<dataset>``` should be one of ```nturgbd-cross-view```, ```nturgbd-cross-subject``` and ```kinetics-skeleton```. The training results will be saved under the ```./work_dir``` by default, including weights, configurations and logging files.
+where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, according to the dataset you want to use. The training results will be saved under the ```./work_dir``` by default, including weights, configurations and logging files.
 
 You can modify the training parameters such as ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
