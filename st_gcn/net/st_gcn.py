@@ -13,21 +13,53 @@ default_backbone = [(64, 64, 1), (64, 64, 1), (64, 64, 1), (64, 128,
 
 
 class Model(nn.Module):
+    """ Spatial temporal graph convolutional networks
+                        for skeleton-based action recognition.
+
+    Input shape:
+        Input shape should be (N, C, T, V, M)
+        where N is the number of samples,
+              C is the number of input channels,
+              T is the length of sequence,
+              V is the number of joints or graph nodes,
+          and M is the number of people.
+    
+    Arguments:
+        About shape:
+            channel (int): Number of channels in the input data
+            num_class (int): Number of classes for classification
+            window_size (int): Length of input sequence
+            num_point (int): Number of joints or graph nodes
+            num_person (int): Number of people
+        About net:
+            use_data_bn: If true, the data will first input to a batch normalization layer
+            backbone_config: The structure of backbone networks
+        About graph convolution:
+            graph: The graph of skeleton, represtented by a adjacency matrix
+            graph_args: The arguments of graph
+            mask_learning: If true, use mask matrixes to reweight the adjacency matrixes
+            use_local_bn: If true, each node in the graph have specific parameters of batch normalzation layer
+        About temporal convolution:
+            multiscale: If true, use multi-scale temporal convolution
+            temporal_kernel_size: The kernel size of temporal convolution
+            dropout: The drop out rate of the dropout layer in front of each temporal convolution layer
+
+    """
     def __init__(self,
                  channel,
                  num_class,
                  window_size,
                  num_point,
                  num_person=1,
+                 use_data_bn=False,
+                 backbone_config=None,
                  graph=None,
                  graph_args=dict(),
-                 backbone_config=None,
-                 multiscale=False,
-                 use_data_bn=False,
+                 mask_learning=False,
                  use_local_bn=False,
+                 multiscale=False,
                  temporal_kernel_size=9,
-                 dropout=0.5,
-                 mask_learning=False):
+                 dropout=0.5):
         super(Model, self).__init__()
 
         if graph is None:

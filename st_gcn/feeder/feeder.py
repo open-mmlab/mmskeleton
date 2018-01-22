@@ -20,6 +20,19 @@ import time
 from tools import * 
 
 class Feeder(torch.utils.data.Dataset):
+    """ Feeder for skeleton-based action recognition
+    Arguments:
+        data_path: the path to '.npy' data, the shape of data should be (N, C, T, V, M)
+        label_path: the path to label
+        mode: must be train or test
+        random_choose: If true, randomly choose a portion of the input sequence
+        random_shift: If true, randomly pad zeros at the begining or end of sequence
+        window_size: The length of the output sequence
+        temporal_downsample_step: Step for down sampling the output sequence
+        mean_subtraction: The value of bias should be subtracted from output data
+        normalization: If true, normalize input sequence
+        debug: If true, only use the first 100 samples
+    """
     def __init__(self,
                  data_path,
                  label_path,
