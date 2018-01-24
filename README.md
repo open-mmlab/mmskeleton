@@ -13,7 +13,7 @@ This repository holds the codebase, dataset and models for the paper
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ## Prerequisites
-Our codebase is based on **Python 2.7**. There are a few dependencies to run the code. The major python libraries we used are
+Our codebase is based on **Python**. There are a few dependencies to run the code. The major python libraries we used are
 - [PyTorch](http://pytorch.org/)
 - NumPy
 - Other Python libraries can be installed by `pip install -r requirements.txt`
