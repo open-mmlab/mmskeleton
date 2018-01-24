@@ -1,10 +1,11 @@
-# The based unit of graph convolutional networks. 
+# The based unit of graph convolutional networks.
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from net import conv_init
+from .net import conv_init
+
 
 class unit_gcn(nn.Module):
     def __init__(self,
@@ -47,14 +48,14 @@ class unit_gcn(nn.Module):
                 self.in_channels,
                 self.out_channels,
                 kernel_size=(kernel_size, 1),
-                padding=((kernel_size - 1) / 2, 0),
+                padding=(int((kernel_size - 1) / 2), 0),
                 stride=(stride, 1)) for i in range(self.num_A)
         ])
 
         if mask_learning:
             self.mask = nn.Parameter(torch.ones(self.A.size()))
         if use_local_bn:
-            self.bn = nn.BatchNorm1d(self.out_channels * self.V)  
+            self.bn = nn.BatchNorm1d(self.out_channels * self.V)
         else:
             self.bn = nn.BatchNorm2d(self.out_channels)
 

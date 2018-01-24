@@ -17,7 +17,7 @@ from torchvision import datasets, transforms
 import time
 
 # operation
-import tools
+from . import tools
 
 
 class Feeder_kinetics(torch.utils.data.Dataset):
@@ -36,6 +36,7 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         temporal_downsample_step: Step for down sampling the output sequence
         debug: If true, only use the first 100 samples
     """
+
     def __init__(self,
                  data_path,
                  label_path,
@@ -156,8 +157,9 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         # sort by score
         sort_index = (-data_numpy[2, :, :, :].sum(axis=1)).argsort(axis=1)
         for t, s in enumerate(sort_index):
-            data_numpy[:, t, :, :] =data_numpy[:, t, :, s].transpose((1,2,0))
-        data_numpy = data_numpy[:,:,:,0:self.num_person_out]
+            data_numpy[:, t, :, :] = data_numpy[:, t, :, s].transpose((1, 2,
+                                                                       0))
+        data_numpy = data_numpy[:, :, :, 0:self.num_person_out]
 
         # match poses between 2 frames
         if self.pose_matching:
@@ -196,10 +198,9 @@ def test(data_path, label_path, vid=None, graph=None):
         index = sample_id.index(vid)
 
     name = loader.dataset.sample_name[index]
-    print name
 
     data, label = loader.dataset[index]
-    data = data.reshape( data.shape)
+    data = data.reshape(data.shape)
 
     # for batch_idx, (data, label) in enumerate(loader):
     C, T, V, M = data.shape
@@ -207,41 +208,44 @@ def test(data_path, label_path, vid=None, graph=None):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-
     if graph is None:
-        p_type=['b.','g.','r.','c.','m.','y.','k.','k.','k.','k.']
-        pose = [ax.plot(np.zeros(V), np.zeros(V), p_type[m])[0] for m in range(M)]
+        p_type = ['b.', 'g.', 'r.', 'c.', 'm.', 'y.', 'k.', 'k.', 'k.', 'k.']
+        pose = [
+            ax.plot(np.zeros(V), np.zeros(V), p_type[m])[0] for m in range(M)
+        ]
         ax.axis([-1, 1, -1, 1])
         for t in range(T):
             # print t
             for m in range(M):
-                pose[m].set_xdata(data[ 0, t, :, m])
-                pose[m].set_ydata(data[ 1, t, :, m])
+                pose[m].set_xdata(data[0, t, :, m])
+                pose[m].set_ydata(data[1, t, :, m])
             fig.canvas.draw()
             plt.pause(0.001)
             # raw_input(t)
     else:
-        p_type=['b-','g-','r-','c-','m-','y-','k-','k-','k-','k-']
+        p_type = ['b-', 'g-', 'r-', 'c-', 'm-', 'y-', 'k-', 'k-', 'k-', 'k-']
         import sys
         from os import path
-        sys.path.append( path.dirname(path.dirname( path.dirname( path.abspath(__file__) ) ) ))
+        sys.path.append(
+            path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
         G = import_class(graph)()
         edge = G.inward
         pose = []
         for m in range(M):
-            a=[]
+            a = []
             for i in range(len(edge)):
-                a.append(ax.plot(np.zeros(2),np.zeros(2),p_type[m])[0])
+                a.append(ax.plot(np.zeros(2), np.zeros(2), p_type[m])[0])
             pose.append(a)
         ax.axis([-1, 1, -1, 1])
         for t in range(T):
             for m in range(M):
                 for i, (v1, v2) in enumerate(edge):
-                    pose[m][i].set_xdata(data[0,t,[v1,v2],m])
-                    pose[m][i].set_ydata(-data[1,t,[v1,v2],m])
+                    pose[m][i].set_xdata(data[0, t, [v1, v2], m])
+                    pose[m][i].set_ydata(-data[1, t, [v1, v2], m])
             fig.canvas.draw()
             plt.pause(0.001)
             # raw_input(t)
+
 
 def import_class(name):
     components = name.split('.')
@@ -250,10 +254,11 @@ def import_class(name):
         mod = getattr(mod, comp)
     return mod
 
+
 if __name__ == '__main__':
     data_path = './data/kinetics-skeleton/kinetics_val'
     label_path = './data/kinetics-skeleton/kinetics_val_label.json'
     graph = 'st_gcn.graph.Kinetics'
     # test(data_path, label_path, vid='iqkx0rrCUCo', graph=graph)
-    test(data_path, label_path, vid = 11111, graph=graph)
+    test(data_path, label_path, vid=11111, graph=graph)
     # test(data_path, label_path, vid = 11199, graph=graph)

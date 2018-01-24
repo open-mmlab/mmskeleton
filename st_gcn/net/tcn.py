@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
-from net import conv_init
+from .net import conv_init
 
 
 class Unit_brdc(nn.Module):
@@ -17,7 +17,7 @@ class Unit_brdc(nn.Module):
             D_in,
             D_out,
             kernel_size=kernel_size,
-            padding=(kernel_size - 1) / 2,
+            padding=int((kernel_size - 1) / 2),
             stride=stride)
 
         # weight initialization
@@ -54,11 +54,7 @@ class TCN_unit(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self,
-                 channel,
-                 num_class,
-                 window_size,
-                 use_data_bn=False):
+    def __init__(self, channel, num_class, window_size, use_data_bn=False):
         super(Model, self).__init__()
         self.num_class = num_class
         self.use_data_bn = use_data_bn
@@ -78,7 +74,6 @@ class Model(nn.Module):
         self.bn = nn.BatchNorm1d(256)
         self.relu = nn.ReLU()
 
-        self.gap_size = ((window_size + 1) / 2 + 1) / 2
         self.fcn = nn.Conv1d(256, num_class, kernel_size=1)
 
     def forward(self, x):
