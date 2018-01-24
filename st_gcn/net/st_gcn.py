@@ -4,8 +4,8 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
 import math
-from net import Unit2D, conv_init, import_class
-from unit_gcn import unit_gcn
+from .net import Unit2D, conv_init, import_class
+from .unit_gcn import unit_gcn
 
 default_backbone = [(64, 64, 1), (64, 64, 1), (64, 64, 1), (64, 128,
                                                             2), (128, 128, 1),
@@ -45,6 +45,7 @@ class Model(nn.Module):
             dropout: The drop out rate of the dropout layer in front of each temporal convolution layer
 
     """
+
     def __init__(self,
                  channel,
                  num_class,
@@ -74,7 +75,7 @@ class Model(nn.Module):
         self.multiscale = multiscale
 
         # Different bodies share batchNorma parameters or not
-        self.M_dim_bn = True 
+        self.M_dim_bn = True
 
         if self.M_dim_bn:
             self.data_bn = nn.BatchNorm1d(channel * num_point * num_person)
@@ -124,13 +125,11 @@ class Model(nn.Module):
         # tail
         self.person_bn = nn.BatchNorm1d(backbone_out_c)
         self.gap_size = backbone_out_t
-        #self.fcn = nn.Conv1d(
-        #    backbone_out_c, num_class, kernel_size=self.gap_size)
         self.fcn = nn.Conv1d(backbone_out_c, num_class, kernel_size=1)
         conv_init(self.fcn)
 
     def forward(self, x):
-        N, C, T, V, M = x.size()  
+        N, C, T, V, M = x.size()
 
         # data bn
         if self.use_data_bn:
@@ -150,7 +149,7 @@ class Model(nn.Module):
         # model
         x = self.gcn0(x)
         x = self.tcn0(x)
-        for  m in self.backbone:
+        for m in self.backbone:
             x = m(x)
 
         # V pooling
@@ -162,7 +161,6 @@ class Model(nn.Module):
 
         # T pooling
         x = F.avg_pool1d(x, kernel_size=x.size()[2])
-        # x = F.avg_pool1d(x, kernel_size=self.gap_size)
 
         # C fcn
         x = self.fcn(x)
@@ -170,6 +168,7 @@ class Model(nn.Module):
         x = x.view(N, self.num_class)
 
         return x
+
 
 class TCN_GCN_unit(nn.Module):
     def __init__(self,
@@ -207,9 +206,10 @@ class TCN_GCN_unit(nn.Module):
 
     def forward(self, x):
         # N, C, T, V = x.size()
-        x = self.tcn1(self.gcn1(x)) + (x if (self.down1 is None) else
-                                       self.down1(x))
+        x = self.tcn1(self.gcn1(x)) + (x if
+                                       (self.down1 is None) else self.down1(x))
         return x
+
 
 class TCN_GCN_unit_multiscale(nn.Module):
     def __init__(self,
@@ -220,9 +220,20 @@ class TCN_GCN_unit_multiscale(nn.Module):
                  stride=1,
                  **kwargs):
         super(TCN_GCN_unit_multiscale, self).__init__()
-        self.unit_1 = TCN_GCN_unit(in_channels, out_channels/2, A, kernel_size=kernel_size, stride=stride, **kwargs)
-        self.unit_2 = TCN_GCN_unit(in_channels, out_channels-out_channels/2, A, kernel_size=kernel_size*2-1, stride=stride, **kwargs)
+        self.unit_1 = TCN_GCN_unit(
+            in_channels,
+            out_channels / 2,
+            A,
+            kernel_size=kernel_size,
+            stride=stride,
+            **kwargs)
+        self.unit_2 = TCN_GCN_unit(
+            in_channels,
+            out_channels - out_channels / 2,
+            A,
+            kernel_size=kernel_size * 2 - 1,
+            stride=stride,
+            **kwargs)
 
     def forward(self, x):
         return torch.cat((self.unit_1(x), self.unit_2(x)), dim=1)
-

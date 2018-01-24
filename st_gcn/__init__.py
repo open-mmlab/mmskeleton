@@ -1,1 +1,1 @@
-import feeder, graph, net
+from . import feeder, graph, net

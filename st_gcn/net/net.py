@@ -6,24 +6,33 @@ import numpy as np
 import math
 
 
-
 class Unit2D(nn.Module):
-    def __init__(self, D_in, D_out, kernel_size, stride=1, dim=2, dropout=0, bias=True):
+    def __init__(self,
+                 D_in,
+                 D_out,
+                 kernel_size,
+                 stride=1,
+                 dim=2,
+                 dropout=0,
+                 bias=True):
         super(Unit2D, self).__init__()
+        pad = int((kernel_size - 1) / 2)
         if dim == 2:
             self.conv = nn.Conv2d(
                 D_in,
                 D_out,
                 kernel_size=(kernel_size, 1),
-                padding=((kernel_size - 1) / 2, 0),
-                stride=(stride, 1), bias=bias)
+                padding=(pad, 0),
+                stride=(stride, 1),
+                bias=bias)
         elif dim == 3:
             self.conv = nn.Conv2d(
                 D_in,
                 D_out,
                 kernel_size=(1, kernel_size),
-                padding=(0, (kernel_size - 1) / 2),
-                stride=(1, stride), bias=bias)
+                padding=(0, pad),
+                stride=(1, stride),
+                bias=bias)
         else:
             raise ValueError()
 

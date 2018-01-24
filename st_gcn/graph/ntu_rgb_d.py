@@ -1,5 +1,5 @@
 import numpy as np
-import tools
+from . import tools
 
 # reference : https://arxiv.org/abs/1604.02808
 # edge format: (origin, neighbor)
@@ -30,6 +30,7 @@ class Graph():
     For more information, please refer to the section 'Partition Strategies' in our paper.
 
     """
+
     def __init__(self, labeling_mode='uniform'):
         self.A = self.get_adjacency_matrix(labeling_mode)
         self.num_node = num_node

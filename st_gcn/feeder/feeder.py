@@ -17,7 +17,8 @@ from torchvision import datasets, transforms
 import time
 
 # operation
-from tools import * 
+from .tools import *
+
 
 class Feeder(torch.utils.data.Dataset):
     """ Feeder for skeleton-based action recognition
@@ -33,6 +34,7 @@ class Feeder(torch.utils.data.Dataset):
         normalization: If true, normalize input sequence
         debug: If true, only use the first 100 samples
     """
+
     def __init__(self,
                  data_path,
                  label_path,
@@ -47,7 +49,7 @@ class Feeder(torch.utils.data.Dataset):
         self.debug = debug
         self.mode = mode
         self.data_path = data_path
-        self.label_path= label_path 
+        self.label_path = label_path
         self.random_choose = random_choose
         self.random_shift = random_shift
         self.window_size = window_size
@@ -57,19 +59,25 @@ class Feeder(torch.utils.data.Dataset):
 
         self.load_data()
         if normalization:
-            self.get_mean_map() 
+            self.get_mean_map()
 
     def load_data(self):
         # data: N C V T M
 
         # load label
         if '.pkl' in self.label_path:
-            with open(self.label_path, 'r') as f:
-                self.sample_name, self.label = pickle.load(f)
+            try:
+                with open(self.label_path) as f:
+                    self.sample_name, self.label = pickle.load(f)
+            except:
+                # for pickle file from python2
+                with open(self.label_path, 'rb') as f:
+                    self.sample_name, self.label = pickle.load(
+                        f, encoding='latin1')
         # old label format
         elif '.npy' in self.label_path:
             self.label = list(np.load(self.label_path))
-            self.sample_name = [ str(i) for i in range(len(self.label))]
+            self.sample_name = [str(i) for i in range(len(self.label))]
         else:
             raise ValueError()
 
@@ -82,12 +90,15 @@ class Feeder(torch.utils.data.Dataset):
             self.sample_name = self.sample_name[0:100]
 
         self.N, self.C, self.T, self.V, self.M = self.data.shape
-    
+
     def get_mean_map(self):
         data = self.data
         N, C, T, V, M = data.shape
-        self.mean_map = data.mean(axis=2,keepdims=True).mean(axis=4,keepdims=True).mean(axis=0) 
-        self.std_map = data.transpose((0,2,4,1,3)).reshape((N*T*M, C*V)).std(axis=0).reshape((C, 1, V, 1))
+        self.mean_map = data.mean(
+            axis=2, keepdims=True).mean(
+                axis=4, keepdims=True).mean(axis=0)
+        self.std_map = data.transpose((0, 2, 4, 1, 3)).reshape(
+            (N * T * M, C * V)).std(axis=0).reshape((C, 1, V, 1))
 
     def __len__(self):
         return len(self.label)
@@ -102,16 +113,16 @@ class Feeder(torch.utils.data.Dataset):
 
         # normalization
         if self.normalization:
-            data_numpy = (data_numpy-self.mean_map)/self.std_map
+            data_numpy = (data_numpy - self.mean_map) / self.std_map
 
         # processing
         if self.temporal_downsample_step != 1:
             if self.mode is 'train':
                 data_numpy = downsample(data_numpy,
-                                         self.temporal_downsample_step)
+                                        self.temporal_downsample_step)
             else:
                 data_numpy = temporal_slice(data_numpy,
-                                             self.temporal_downsample_step)
+                                            self.temporal_downsample_step)
         if self.mode is 'train':
             if self.random_shift:
                 data_numpy = random_shift(data_numpy)
@@ -129,6 +140,7 @@ class Feeder(torch.utils.data.Dataset):
         hit_top_k = [l in rank[i, -top_k:] for i, l in enumerate(self.label)]
         return sum(hit_top_k) * 1.0 / len(hit_top_k)
 
+
 def test(data_path, label_path, vid=None):
     import matplotlib.pyplot as plt
     loader = torch.utils.data.DataLoader(
@@ -136,40 +148,37 @@ def test(data_path, label_path, vid=None):
         batch_size=64,
         shuffle=False,
         num_workers=2)
-    
+
     if vid is not None:
         sample_name = loader.dataset.sample_name
-        sample_id = [ name.split('.')[0] for name in sample_name]
+        sample_id = [name.split('.')[0] for name in sample_name]
         index = sample_id.index(vid)
         data, label = loader.dataset[index]
-        data=data.reshape((1,)+data.shape)
+        data = data.reshape((1, ) + data.shape)
 
-    # for batch_idx, (data, label) in enumerate(loader):
+        # for batch_idx, (data, label) in enumerate(loader):
         N, C, T, V, M = data.shape
 
         plt.ion()
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
-        pose, = ax.plot(np.zeros(V*M), np.zeros(V*M), 'g^')
+        pose, = ax.plot(np.zeros(V * M), np.zeros(V * M), 'g^')
         ax.axis([-1, 1, -1, 1])
 
         for n in range(N):
             for t in range(T):
-                x=data[n, 0, t, :, 0]
-                y=data[n, 1, t, :, 0]
-                z=data[n, 2, t, :, 0]
+                x = data[n, 0, t, :, 0]
+                y = data[n, 1, t, :, 0]
+                z = data[n, 2, t, :, 0]
                 pose.set_xdata(x)
                 pose.set_ydata(y)
                 fig.canvas.draw()
-                print x
-                print y
-                print z
                 plt.pause(1)
 
+
 if __name__ == '__main__':
-    data_path="./data/NTU-RGB-D/xview/val_data.npy"
-    label_path="./data/NTU-RGB-D/xview/val_label.pkl"
+    data_path = "./data/NTU-RGB-D/xview/val_data.npy"
+    label_path = "./data/NTU-RGB-D/xview/val_label.pkl"
 
     test(data_path, label_path, vid='S003C001P017R001A044')
-
