@@ -14,24 +14,140 @@ import torch.optim as optim
 from torch.autograd import Variable
 
 
-def str2bool(v):
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+def get_parser():
 
+    # parameter priority: command line > config > default
+    parser = argparse.ArgumentParser(
+        description='Spatial Temporal Graph Convolution Network')
+    parser.add_argument(
+        '--work-dir',
+        default='./work_dir/temp',
+        help='the work folder for storing results')
+    parser.add_argument(
+        '--config',
+        default='./config/NTU-RGB-D/xview/ST_GCN.yaml',
+        help='path to the configuration file')
 
-def import_class(name):
-    components = name.split('.')
-    mod = __import__(components[0])
-    for comp in components[1:]:
-        mod = getattr(mod, comp)
-    return mod
+    # processor
+    parser.add_argument(
+        '--phase', default='train', help='must be train or test')
+    parser.add_argument(
+        '--save-score',
+        type=str2bool,
+        default=False,
+        help='if ture, the classification score will be stored')
+
+    # visulize and debug
+    parser.add_argument(
+        '--seed', type=int, default=1, help='random seed for pytorch')
+    parser.add_argument(
+        '--log-interval',
+        type=int,
+        default=100,
+        help='the interval for printing messages (#iteration)')
+    parser.add_argument(
+        '--save-interval',
+        type=int,
+        default=10,
+        help='the interval for storing models (#iteration)')
+    parser.add_argument(
+        '--eval-interval',
+        type=int,
+        default=5,
+        help='the interval for evaluating models (#iteration)')
+    parser.add_argument(
+        '--print-log',
+        type=str2bool,
+        default=True,
+        help='print logging or not')
+    parser.add_argument(
+        '--show-topk',
+        type=int,
+        default=[1, 5],
+        nargs='+',
+        help='which Top K accuracy will be shown')
+
+    # feeder
+    parser.add_argument(
+        '--feeder', default='feeder.feeder', help='data loader will be used')
+    parser.add_argument(
+        '--num-worker',
+        type=int,
+        default=128,
+        help='the number of worker for data loader')
+    parser.add_argument(
+        '--train-feeder-args',
+        default=dict(),
+        help='the arguments of data loader for training')
+    parser.add_argument(
+        '--test-feeder-args',
+        default=dict(),
+        help='the arguments of data loader for test')
+
+    # model
+    parser.add_argument('--model', default=None, help='the model will be used')
+    parser.add_argument(
+        '--model-args',
+        type=dict,
+        default=dict(),
+        help='the arguments of model')
+    parser.add_argument(
+        '--weights',
+        default=None,
+        help='the weights for network initialization')
+    parser.add_argument(
+        '--ignore-weights',
+        type=str,
+        default=[],
+        nargs='+',
+        help='the name of weights which will be ignored in the initialization')
+
+    # optim
+    parser.add_argument(
+        '--base-lr', type=float, default=0.01, help='initial learning rate')
+    parser.add_argument(
+        '--step',
+        type=int,
+        default=[20, 40, 60],
+        nargs='+',
+        help='the epoch where optimizer reduce the learning rate')
+    parser.add_argument(
+        '--device',
+        type=int,
+        default=0,
+        nargs='+',
+        help='the indexes of GPUs for training or testing')
+    parser.add_argument('--optimizer', default='SGD', help='type of optimizer')
+    parser.add_argument(
+        '--nesterov', type=str2bool, default=False, help='use nesterov or not')
+    parser.add_argument(
+        '--batch-size', type=int, default=256, help='training batch size')
+    parser.add_argument(
+        '--test-batch-size', type=int, default=256, help='test batch size')
+    parser.add_argument(
+        '--start-epoch',
+        type=int,
+        default=0,
+        help='start training from which epoch')
+    parser.add_argument(
+        '--num-epoch',
+        type=int,
+        default=80,
+        help='stop training in which epoch')
+    parser.add_argument(
+        '--weight-decay',
+        type=float,
+        default=0.0005,
+        help='weight decay for optimizer')
+
+    return parser
 
 
 class Processor():
+    """ 
+        Processor for Skeleton-based Action Recgnition
+    """
+
     def __init__(self, arg):
         self.arg = arg
         self.save_arg()
@@ -55,7 +171,8 @@ class Processor():
             num_workers=self.arg.num_worker)
 
     def load_model(self):
-        output_device = self.arg.device[0] if type(self.arg.device) is list else self.arg.device
+        output_device = self.arg.device[
+            0] if type(self.arg.device) is list else self.arg.device
         self.output_device = output_device
         Model = import_class(self.arg.model)
         self.model = Model(**self.arg.model_args).cuda(output_device)
@@ -69,7 +186,9 @@ class Processor():
             else:
                 weights = torch.load(self.arg.weights)
 
-            weights= OrderedDict([[k.split('module.')[-1],v.cuda(output_device)] for k, v in weights.items()])
+            weights = OrderedDict(
+                [[k.split('module.')[-1],
+                  v.cuda(output_device)] for k, v in weights.items()])
 
             for w in self.arg.ignore_weights:
                 if weights.pop(w, None) is not None:
@@ -87,7 +206,6 @@ class Processor():
                     print('  ' + d)
                 state.update(weights)
                 self.model.load_state_dict(state)
-
 
         if type(self.arg.device) is list:
             if len(self.arg.device) > 1:
@@ -180,31 +298,33 @@ class Processor():
             loss.backward()
             self.optimizer.step()
             loss_value.append(loss.data[0])
-            timer['model'] += self.split_time() 
+            timer['model'] += self.split_time()
 
-            # statistics           
+            # statistics
             if batch_idx % self.arg.log_interval == 0:
                 self.print_log(
-                    '\tBatch({}/{}) done. Loss: {:.4f}  lr:{}'.format(
+                    '\tBatch({}/{}) done. Loss: {:.4f}  lr:{:.6f}'.format(
                         batch_idx, len(loader), loss.data[0], lr))
-            timer['statistics'] += self.split_time() 
+            timer['statistics'] += self.split_time()
 
-        # statistics of time consumption and loss 
-        proportion = { k:'{:02d}%'.format(int(round(v*100/sum(timer.values())))) for k, v in timer.items()}
-        self.print_log('\tMean training loss: {}.'.format(np.mean(loss_value)))
-        self.print_log('\tTime consumption: [Data]{dataloader}, [Network]{model}'.format(**proportion))
+        # statistics of time consumption and loss
+        proportion = {
+            k: '{:02d}%'.format(int(round(v * 100 / sum(timer.values()))))
+            for k, v in timer.items()
+        }
+        self.print_log(
+            '\tMean training loss: {:.4f}.'.format(np.mean(loss_value)))
+        self.print_log(
+            '\tTime consumption: [Data]{dataloader}, [Network]{model}'.format(
+                **proportion))
 
         if save_model:
             model_path = '{}/epoch{}_model.pt'.format(self.arg.work_dir,
-                                                       epoch + 1)
+                                                      epoch + 1)
             state_dict = self.model.state_dict()
-            weights= OrderedDict([[k.split('module.')[-1],v.cpu()] for k, v in state_dict.items()])
+            weights = OrderedDict([[k.split('module.')[-1],
+                                    v.cpu()] for k, v in state_dict.items()])
             torch.save(weights, model_path)
-            
-            #with open(model_path, 'w') as f:
-            #    pickle.dump(self.model.state_dict(), f)
-            # torch.save(self.model.module.state_dict(), model_path)
-            # self.print_log('The model was saved in {}'.format(model_path))
 
     def eval(self, epoch, save_score=False, loader_name=['test']):
         self.model.eval()
@@ -251,7 +371,10 @@ class Processor():
                 self.train(epoch, save_model=save_model)
 
                 if eval_model:
-                    self.eval(epoch, save_score=self.arg.save_score, loader_name=['test'])
+                    self.eval(
+                        epoch,
+                        save_score=self.arg.save_score,
+                        loader_name=['test'])
                 else:
                     pass
 
@@ -261,52 +384,27 @@ class Processor():
             self.arg.print_log = False
             self.print_log('Model:   {}.'.format(self.arg.model))
             self.print_log('Weights: {}.'.format(self.arg.weights))
-            self.eval(epoch=0, save_score=self.arg.save_score, loader_name=['test'])
+            self.eval(
+                epoch=0, save_score=self.arg.save_score, loader_name=['test'])
             self.print_log('Done.\n')
 
 
-def get_parser():
-    # parameter priority: command line > config > default
-    parser = argparse.ArgumentParser(
-        description='Spatial Temporal Graph Convolution Network')
-    parser.add_argument('--work-dir', default='./work_dir/temp', help='the work folder for storing results')
-    parser.add_argument('--config', default='./config/NTU-RGB-D/xview/ST_GCN.yaml', help='path to the configuration file')
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
-    # processor
-    parser.add_argument('--phase', default='train', help='must be train or test')
-    parser.add_argument('--save-score', type=str2bool, default=False, help='if ture, the classification score will be stored')
-    # visulize and debug
-    parser.add_argument('--seed', type=int, default=1, help='random seed for pytorch')
-    parser.add_argument('--log-interval', type=int, default=100, help='the interval for printing messages (#iteration)')
-    parser.add_argument('--save-interval', type=int, default=10, help='the interval for storing models (#iteration)')
-    parser.add_argument('--eval-interval', type=int, default=5, help='the interval for evaluating models (#iteration)')
-    parser.add_argument('--print-log', type=str2bool, default=True, help='print logging or not')
-    parser.add_argument('--show-topk', type=int, default=[1, 5], nargs='+', help='which Top K accuracy will be shown')
 
-    # feeder
-    parser.add_argument('--feeder', default='feeder.feeder', help='data loader will be used')
-    parser.add_argument('--num-worker', type=int, default=128, help='the number of worker for data loader')
-    parser.add_argument('--train-feeder-args', default=dict(), help='the arguments of data loader for training')
-    parser.add_argument('--test-feeder-args', default=dict(), help='the arguments of data loader for test')
-    # model
-    parser.add_argument('--model', default=None, help='the model will be used')
-    parser.add_argument('--model-args', type=dict, default=dict(), help='the arguments of model')
-    parser.add_argument('--weights', default=None, help='the weights for network initialization')
-    parser.add_argument('--ignore-weights', type=str, default=[], nargs='+', help='the name of weights which will be ignored in the initialization')
+def import_class(name):
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod
 
-    # optim
-    parser.add_argument('--base-lr', type=float, default=0.01, help='initial learning rate')
-    parser.add_argument('--step', type=int, default=[20, 40, 60], nargs='+', help='the epoch where optimizer reduce the learning rate')
-    parser.add_argument('--device', type=int, default=0, nargs='+', help='the indexes of GPUs for training or testing')
-    parser.add_argument('--optimizer', default='SGD', help='type of optimizer')
-    parser.add_argument('--nesterov', type=str2bool, default=False, help='use nesterov or not')
-    parser.add_argument('--batch-size', type=int, default=256, help='training batch size')
-    parser.add_argument('--test-batch-size', type=int, default=256, help='test batch size')
-    parser.add_argument('--start-epoch', type=int, default=0, help='start training from which epoch')
-    parser.add_argument('--num-epoch', type=int, default=80, help='stop training in which epoch')
-    parser.add_argument('--weight-decay', type=float, default=0.0005, help='weight decay for optimizer')
-
-    return parser
 
 if __name__ == '__main__':
     parser = get_parser()
