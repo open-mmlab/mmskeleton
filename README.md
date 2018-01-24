@@ -10,7 +10,7 @@ This repository holds the codebase, dataset and models for the paper
 
 **Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition** Sijie Yan, Yuanjun Xiong and Dahua Lin, AAAI 2018.
 
-[Arxiv Preprint]
+[[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ## Prerequisites
 Our codebase is based on **Python 2.7**. There are a few dependencies to run the code. The major python libraries we used are
