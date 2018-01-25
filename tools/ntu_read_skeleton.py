@@ -58,4 +58,4 @@ if __name__ == '__main__':
     test_skeleton = 'S014C002P037R002A050.skeleton'
 
     data = read_xyz(os.path.join(data_path, test_skeleton))
-    print data
+    print(data)
