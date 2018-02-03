@@ -6,11 +6,37 @@ A graph convolutional network for skeleton based action recognition.
 </div>
 
 ## Introduction
-This repository holds the codebase, dataset and models for the paper
+This repository holds the codebase, dataset and models for the paper>
 
 **Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition** Sijie Yan, Yuanjun Xiong and Dahua Lin, AAAI 2018.
 
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
+
+## Visulization
+<!-- <div align="center">
+    <img src="tools/.info/S001C001P001R001A044.gif">
+    <img src="tools/.info/S001C001P001R001A051.gif">
+    <img src="tools/.info/S002C001P010R001A017.gif">
+    <img src="tools/.info/S003C001P008R001A002.gif">
+    <img src="tools/.info/S003C001P008R001A008.gif">
+</div -->
+### NTU RGB+D
+<table style="width:100%; table-layout:fixed;">
+  <tr>
+    <td><img width="150px" src="tools/.info/S001C001P001R001A044.gif"></td>
+    <td><img width="150px" src="tools/.info/S003C001P008R001A008.gif"></td>
+    <td><img width="150px" src="tools/.info/S002C001P010R001A017.gif"></td>
+    <td><img width="150px" src="tools/.info/S003C001P008R001A002.gif"></td>
+    <td><img width="150px" src="tools/.info/S001C001P001R001A051.gif"></td>
+  </tr>
+    <tr>
+    <td>Touch head</td>
+    <td>Sitting down</td>
+    <td>Take off a shoe</td>
+    <td>Eat meal/snack</td>
+    <td>Kicking other person</td>
+  </tr>
+</table>
 
 ## Prerequisites
 Our codebase is based on **Python**. There are a few dependencies to run the code. The major python libraries we used are
