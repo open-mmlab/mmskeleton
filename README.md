@@ -16,9 +16,6 @@ This repository holds the codebase, dataset and models for the paper>
 
 <table style="width:100%; table-layout:fixed;">
   <tr>
-    <td><font size="1">NTU RGB+D<font></td>
-  </tr>
-  <tr>
     <td><img width="150px" src="tools/.info/S001C001P001R001A044_w.gif"></td>
     <td><img width="150px" src="tools/.info/S003C001P008R001A008_w.gif"></td>
     <td><img width="150px" src="tools/.info/S002C001P010R001A017_w.gif"></td>
@@ -31,9 +28,6 @@ This repository holds the codebase, dataset and models for the paper>
     <td><font size="1">Take off a shoe<font></td>
     <td><font size="1">Eat meal/snack<font></td>
     <td><font size="1">Kick other person<font></td>
-  </tr>
-    <tr>
-    <td><font size="1">Kinetics-skeleton<font></td>
   </tr>
   <tr>
     <td><img width="150px" src="tools/.info/hammer_throw_w.gif"></td>
@@ -50,7 +44,8 @@ This repository holds the codebase, dataset and models for the paper>
     <td><font size="1">Juggling ball<font></td>
   </tr>
 </table>
-Above figures show the neural response magnitude of each node in the last layer of our ST-GCN. The first row of results is from  NTU-RGB+D dataset, and the second row is from Kinetics-skeleton. 
+
+Above figures show the neural response magnitude of each node in the last layer of our ST-GCN. The first row of results is from  **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**. 
 
 
 ## Prerequisites
