@@ -34,7 +34,7 @@ This repository holds the codebase, dataset and models for the paper>
     <td><font size="1">Sitting down<font></td>
     <td><font size="1">Take off a shoe<font></td>
     <td><font size="1">Eat meal/snack<font></td>
-    <td><font size="1">Kicking other person<font></td>
+    <td><font size="1">Kick other person<font></td>
   </tr>
 </table>
 
