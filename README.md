@@ -12,7 +12,7 @@ This repository holds the codebase, dataset and models for the paper>
 
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
-### Visulization of ST-GCN in action
+### Visulization of ST-GCN in Action
 <!-- <div align="center">
     <img src="tools/.info/S001C001P001R001A044.gif">
     <img src="tools/.info/S001C001P001R001A051.gif">
@@ -20,7 +20,7 @@ This repository holds the codebase, dataset and models for the paper>
     <img src="tools/.info/S003C001P008R001A002.gif">
     <img src="tools/.info/S003C001P008R001A008.gif">
 </div -->
-The neural response of the last layer in our ST-GCN: 
+
 <table style="width:100%; table-layout:fixed;">
   <tr>
     <td><img width="150px" src="tools/.info/S001C001P001R001A044.gif"></td>
@@ -37,6 +37,7 @@ The neural response of the last layer in our ST-GCN:
     <td><font size="1">Kick other person<font></td>
   </tr>
 </table>
+Above figures show the neural response of the last layer in our ST-GCN.
 
 ## Prerequisites
 Our codebase is based on **Python**. There are a few dependencies to run the code. The major python libraries we used are
