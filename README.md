@@ -30,11 +30,11 @@ This repository holds the codebase, dataset and models for the paper>
     <td><img width="150px" src="tools/.info/S001C001P001R001A051.gif"></td>
   </tr>
     <tr>
-    <td>Touch head</td>
-    <td>Sitting down</td>
-    <td>Take off a shoe</td>
-    <td>Eat meal/snack</td>
-    <td>Kicking other person</td>
+    <td><font size="1">Touch head<font></td>
+    <td><font size="1">Sitting down<font></td>
+    <td><font size="1">Take off a shoe<font></td>
+    <td><font size="1">Eat meal/snack<font></td>
+    <td><font size="1">Kicking other person<font></td>
   </tr>
 </table>
 
