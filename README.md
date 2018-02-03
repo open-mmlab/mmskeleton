@@ -13,21 +13,14 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ### Visulization of ST-GCN in Action
-<!-- <div align="center">
-    <img src="tools/.info/S001C001P001R001A044.gif">
-    <img src="tools/.info/S001C001P001R001A051.gif">
-    <img src="tools/.info/S002C001P010R001A017.gif">
-    <img src="tools/.info/S003C001P008R001A002.gif">
-    <img src="tools/.info/S003C001P008R001A008.gif">
-</div -->
 
 <table style="width:100%; table-layout:fixed;">
   <tr>
-    <td><img width="150px" src="tools/.info/S001C001P001R001A044.gif"></td>
-    <td><img width="150px" src="tools/.info/S003C001P008R001A008.gif"></td>
-    <td><img width="150px" src="tools/.info/S002C001P010R001A017.gif"></td>
-    <td><img width="150px" src="tools/.info/S003C001P008R001A002.gif"></td>
-    <td><img width="150px" src="tools/.info/S001C001P001R001A051.gif"></td>
+    <td><img width="150px" src="tools/.info/S001C001P001R001A044_w.gif"></td>
+    <td><img width="150px" src="tools/.info/S003C001P008R001A008_w.gif"></td>
+    <td><img width="150px" src="tools/.info/S002C001P010R001A017_w.gif"></td>
+    <td><img width="150px" src="tools/.info/S003C001P008R001A002_w.gif"></td>
+    <td><img width="150px" src="tools/.info/S001C001P001R001A051_w.gif"></td>
   </tr>
   <tr>
     <td><font size="1">Touch head<font></td>
@@ -37,11 +30,11 @@ This repository holds the codebase, dataset and models for the paper>
     <td><font size="1">Kick other person<font></td>
   </tr>
   <tr>
-    <td><img width="150px" src="tools/.info/hammer_throw.gif"></td>
-    <td><img width="150px" src="tools/.info/clean_and_jerk.gif"></td>
-    <td><img width="150px" src="tools/.info/pull_ups.gif"></td>
-    <td><img width="150px" src="tools/.info/tai_chi.gif"></td>
-    <td><img width="150px" src="tools/.info/juggling_balls.gif"></td>
+    <td><img width="150px" src="tools/.info/hammer_throw_w.gif"></td>
+    <td><img width="150px" src="tools/.info/clean_and_jerk_w.gif"></td>
+    <td><img width="150px" src="tools/.info/pull_ups_w.gif"></td>
+    <td><img width="150px" src="tools/.info/tai_chi_w.gif"></td>
+    <td><img width="150px" src="tools/.info/juggling_balls_w.gif"></td>
   </tr>
   <tr>
     <td><font size="1">Hammer throw<font></td>
