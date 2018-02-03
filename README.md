@@ -51,7 +51,7 @@ This repository holds the codebase, dataset and models for the paper>
     <td><font size="1">Juggling ball<font></td>
   </tr>
 </table>
-Above figures show the neural response of the last layer in our ST-GCN.
+Above figures show the neural response magnitude of each node in the last layer of our ST-GCN. The first row of results is from  NTU-RGB+D dataset, the second row is from Kinetics-skeleton. 
 
 
 ## Prerequisites
