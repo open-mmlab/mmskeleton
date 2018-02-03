@@ -29,15 +29,30 @@ This repository holds the codebase, dataset and models for the paper>
     <td><img width="150px" src="tools/.info/S003C001P008R001A002.gif"></td>
     <td><img width="150px" src="tools/.info/S001C001P001R001A051.gif"></td>
   </tr>
-    <tr>
+  <tr>
     <td><font size="1">Touch head<font></td>
     <td><font size="1">Sitting down<font></td>
     <td><font size="1">Take off a shoe<font></td>
     <td><font size="1">Eat meal/snack<font></td>
     <td><font size="1">Kick other person<font></td>
   </tr>
+  <tr>
+    <td><img width="150px" src="tools/.info/hammer_throw.gif"></td>
+    <td><img width="150px" src="tools/.info/clean_and_jerk.gif"></td>
+    <td><img width="150px" src="tools/.info/pull_ups.gif"></td>
+    <td><img width="150px" src="tools/.info/tai_chi.gif"></td>
+    <td><img width="150px" src="tools/.info/juggling_balls.gif"></td>
+  </tr>
+  <tr>
+    <td><font size="1">Hammer throw<font></td>
+    <td><font size="1">Clean and jerk<font></td>
+    <td><font size="1">Pull ups<font></td>
+    <td><font size="1">Tai chi<font></td>
+    <td><font size="1">Juggling ball<font></td>
+  </tr>
 </table>
 Above figures show the neural response of the last layer in our ST-GCN.
+
 
 ## Prerequisites
 Our codebase is based on **Python**. There are a few dependencies to run the code. The major python libraries we used are
