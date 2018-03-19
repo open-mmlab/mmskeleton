@@ -2,6 +2,7 @@
 work_dir/*
 data/*
 config_v0/*
+backup/*
 .vscode
 model/*
 
