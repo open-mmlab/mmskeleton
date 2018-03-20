@@ -156,8 +156,9 @@ class Model(nn.Module):
         x = F.avg_pool2d(x, kernel_size=(1, V))
 
         # M pooling
-        x = x.view(N, M, x.size(1), x.size(2))
-        x = x.mean(dim=1)
+        c = x.size(1)
+        t = x.size(2)
+        x = x.view(N, M, c, t).mean(dim=1).view(N, c, t)
 
         # T pooling
         x = F.avg_pool1d(x, kernel_size=x.size()[2])

@@ -65,8 +65,10 @@ where the ```<path to nturgbd>``` points to the 3D skeletons modality of NTU RGB
 ### Kinetics-skeleton
 [Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/) is a video-based dataset for action recognition which only provide raw video clips without skeleton data. To obatin the joint locations, we first resized all videos to the resolution of 340x256 and converted the frame rate to 30 fps.  Then, we extracted skeletons from each frame in Kinetics by [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose). The extracted skeleton data we called **Kinetics-skeleton**(7.5GB) can be directly downloaded from [GoogleDrive](https://drive.google.com/open?id=1SPQ6FmFsjGg3f59uCWfdUWI-5HJM_YhZ) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fkinetics-skeleton&parentPath=%2FShare).
 
-It is highly recommended storing data in the **SSD** rather than HDD for efficiency.
-
+After uncompressing, rebuild the database by this command:
+```
+python tools/kinetics_gendata.py --data_path <path to kinetics-skeleton>
+```
 
 ##  Testing Pretrained Models
 ### Get trained models

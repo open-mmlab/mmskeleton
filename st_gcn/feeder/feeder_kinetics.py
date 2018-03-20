@@ -25,7 +25,6 @@ class Feeder_kinetics(torch.utils.data.Dataset):
     Arguments:
         data_path: the path to '.npy' data, the shape of data should be (N, C, T, V, M)
         label_path: the path to label
-        mode: must be train or test
         random_choose: If true, randomly choose a portion of the input sequence
         random_shift: If true, randomly pad zeros at the begining or end of sequence
         random_move: If true, perform randomly but continuously changed transformation to input sequence
@@ -33,14 +32,12 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         pose_matching: If ture, match the pose between two frames
         num_person_in: The number of people the feeder can observe in the input sequence
         num_person_out: The number of people the feeder in the output sequence
-        temporal_downsample_step: Step for down sampling the output sequence
         debug: If true, only use the first 100 samples
     """
 
     def __init__(self,
                  data_path,
                  label_path,
-                 mode,
                  ignore_empty_sample=True,
                  random_choose=False,
                  random_shift=False,
@@ -49,17 +46,14 @@ class Feeder_kinetics(torch.utils.data.Dataset):
                  pose_matching=False,
                  num_person_in=5,
                  num_person_out=2,
-                 temporal_downsample_step=1,
                  debug=False):
         self.debug = debug
-        self.mode = mode
         self.data_path = data_path
         self.label_path = label_path
         self.random_choose = random_choose
         self.random_shift = random_shift
         self.random_move = random_move
         self.window_size = window_size
-        self.temporal_downsample_step = temporal_downsample_step
         self.num_person_in = num_person_in
         self.num_person_out = num_person_out
         self.pose_matching = pose_matching
@@ -136,14 +130,6 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         label = video_info['label_index']
         assert (self.label[index] == label)
 
-        # processing
-        if self.temporal_downsample_step != 1:
-            if self.mode is 'train':
-                data_numpy = tools.downsample(data_numpy,
-                                              self.temporal_downsample_step)
-            else:
-                data_numpy = tools.temporal_slice(
-                    data_numpy, self.temporal_downsample_step)
         # data augmentation
         if self.random_shift:
             data_numpy = tools.random_shift(data_numpy)
@@ -179,11 +165,7 @@ def test(data_path, label_path, vid=None, graph=None):
     import matplotlib.pyplot as plt
     loader = torch.utils.data.DataLoader(
         dataset=Feeder_kinetics(
-            data_path,
-            label_path,
-            mode='val',
-            pose_matching=False,
-            num_person=10),
+            data_path, label_path, pose_matching=False, num_person=10),
         batch_size=64,
         shuffle=False,
         num_workers=2)

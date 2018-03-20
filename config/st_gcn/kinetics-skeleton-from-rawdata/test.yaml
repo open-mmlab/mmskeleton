@@ -1,9 +1,9 @@
 # feeder
-feeder: st_gcn.feeder.Feeder
+# read data from original kenetics-skeleton dataset
+feeder: st_gcn.feeder.Feeder_kinetics
 test_feeder_args:
-  data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
-  label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
-
+  data_path: ./data/Kinetics/kinetics-skeleton/kinetics_val
+  label_path : ./data/Kinetics/kinetics-skeleton/kinetics_val_label.json
 
 # model
 model: st_gcn.net.ST_GCN
