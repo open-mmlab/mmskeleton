@@ -1,8 +1,6 @@
 # feeder
 feeder: st_gcn.feeder.Feeder
 test_feeder_args:
-  mode: test
-  window_size: 300
   data_path: ./data/NTU-RGB-D/xview/val_data.npy
   label_path: ./data/NTU-RGB-D/xview/val_label.pkl
 

@@ -43,7 +43,7 @@ def gendata(data_path,
                 line.strip() + '.skeleton' for line in f.readlines()
             ]
     else:
-        ignored_samples = [] 
+        ignored_samples = []
     sample_name = []
     sample_label = []
     for filename in os.listdir(data_path):
@@ -75,7 +75,7 @@ def gendata(data_path,
             sample_label.append(action_class - 1)
 
     with open('{}/{}_label.pkl'.format(out_path, part), 'w') as f:
-        pickle.dump((sample_name,list(sample_label)), f)
+        pickle.dump((sample_name, list(sample_label)), f)
     # np.save('{}/{}_label.npy'.format(out_path, part), sample_label)
 
     fp = open_memmap(
@@ -96,13 +96,15 @@ def gendata(data_path,
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(
-        description='NTU-RGB-D Data Converter.')
-    parser.add_argument('--data_path', default='data/NTU-RGB-D/nturgb+d_skeletons')
-    parser.add_argument('--ignored_sample_path', default='data/NTU-RGB-D/samples_with_missing_skeletons.txt')
+    parser = argparse.ArgumentParser(description='NTU-RGB-D Data Converter.')
+    parser.add_argument(
+        '--data_path', default='data/NTU-RGB-D/nturgb+d_skeletons')
+    parser.add_argument(
+        '--ignored_sample_path',
+        default='data/NTU-RGB-D/samples_with_missing_skeletons.txt')
     parser.add_argument('--out_folder', default='data/NTU-RGB-D')
 
-    benchmark = [ 'xsub', 'xview']
+    benchmark = ['xsub', 'xview']
     part = ['train', 'val']
     arg = parser.parse_args()
 
@@ -112,4 +114,8 @@ if __name__ == '__main__':
             if not os.path.exists(out_path):
                 os.makedirs(out_path)
             gendata(
-                arg.data_path, out_path, arg.ignored_sample_path, benchmark=b, part=p)
+                arg.data_path,
+                out_path,
+                arg.ignored_sample_path,
+                benchmark=b,
+                part=p)
