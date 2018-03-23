@@ -55,7 +55,7 @@ Our codebase is based on **Python**. There are a few dependencies to run the cod
 - Other Python libraries can be installed by `pip install -r requirements.txt`
 
 ## Data Preparation
-We experimented on two skeleton-based action recognition datasts: [NTU RGB+D](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp) and Kinetics-skeleton. 
+We experimented on two skeleton-based action recognition datasts: **NTU RGB+D** and **Kinetics-skeleton**. 
 ### NTU RGB+D
 NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
 ```
@@ -77,7 +77,7 @@ We provided the pretrained model weithts of our **ST-GCN** and the baseline mode
 bash tools/get_models.sh
 ```
 The downloaded models will be stored under ```./model```.
-You can also obtain models from [GoogleDrive](https://drive.google.com/open?id=1koTe3ces06NCntVdfLxF7O2Z4l_5csnX) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fst-gcn&parentPath=%2FShare), and manually put them into ```./model```.
+If you get an error message after running above command, you can also obtain models from [GoogleDrive](https://drive.google.com/open?id=1koTe3ces06NCntVdfLxF7O2Z4l_5csnX) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fst-gcn&parentPath=%2FShare), and manually put them into ```./model```.
 
 ### Evaluation
 Once datasets and models ready, we can start the evaluation.
