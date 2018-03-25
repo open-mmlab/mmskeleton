@@ -74,7 +74,7 @@ def gendata(data_path,
             sample_name.append(filename)
             sample_label.append(action_class - 1)
 
-    with open('{}/{}_label.pkl'.format(out_path, part), 'w') as f:
+    with open('{}/{}_label.pkl'.format(out_path, part), 'wb') as f:
         pickle.dump((sample_name, list(sample_label)), f)
     # np.save('{}/{}_label.npy'.format(out_path, part), sample_label)
 
