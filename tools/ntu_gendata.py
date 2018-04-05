@@ -101,7 +101,7 @@ if __name__ == '__main__':
         '--data_path', default='data/NTU-RGB-D/nturgb+d_skeletons')
     parser.add_argument(
         '--ignored_sample_path',
-        default='data/NTU-RGB-D/samples_with_missing_skeletons.txt')
+        default='resource/NTU-RGB-D/samples_with_missing_skeletons.txt')
     parser.add_argument('--out_folder', default='data/NTU-RGB-D')
 
     benchmark = ['xsub', 'xview']
