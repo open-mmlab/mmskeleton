@@ -356,7 +356,7 @@ class Processor():
 
             if save_score:
                 with open('{}/epoch{}_{}_score.pkl'.format(
-                        self.arg.work_dir, epoch + 1, ln), 'w') as f:
+                        self.arg.work_dir, epoch + 1, ln), 'wb') as f:
                     pickle.dump(score_dict, f)
 
     def start(self):
