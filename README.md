@@ -50,7 +50,7 @@ Above figures show the neural response magnitude of each node in the last layer 
 
 ## Prerequisites
 Our codebase is based on **Python**. There are a few dependencies to run the code. The major python libraries we used are
-- [PyTorch](http://pytorch.org/)
+- [PyTorch](http://pytorch.org/) (<=0.3. Version 0.4 is no supported right now).
 - NumPy
 - Other Python libraries can be installed by `pip install -r requirements.txt`
 
