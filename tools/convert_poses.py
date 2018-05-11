@@ -7,14 +7,13 @@ import argparse
 
 def list_video_names(videos_path, video_list_file):
     """
-    Creates a file containing the list of all the video names for the videos in 'video_path'
+    Creates a file containing the list of all the video names (no suffix) for the videos in 'video_path'
     """
     with open(video_list_file, 'w') as f:
         p = Path(videos_path)
         for path in p.glob('*.avi'):
-            video_path = str(path)
-            video_name = (video_path.split('/')[-1]).split('.')[0]
-            f.write(video_name + '\n')
+            f.write(path.stem + '\n')
+
 
 if __name__ == "__main__":
 
@@ -35,26 +34,29 @@ if __name__ == "__main__":
     list_video_names(arg.videos_path, arg.video_list_file)
 
     p = Path(arg.openpose_json_path)
-    
+
+    if not os.path.exists(arg.stgcn_json_path):
+        os.mkdir(arg.stgcn_json_path)
+
     labels = {}
     with open(arg.video_list_file, 'r') as f:
         for line in f:
-            video_name  = line.strip('\n')
+            video_name = line.strip('\n')
             arg.stgcn_data_array = []
             stgcn_data = {}
-            dest_path = arg.stgcn_json_path + video_name + '.json'
-            for path in p.glob(video_name + '*.json'): # each json file for this video
+            dest_path = os.path.join(arg.stgcn_json_path, video_name + '.json')
+            for path in p.glob(video_name + '*.json'):  # each json file for this video
                 json_path = str(path)
-                frame_id = int(((json_path.split('/')[-1]).split('.')[0]).split('_')[1])
+                frame_id = int(path.stem.split('_')[1])
                 frame_data = {'frame_index': frame_id}
                 data = json.load(open(json_path))
-                skeletons = []        
+                skeletons = []
                 for person in data['people']:
                     score, coordinates = [], []
                     skeleton = {}
                     keypoints = person['pose_keypoints_2d']
                     for i in range(0, len(keypoints), 3):
-                        coordinates +=  [keypoints[i], keypoints[i + 1]]
+                        coordinates += [keypoints[i], keypoints[i + 1]]
                         score += [keypoints[i + 2]]
                     skeleton['pose'] = coordinates
                     skeleton['score'] = score
@@ -62,9 +64,9 @@ if __name__ == "__main__":
                 frame_data['skeleton'] = skeletons
                 arg.stgcn_data_array += [frame_data]
 
-            labels[video_name] = {"has_skeleton": True, 
-                "label": "fake_label", 
-                "label_index": 0}
+            labels[video_name] = {"has_skeleton": True,
+                                  "label": "fake_label",
+                                  "label_index": 0}
             stgcn_data['data'] = arg.stgcn_data_array
             stgcn_data['label'] = 'fake_label'
             stgcn_data['label_index'] = 0
