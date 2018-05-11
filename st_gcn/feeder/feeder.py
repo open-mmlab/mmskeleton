@@ -125,6 +125,22 @@ class Feeder(torch.utils.data.Dataset):
         hit_top_k = [l in rank[i, -top_k:] for i, l in enumerate(self.label)]
         return sum(hit_top_k) * 1.0 / len(hit_top_k)
 
+    def top_k_by_category(self, score, top_k):
+        instance_num, class_num = score.shape
+        rank = score.argsort()
+        hit_top_k = [[] for i in range(class_num)]
+        for i in range(instance_num):
+            l = self.label[i]
+            hit_top_k[l].append(l in rank[i, -top_k:])
+
+        accuracy_list = []
+        for list in hit_top_k:
+            if list:
+                accuracy_list.append(sum(list) * 1.0 / len(list))
+            else:
+                accuracy_list.append(0.0)
+        return accuracy_list
+
 
 def test(data_path, label_path, vid=None):
     import matplotlib.pyplot as plt

@@ -160,6 +160,24 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         hit_top_k = [l in rank[i, -top_k:] for i, l in enumerate(self.label)]
         return sum(hit_top_k) * 1.0 / len(hit_top_k)
 
+    def top_k_by_category(self, score, top_k):
+        assert (all(self.label >= 0))
+
+        instance_num, class_num = score.shape
+        rank = score.argsort()
+        hit_top_k = [[] for i in range(class_num)]
+        for i in range(instance_num):
+            l = self.label[i]
+            hit_top_k[l].append(l in rank[i, -top_k:])
+
+        accuracy_list = []
+        for hit_per_category in hit_top_k:
+            if hit_per_category:
+                accuracy_list.append(sum(hit_per_category) * 1.0 / len(hit_per_category))
+            else:
+                accuracy_list.append(0.0)
+        return accuracy_list
+
 
 def test(data_path, label_path, vid=None, graph=None):
     import matplotlib.pyplot as plt

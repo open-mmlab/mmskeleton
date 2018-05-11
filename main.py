@@ -15,7 +15,6 @@ from torch.autograd import Variable
 
 
 def get_parser():
-
     # parameter priority: command line > config > default
     parser = argparse.ArgumentParser(
         description='Spatial Temporal Graph Convolution Network')
@@ -139,6 +138,11 @@ def get_parser():
         type=float,
         default=0.0005,
         help='weight decay for optimizer')
+    parser.add_argument(
+        '--display_by_category',
+        type=str2bool,
+        default=False,
+        help='if ture, the top k accuracy by category  will be displayed')
 
     return parser
 
@@ -351,8 +355,14 @@ class Processor():
             self.print_log('\tMean {} loss of {} batches: {}.'.format(
                 ln, len(self.data_loader[ln]), np.mean(loss_value)))
             for k in self.arg.show_topk:
-                self.print_log('\tTop{}: {:.2f}%'.format(
-                    k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
+                if arg.display_by_category:
+                    accuracy = self.data_loader[ln].dataset.top_k_by_category(score, k)
+                    for i in range(score.shape[1]):
+                        self.print_log('\tClass{} Top{}: {:.2f}%'.format(
+                            i + 1, k, 100 * accuracy[i]))
+                else:
+                    self.print_log('\tTop{}: {:.2f}%'.format(
+                        k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
 
             if save_score:
                 with open('{}/epoch{}_{}_score.pkl'.format(
