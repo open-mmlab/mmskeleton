@@ -134,9 +134,9 @@ class Feeder(torch.utils.data.Dataset):
             hit_top_k[l].append(l in rank[i, -top_k:])
 
         accuracy_list = []
-        for list in hit_top_k:
-            if list:
-                accuracy_list.append(sum(list) * 1.0 / len(list))
+        for hit_per_category in hit_top_k:
+            if hit_per_category:
+                accuracy_list.append(sum(hit_per_category) * 1.0 / len(hit_per_category))
             else:
                 accuracy_list.append(0.0)
         return accuracy_list
