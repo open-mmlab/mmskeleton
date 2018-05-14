@@ -141,6 +141,28 @@ class Feeder(torch.utils.data.Dataset):
                 accuracy_list.append(0.0)
         return accuracy_list
 
+    def calculate_recall_precision(self, score):
+        instance_num, class_num = score.shape
+        rank = score.argsort()
+        confusion_matrix = np.zeros([class_num, class_num])
+
+        for i in range(instance_num):
+            true_l = self.label[i]
+            pred_l = rank[i, -1]
+            confusion_matrix[true_l][pred_l] += 1
+
+        precision = []
+        recall = []
+
+        for i in range(class_num):
+            true_p = confusion_matrix[i][i]
+            false_n = sum(confusion_matrix[i, :]) - true_p
+            false_p = sum(confusion_matrix[:, i]) - true_p
+            precision.append(true_p * 1.0 / (true_p + false_p))
+            recall.append(true_p * 1.0 / (true_p + false_n))
+
+        return precision, recall
+
 
 def test(data_path, label_path, vid=None):
     import matplotlib.pyplot as plt

@@ -143,6 +143,11 @@ def get_parser():
         type=str2bool,
         default=False,
         help='if ture, the top k accuracy by category  will be displayed')
+    parser.add_argument(
+        '--display_recall_precision',
+        type=str2bool,
+        default=False,
+        help='if ture, recall and precision by category  will be displayed')
 
     return parser
 
@@ -360,9 +365,17 @@ class Processor():
                     for i in range(score.shape[1]):
                         self.print_log('\tClass{} Top{}: {:.2f}%'.format(
                             i + 1, k, 100 * accuracy[i]))
+                    self.print_log('\tTop{}: {:.2f}%'.format(k, 100 * sum(accuracy) / len(accuracy)))
                 else:
                     self.print_log('\tTop{}: {:.2f}%'.format(
                         k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
+
+                if arg.display_recall_precision:
+                    precision, recall = self.data_loader[ln].dataset.calculate_recall_precision(score)
+                    for i in range(len(precision)):
+                        self.print_log('\tClass{} Precision: {:.2f}%, Recall: {:.2f}%'.format(
+                            i + 1, 100 * precision[i], 100 * recall[i]
+                        ))
 
             if save_score:
                 with open('{}/epoch{}_{}_score.pkl'.format(
