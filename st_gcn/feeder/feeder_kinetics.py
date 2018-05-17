@@ -162,11 +162,11 @@ class Feeder_kinetics(torch.utils.data.Dataset):
 
     def top_k_by_category(self, score, top_k):
         assert (all(self.label >= 0))
-        return tools.top_k_by_category(score, top_k)
+        return tools.top_k_by_category(self.label, score, top_k)
 
     def calculate_recall_precision(self, score):
         assert (all(self.label >= 0))
-        return tools.calculate_recall_precision(score)
+        return tools.calculate_recall_precision(self.label, score)
 
 
 def test(data_path, label_path, vid=None, graph=None):

@@ -220,12 +220,12 @@ def openpose_match(data_numpy):
     #     data_numpy = new_data_numpy
 
 
-def top_k_by_category(self, score, top_k):
+def top_k_by_category(label, score, top_k):
     instance_num, class_num = score.shape
     rank = score.argsort()
     hit_top_k = [[] for i in range(class_num)]
     for i in range(instance_num):
-        l = self.label[i]
+        l = label[i]
         hit_top_k[l].append(l in rank[i, -top_k:])
 
     accuracy_list = []
@@ -237,13 +237,13 @@ def top_k_by_category(self, score, top_k):
     return accuracy_list
 
 
-def calculate_recall_precision(self, score):
+def calculate_recall_precision(label, score):
     instance_num, class_num = score.shape
     rank = score.argsort()
     confusion_matrix = np.zeros([class_num, class_num])
 
     for i in range(instance_num):
-        true_l = self.label[i]
+        true_l = label[i]
         pred_l = rank[i, -1]
         confusion_matrix[true_l][pred_l] += 1
 

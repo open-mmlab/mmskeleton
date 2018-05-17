@@ -126,10 +126,10 @@ class Feeder(torch.utils.data.Dataset):
         return sum(hit_top_k) * 1.0 / len(hit_top_k)
 
     def top_k_by_category(self, score, top_k):
-        return tools.top_k_by_category(score, top_k)
+        return tools.top_k_by_category(self.label, score, top_k)
 
     def calculate_recall_precision(self, score):
-        return tools.calculate_recall_precision(score)
+        return tools.calculate_recall_precision(self.label, score)
 
 
 def test(data_path, label_path, vid=None):
