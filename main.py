@@ -15,7 +15,6 @@ from torch.autograd import Variable
 
 
 def get_parser():
-
     # parameter priority: command line > config > default
     parser = argparse.ArgumentParser(
         description='Spatial Temporal Graph Convolution Network')
@@ -139,6 +138,16 @@ def get_parser():
         type=float,
         default=0.0005,
         help='weight decay for optimizer')
+    parser.add_argument(
+        '--display_by_category',
+        type=str2bool,
+        default=True,
+        help='if ture, the top k accuracy by category  will be displayed')
+    parser.add_argument(
+        '--display_recall_precision',
+        type=str2bool,
+        default=True,
+        help='if ture, recall and precision by category  will be displayed')
 
     return parser
 
@@ -242,7 +251,7 @@ class Processor():
     def adjust_learning_rate(self, epoch):
         if self.arg.optimizer == 'SGD' or self.arg.optimizer == 'Adam':
             lr = self.arg.base_lr * (
-                0.1**np.sum(epoch >= np.array(self.arg.step)))
+                    0.1 ** np.sum(epoch >= np.array(self.arg.step)))
             for param_group in self.optimizer.param_groups:
                 param_group['lr'] = lr
             return lr
@@ -281,7 +290,7 @@ class Processor():
         self.record_time()
         timer = dict(dataloader=0.001, model=0.001, statistics=0.001)
         for batch_idx, (data, label) in enumerate(loader):
-
+            print('{}/{}'.format(batch_idx, len(loader)))
             # get data
             data = Variable(
                 data.float().cuda(self.output_device), requires_grad=False)
@@ -333,6 +342,7 @@ class Processor():
             loss_value = []
             score_frag = []
             for batch_idx, (data, label) in enumerate(self.data_loader[ln]):
+                print('{}/{}'.format(batch_idx, len(self.data_loader[ln])))
                 data = Variable(
                     data.float().cuda(self.output_device),
                     requires_grad=False,
@@ -350,9 +360,25 @@ class Processor():
                 zip(self.data_loader[ln].dataset.sample_name, score))
             self.print_log('\tMean {} loss of {} batches: {}.'.format(
                 ln, len(self.data_loader[ln]), np.mean(loss_value)))
+
+            if arg.display_recall_precision:
+                precision, recall = self.data_loader[ln].dataset.calculate_recall_precision(score)
+                for i in range(len(precision)):
+                    self.print_log('\tClass{} Precision: {:.2f}%, Recall: {:.2f}%'.format(
+                        i + 1, 100 * precision[i], 100 * recall[i]
+                    ))
+
             for k in self.arg.show_topk:
-                self.print_log('\tTop{}: {:.2f}%'.format(
-                    k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
+                if arg.display_by_category:
+                    accuracy = self.data_loader[ln].dataset.top_k_by_category(score, k)
+                    for i in range(score.shape[1]):
+                        self.print_log('\tClass{} Top{}: {:.2f}%'.format(
+                            i + 1, k, 100 * accuracy[i]))
+                    self.print_log('\tTop{}: {:.2f}%'.format(k, 100 * sum(accuracy) / len(accuracy)))
+                else:
+                    self.print_log('\tTop{}: {:.2f}%'.format(
+                        k, 100 * self.data_loader[ln].dataset.top_k(score, k)))
+
 
             if save_score:
                 with open('{}/epoch{}_{}_score.pkl'.format(
@@ -364,9 +390,9 @@ class Processor():
             self.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
             for epoch in range(self.arg.start_epoch, self.arg.num_epoch):
                 save_model = ((epoch + 1) % self.arg.save_interval == 0) or (
-                    epoch + 1 == self.arg.num_epoch)
+                        epoch + 1 == self.arg.num_epoch)
                 eval_model = ((epoch + 1) % self.arg.eval_interval == 0) or (
-                    epoch + 1 == self.arg.num_epoch)
+                        epoch + 1 == self.arg.num_epoch)
 
                 self.train(epoch, save_model=save_model)
 
