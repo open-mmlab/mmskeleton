@@ -40,7 +40,8 @@ class Feeder(torch.utils.data.Dataset):
                  random_move=False,
                  window_size=-1,
                  normalization=False,
-                 debug=False):
+                 debug=False,
+                 mmap=False):
         self.debug = debug
         self.data_path = data_path
         self.label_path = label_path
@@ -75,8 +76,11 @@ class Feeder(torch.utils.data.Dataset):
             raise ValueError()
 
         # load data
-        self.data = np.load(self.data_path, mmap_mode='r')
-
+        if mmap:
+            self.data = np.load(self.data_path, mmap_mode='r')
+        else:
+            self.data = np.load(self.data_path)
+            
         if self.debug:
             self.label = self.label[0:100]
             self.data = self.data[0:100]
