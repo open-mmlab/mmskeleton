@@ -51,11 +51,11 @@ class Feeder(torch.utils.data.Dataset):
         self.window_size = window_size
         self.normalization = normalization
 
-        self.load_data()
+        self.load_data(mmap)
         if normalization:
             self.get_mean_map()
 
-    def load_data(self):
+    def load_data(self, mmap):
         # data: N C V T M
 
         # load label
