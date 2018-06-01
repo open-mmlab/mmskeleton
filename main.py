@@ -141,12 +141,12 @@ def get_parser():
     parser.add_argument(
         '--display_by_category',
         type=str2bool,
-        default=True,
+        default=False,
         help='if ture, the top k accuracy by category  will be displayed')
     parser.add_argument(
         '--display_recall_precision',
         type=str2bool,
-        default=True,
+        default=False,
         help='if ture, recall and precision by category  will be displayed')
 
     return parser
@@ -341,7 +341,6 @@ class Processor():
             loss_value = []
             score_frag = []
             for batch_idx, (data, label) in enumerate(self.data_loader[ln]):
-                print('{}/{}'.format(batch_idx, len(self.data_loader[ln])))
                 data = Variable(
                     data.float().cuda(self.output_device),
                     requires_grad=False,
