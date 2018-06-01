@@ -290,7 +290,6 @@ class Processor():
         self.record_time()
         timer = dict(dataloader=0.001, model=0.001, statistics=0.001)
         for batch_idx, (data, label) in enumerate(loader):
-            print('{}/{}'.format(batch_idx, len(loader)))
             # get data
             data = Variable(
                 data.float().cuda(self.output_device), requires_grad=False)
