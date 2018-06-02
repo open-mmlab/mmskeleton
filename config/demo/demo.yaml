@@ -1,0 +1,16 @@
+work_dir: ./work_dir/demo
+weights: ./work_dir/recognition/kinetics_skeleton/ST_GCN//epoch10_model.pt
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 3
+  num_class: 400
+  edge_importance_weighting: True
+  graph_args:
+    layout: 'openpose'
+    strategy: 'spatial'
+    
+# training
+device: [0]
+

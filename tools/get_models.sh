@@ -1,8 +1,8 @@
 #!/bin/bash
 
-out_path="model/"
+out_path="models/"
 link="https://s3-us-west-1.amazonaws.com/yysijie-data/public/st-gcn/model/"
-reference_model="tools/reference_model.txt"
+reference_model="resource/reference_model.txt"
 
 mkdir -p $out_path
 
