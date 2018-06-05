@@ -109,9 +109,16 @@ class Model(nn.Module):
         _, c, t, v = x.size()
         feature = x.view(N, M, c, t, v).permute(0, 2, 3, 4, 1)
 
+        # # prediction
+        # x = self.fcn(x)
+        # output = x.view(N, M, -1, t, v).permute(0, 2, 3, 4, 1)
+
+        # global pooling
+        x = F.avg_pool2d(x, x.size()[2:])
+        x = x.view(N, M, -1, 1, 1).mean(dim=1)
         # prediction
         x = self.fcn(x)
-        output = x.view(N, M, -1, t, v).permute(0, 2, 3, 4, 1)
+        output = x.view(x.size(0), -1)
 
         return output, feature
 
