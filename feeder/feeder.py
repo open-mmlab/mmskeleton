@@ -51,7 +51,7 @@ class Feeder(torch.utils.data.Dataset):
         # data: N C V T M
 
         # load label
-        with open(self.label_path) as f:
+        with open(self.label_path, 'rb') as f:
             self.sample_name, self.label = pickle.load(f)
 
         # load data

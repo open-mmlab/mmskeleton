@@ -24,7 +24,11 @@ class Demo(IO):
         output_sequence_dir = './data/openpose_estimation/data'
         output_sequence_path = f'{output_sequence_dir}/{video_name}.json'
         output_result_dir = self.arg.output_dir
-        output_result_path = f'{output_result_dir}/{video_name}.avi'
+        output_result_path = f'{output_result_dir}/{video_name}.mp4'
+        label_name_path = './resource/kinetics_skeleton/label_name.txt'
+        with open(label_name_path) as f:
+            label_name = f.readlines()
+            label_name = [line.rstrip() for line in label_name]
 
         # pose estimation
         openpose_args = dict(
@@ -34,9 +38,9 @@ class Demo(IO):
             render_pose=0)
         command_line = openpose + ' '
         command_line += ' '.join([f'--{k} {v}' for k, v in openpose_args.items()])
-        shutil.rmtree(output_snippets_dir, ignore_errors=True)
-        os.makedirs(output_snippets_dir)
-        os.system(command_line)
+        # shutil.rmtree(output_snippets_dir, ignore_errors=True)
+        # os.makedirs(output_snippets_dir)
+        # os.system(command_line)
 
         # pack openpose ouputs
         video = utils.video.get_video_frames(self.arg.video)
@@ -59,13 +63,20 @@ class Demo(IO):
         data = data.float().to(self.dev)
 
         # extract feature
-        print('Network forwad.')
-        output, feature = self.model.extract_feature(data)[0]
-        intensity = feature.abs().sum(dim=0)
+        print('\nNetwork forwad...')
+        output, feature = self.model.extract_feature(data)
+        output = output[0]
+        feature = feature[0]
+        intensity = (feature*feature).sum(dim=0)**0.5
         intensity = intensity.cpu().detach().numpy()
+        print('\tDone.')
 
+        # visualization
+        print('\nVisualization...')
+        label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax()
         edge = self.model.graph.edge
-        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video)
+        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video, label_name[label])
+        print('\tDone.')
 
         # save video
         if not os.path.exists(output_result_dir):
@@ -95,7 +106,7 @@ class Demo(IO):
         parser.add_argument('--output_dir',
             default='./data/demo_result',
             help='Path to save results')
-        parser.set_defaults(config='./config/st_gcn/kinetics_skeleton/demo.yaml')
+        parser.set_defaults(config='./config/st_gcn/kinetics-skeleton/demo.yaml')
         parser.set_defaults(print_log=False)
         # endregion yapf: enable
 

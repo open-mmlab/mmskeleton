@@ -1,15 +1,19 @@
 import cv2
 import numpy as np
 
-def stgcn_visualize(pose, edge, feature, video):
+def stgcn_visualize(pose, edge, feature, video, label=None):
 
     C, T, V, M = pose.shape
     T = len(video)
     images = []
     for t in range(T):
         frame = video[t]
+
+        # image resize
         H, W, c = frame.shape
-        scale_factor = (H*W/10**5)**0.5
+        frame = cv2.repsize(frame, (540*W//H, 540))
+        H, W, c = frame.shape
+        scale_factor = 2
         
         skeleton = frame * 0
 
@@ -53,9 +57,22 @@ def stgcn_visualize(pose, edge, feature, video):
         skeleton_result = (blurred_mask.astype(float) * 0.75 + skeleton.astype(float) * 0.25).astype(np.uint8)
         rgb_result = (blurred_mask.astype(float) * 0.75 + frame.astype(float) * 0.25).astype(np.uint8)
         
+        position = (0,int(H*0.98))
+        params = (position, cv2.FONT_HERSHEY_COMPLEX, 0.5*scale_factor, (255,255,255))
+        cv2.putText(frame, 'original video', *params)
+        cv2.putText(skeleton, 'pose esitimation', *params)
+        cv2.putText(skeleton_result, 'feature magnitude', *params)
+        cv2.putText(rgb_result, 'feature magnitude + rgb', *params)
+
+
         img0 = np.concatenate((frame, skeleton), axis=1)
-        img1 = np.concatenate((rgb_result, skeleton_result), axis=1)
+        img1 = np.concatenate((skeleton_result, rgb_result), axis=1)
         img = np.concatenate((img0, img1), axis=0)
+        cv2.rectangle(img, (0, int(2*H*0.015)), (2*W, int(2*H*0.065)), (255,255,255), -1)
+
+        if label is not None:
+            position = (int(W*0.9),int(H*0.1))
+            cv2.putText(img, label, position, cv2.FONT_HERSHEY_COMPLEX,  0.5*scale_factor, (0, 0, 0))
 
         images.append(img)
     return images

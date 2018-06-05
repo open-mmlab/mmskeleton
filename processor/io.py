@@ -93,7 +93,7 @@ class IO():
         # parameter priority: command line > config > default
         parser = argparse.ArgumentParser( add_help=add_help, description='IO Processor')
 
-        parser.add_argument('--work_dir', default='./work_dir/tmp', help='the work folder for storing results')
+        parser.add_argument('-w', '--work_dir', default='./work_dir/tmp', help='the work folder for storing results')
         parser.add_argument('-c', '--config', default=None, help='path to the configuration file')
 
         # processor

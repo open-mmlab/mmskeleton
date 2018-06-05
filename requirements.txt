@@ -1,6 +1,6 @@
 pyyaml
 argparse
 numpy
-opencv
+opencv-python
 imageio
 scikit-video

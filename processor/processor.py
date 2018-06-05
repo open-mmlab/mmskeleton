@@ -137,9 +137,6 @@ class Processor(IO):
             # evaluation
             self.io.print_log('Evaluation Start:')
             self.test()
-            self.io.print_log(
-                f"\tMean test loss : {np.mean(self.meta_info['mean_loss']):.4f}."
-            )
             self.io.print_log('Done.\n')
 
             # save the output of model
@@ -156,7 +153,7 @@ class Processor(IO):
         # parameter priority: command line > config > default
         parser = argparse.ArgumentParser( add_help=add_help, description='Base Processor')
 
-        parser.add_argument('--work_dir', default='./work_dir/tmp', help='the work folder for storing results')
+        parser.add_argument('-w', '--work_dir', default='./work_dir/tmp', help='the work folder for storing results')
         parser.add_argument('-c', '--config', default=None, help='path to the configuration file')
 
         # processor
