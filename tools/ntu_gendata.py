@@ -1,10 +1,12 @@
-import numpy as np
-import argparse
 import os
 import sys
-from ntu_read_skeleton import read_xyz
-from numpy.lib.format import open_memmap
 import pickle
+
+import argparse
+import numpy as np
+from numpy.lib.format import open_memmap
+
+from utils.ntu_read_skeleton import read_xyz
 
 training_subjects = [
     1, 2, 4, 5, 8, 9, 13, 14, 15, 16, 17, 18, 19, 25, 27, 28, 31, 34, 35, 38
@@ -14,7 +16,6 @@ max_body = 2
 num_joint = 25
 max_frame = 300
 toolbar_width = 30
-
 
 def print_toolbar(rate, annotation=''):
     # setup toolbar
