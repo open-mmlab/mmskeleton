@@ -69,14 +69,16 @@ class Demo(IO):
         feature = feature[0]
         intensity = (feature*feature).sum(dim=0)**0.5
         intensity = intensity.cpu().detach().numpy()
-        print('\tDone.')
+        print('Done.')
 
         # visualization
         print('\nVisualization...')
-        label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax()
+        label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax(dim=0)
+        label_sequence = output.sum(dim=3).sum(dim=2).argmax(dim=0)
+        label_name_sequence = [label_name[l] for l in label_sequence]
         edge = self.model.graph.edge
-        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video, label_name[label])
-        print('\tDone.')
+        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video, label_name[label], label_name_sequence)
+        print('Done.')
 
         # save video
         if not os.path.exists(output_result_dir):
