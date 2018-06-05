@@ -2,12 +2,12 @@ import skvideo.io
 import numpy as np
 import cv2
 
-def video_info_parsing(video_info, max_person=5):
-    data_numpy = np.zeros((3, len(video_info['data']), 18, max_person))
+def video_info_parsing(video_info, num_person_in=5, num_person_out=2):
+    data_numpy = np.zeros((3, len(video_info['data']), 18, num_person_in))
     for frame_info in video_info['data']:
         frame_index = frame_info['frame_index']
         for m, skeleton_info in enumerate(frame_info["skeleton"]):
-            if m >= max_person:
+            if m >= num_person_in:
                 break
             pose = skeleton_info['pose']
             score = skeleton_info['score']
@@ -20,8 +20,13 @@ def video_info_parsing(video_info, max_person=5):
     data_numpy[0][data_numpy[2] == 0] = 0
     data_numpy[1][data_numpy[2] == 0] = 0
 
+    sort_index = (-data_numpy[2, :, :, :].sum(axis=1)).argsort(axis=1)
+    for t, s in enumerate(sort_index):
+        data_numpy[:, t, :, :] = data_numpy[:, t, :, s].transpose((1, 2,
+                                                                    0))
+    data_numpy = data_numpy[:, :, :, :num_person_out]
+
     label = video_info['label_index']
-    
     return data_numpy, label
 
 def get_video_frames(video_path):

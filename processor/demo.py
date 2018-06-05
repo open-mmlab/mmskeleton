@@ -38,9 +38,9 @@ class Demo(IO):
             render_pose=0)
         command_line = openpose + ' '
         command_line += ' '.join([f'--{k} {v}' for k, v in openpose_args.items()])
-        # shutil.rmtree(output_snippets_dir, ignore_errors=True)
-        # os.makedirs(output_snippets_dir)
-        # os.system(command_line)
+        shutil.rmtree(output_snippets_dir, ignore_errors=True)
+        os.makedirs(output_snippets_dir)
+        os.system(command_line)
 
         # pack openpose ouputs
         video = utils.video.get_video_frames(self.arg.video)
@@ -73,11 +73,12 @@ class Demo(IO):
 
         # visualization
         print('\nVisualization...')
-        label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax(dim=0)
-        label_sequence = output.sum(dim=3).sum(dim=2).argmax(dim=0)
-        label_name_sequence = [label_name[l] for l in label_sequence]
+        # label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax(dim=0)
+        # label_sequence = output.sum(dim=3).sum(dim=2).argmax(dim=0)
+        # label_name_sequence = [label_name[l] for l in label_sequence]
+        label = output.argmax(dim=0)
         edge = self.model.graph.edge
-        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video, label_name[label], label_name_sequence)
+        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video, label_name[label])
         print('Done.')
 
         # save video

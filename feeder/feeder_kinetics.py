@@ -8,13 +8,7 @@ import json
 # torch
 import torch
 import torch.nn as nn
-import torch.optim as optim
-import torch.nn.functional as F
-from torch.autograd import Variable
 from torchvision import datasets, transforms
-
-# visualization
-import time
 
 # operation
 from . import tools
@@ -167,88 +161,3 @@ class Feeder_kinetics(torch.utils.data.Dataset):
     def calculate_recall_precision(self, score):
         assert (all(self.label >= 0))
         return tools.calculate_recall_precision(self.label, score)
-
-
-def test(data_path, label_path, vid=None, graph=None):
-    import matplotlib.pyplot as plt
-    loader = torch.utils.data.DataLoader(
-        dataset=Feeder_kinetics(
-            data_path, label_path, pose_matching=False, num_person=10),
-        batch_size=64,
-        shuffle=False,
-        num_workers=2)
-
-    if vid is None:
-        index = 0
-    elif type(vid) == int:
-        index = vid
-    else:
-        sample_name = loader.dataset.sample_name
-        sample_id = [name.split('.')[0] for name in sample_name]
-        index = sample_id.index(vid)
-
-    name = loader.dataset.sample_name[index]
-
-    data, label = loader.dataset[index]
-    data = data.reshape(data.shape)
-
-    # for batch_idx, (data, label) in enumerate(loader):
-    C, T, V, M = data.shape
-    plt.ion()
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-
-    if graph is None:
-        p_type = ['b.', 'g.', 'r.', 'c.', 'm.', 'y.', 'k.', 'k.', 'k.', 'k.']
-        pose = [
-            ax.plot(np.zeros(V), np.zeros(V), p_type[m])[0] for m in range(M)
-        ]
-        ax.axis([-1, 1, -1, 1])
-        for t in range(T):
-            # print t
-            for m in range(M):
-                pose[m].set_xdata(data[0, t, :, m])
-                pose[m].set_ydata(data[1, t, :, m])
-            fig.canvas.draw()
-            plt.pause(0.001)
-            # raw_input(t)
-    else:
-        p_type = ['b-', 'g-', 'r-', 'c-', 'm-', 'y-', 'k-', 'k-', 'k-', 'k-']
-        import sys
-        from os import path
-        sys.path.append(
-            path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
-        G = import_class(graph)()
-        edge = G.inward
-        pose = []
-        for m in range(M):
-            a = []
-            for i in range(len(edge)):
-                a.append(ax.plot(np.zeros(2), np.zeros(2), p_type[m])[0])
-            pose.append(a)
-        ax.axis([-1, 1, -1, 1])
-        for t in range(T):
-            for m in range(M):
-                for i, (v1, v2) in enumerate(edge):
-                    pose[m][i].set_xdata(data[0, t, [v1, v2], m])
-                    pose[m][i].set_ydata(-data[1, t, [v1, v2], m])
-            fig.canvas.draw()
-            plt.pause(0.001)
-            # raw_input(t)
-
-
-def import_class(name):
-    components = name.split('.')
-    mod = __import__(components[0])
-    for comp in components[1:]:
-        mod = getattr(mod, comp)
-    return mod
-
-
-if __name__ == '__main__':
-    data_path = './data/kinetics-skeleton/kinetics_val'
-    label_path = './data/kinetics-skeleton/kinetics_val_label.json'
-    graph = 'st_gcn.graph.Kinetics'
-    # test(data_path, label_path, vid='iqkx0rrCUCo', graph=graph)
-    test(data_path, label_path, vid=11111, graph=graph)
-    # test(data_path, label_path, vid = 11199, graph=graph)
