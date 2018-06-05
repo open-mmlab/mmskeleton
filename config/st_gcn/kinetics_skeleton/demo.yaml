@@ -1,5 +1,4 @@
-work_dir: ./work_dir/demo
-weights: ./work_dir/recognition/kinetics_skeleton/ST_GCN//epoch10_model.pt
+weights: ./models/kinetics-st_gcn.pt
 
 # model
 model: net.st_gcn.Model
@@ -13,4 +12,3 @@ model_args:
     
 # training
 device: [0]
-
