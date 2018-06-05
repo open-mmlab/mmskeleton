@@ -47,7 +47,7 @@ class Demo(IO):
         with open(output_sequence_path, 'w') as outfile:
             json.dump(video_info, outfile)
         if len(video_info['data']) == 0:
-            print('Openpose can not find human skeletons from this video.')
+            print('Can not find pose estimation results.')
             return
         else:
             print('Pose estimation complete.')
@@ -60,7 +60,7 @@ class Demo(IO):
 
         # extract feature
         print('Network forwad.')
-        feature = self.model.extract_feature(data)[0]
+        output, feature = self.model.extract_feature(data)[0]
         intensity = feature.abs().sum(dim=0)
         intensity = intensity.cpu().detach().numpy()
 
@@ -95,7 +95,7 @@ class Demo(IO):
         parser.add_argument('--output_dir',
             default='./data/demo_result',
             help='Path to save results')
-        parser.set_defaults(config='./config/demo/demo.yaml')
+        parser.set_defaults(config='./config/st_gcn/kinetics_skeleton/demo.yaml')
         parser.set_defaults(print_log=False)
         # endregion yapf: enable
 
