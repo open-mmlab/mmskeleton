@@ -5,6 +5,10 @@ A graph convolutional network for skeleton based action recognition.
     <img src="resource/info/pipeline.png">
 </div>
 
+## News & Updates
+- June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
+- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration.
+
 ## Introduction
 This repository holds the codebase, dataset and models for the paper>
 
@@ -13,6 +17,7 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ### Visulization of ST-GCN in Action
+
 
 <table style="width:100%; table-layout:fixed;">
   <tr>
@@ -45,23 +50,37 @@ This repository holds the codebase, dataset and models for the paper>
   </tr>
 </table>
 
-Above figures show the neural response magnitude of each node in the last layer of our ST-GCN. The first row of results is from  **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**. 
+ST-GCN is able to exploit local pattern and correlation from human skeletons.
+Above figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
 
+The first row of results is from  **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**. 
 
 ## Prerequisites
-Our codebase is based on **Python**. There are a few dependencies to run the code. The major python libraries we used are
-- [PyTorch](http://pytorch.org/) (<=0.3. Version 0.4 is no supported right now).
-- NumPy
+Our codebase is based on **Python3.6**. There are a few dependencies to run the code. The major libraries we depend are
+- Python (>=3.6)
+- [PyTorch](http://pytorch.org/) (Release version 0.4.0)
+- [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) (Optional: for demo only)
 - Other Python libraries can be installed by `pip install -r requirements.txt`
 
+### Get pretrained models
+We provided the pretrained model weithts of our **ST-GCN**. The model weights can be downloaded by running the script
+```
+bash tools/get_models.sh
+```
+The downloaded models will be stored under ```./models```.
+<!-- If you get an error message after running above command, you can also obtain models from [GoogleDrive](https://drive.google.com/open?id=1koTe3ces06NCntVdfLxF7O2Z4l_5csnX) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fst-gcn&parentPath=%2FShare), and manually put them into ```./models```. -->
+
+## Demo
+Our graph convolutional networks represent human skeleton sequences by
+**spatial temporal graph**, which maintain the spatial structure in the network propagation. To visualize how ST-GCN exploit local correlation and pattern, we compute the feature vector magnitude of each node in the final spatial temporal graph, and overlay them on the original video. **Openpose** should be ready for extracting human skeletons from videos as the input of our model.
+
+Run the demo by this command:
+```
+python main.py demo --openpose <path to openpose build directory> [--video <path to your video>]
+```
+
 ## Data Preparation
-We experimented on two skeleton-based action recognition datasts: **NTU RGB+D** and **Kinetics-skeleton**. 
-### NTU RGB+D
-NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
-```
-python tools/ntu_gendata.py --data_path <path to nturgbd>
-```
-where the ```<path to nturgbd>``` points to the 3D skeletons modality of NTU RGB+D dataset you download, for example ```data/NTU-RGB-D/nturgbd+d_skeletons```.
+
 ### Kinetics-skeleton
 [Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/) is a video-based dataset for action recognition which only provide raw video clips without skeleton data. To obatin the joint locations, we first resized all videos to the resolution of 340x256 and converted the frame rate to 30 fps.  Then, we extracted skeletons from each frame in Kinetics by [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose). The extracted skeleton data we called **Kinetics-skeleton**(7.5GB) can be directly downloaded from [GoogleDrive](https://drive.google.com/open?id=1SPQ6FmFsjGg3f59uCWfdUWI-5HJM_YhZ) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fkinetics-skeleton&parentPath=%2FShare).
 
@@ -70,41 +89,37 @@ After uncompressing, rebuild the database by this command:
 python tools/kinetics_gendata.py --data_path <path to kinetics-skeleton>
 ```
 
-##  Testing Pretrained Models
-### Get trained models
-We provided the pretrained model weithts of our **ST-GCN** and the baseline model Temporal-Conv[1]. The model weights can be downloaded by running the script
+<!-- ### NTU RGB+D
+NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
 ```
-bash tools/get_models.sh
+python tools/ntu_gendata.py --data_path <path to nturgbd+d_skeletons>
 ```
-The downloaded models will be stored under ```./model```.
-If you get an error message after running above command, you can also obtain models from [GoogleDrive](https://drive.google.com/open?id=1koTe3ces06NCntVdfLxF7O2Z4l_5csnX) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fst-gcn&parentPath=%2FShare), and manually put them into ```./model```.
+where the ```<path to nturgbd+d_skeletons>``` points to the 3D skeletons modality of NTU RGB+D dataset you download. -->
 
-### Evaluation
-Once datasets and models ready, we can start the evaluation.
-<!-- Use the folloing command to evaluate our **ST-GCN** model:
-```
-python main.py --config config/st_gcn/<dataset>/test.yaml
-```
-where the ```<dataset>``` can be  -->
+## Testing Pretrained Models
+
+<!-- ### Evaluation
+Once datasets ready, we can start the evaluation. -->
 
 To evaluate ST-GCN model pretrained on **Kinetcis-skeleton**, run
 ```
-python main.py --config config/st_gcn/kinetics-skeleton/test.yaml
+python main.py recognition -c config/st_gcn/kinetics-skeleton/test.yaml
 ```
-For **cross-view** evaluation in **NTU RGB+D**, run
+
+<!-- For **cross-view** evaluation in **NTU RGB+D**, run
 ```
 python main.py --config config/st_gcn/nturgbd-cross-view/test.yaml
 ```
 For **cross-subject** evaluation in **NTU RGB+D**, run
 ```
 python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
-```
+``` -->
 
-Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```.
+<!-- Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```. -->
 
 To speed up evaluation by multi-gpu inference or modify batch size for reducing the memory cost, set ```--test-batch-size``` and ```--device``` like:
 ```
-python main.py --config <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
+python main.py recognition -c <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
 ```
 
 ### Results
@@ -120,7 +135,7 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 ## Training
 To train a new ST-GCN model, run 
 ```
-python main.py --config config/st_gcn/<dataset>/train.yaml [--work-dir <work folder>]
+python main.py recognition -c config/st_gcn/<dataset>/train.yaml [--work-dir <work folder>]
 ```
 where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, depending on the dataset you want to use. The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
 
@@ -128,7 +143,7 @@ You can modify the training parameters such as ```work-dir```, ```batch-size```,
 
 Finally, custom model evaluation can be achieved by this command as we mentioned above:
 ```
-python main.py --config config/st_gcn/<dataset>/test.yaml --weights <path to model weights>
+python main.py -c config/st_gcn/<dataset>/test.yaml --weights <path to model weights>
 ```
 
 ## Citation
