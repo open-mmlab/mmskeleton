@@ -6,7 +6,9 @@ config_v0/*
 backup/*
 .vscode
 model/*
-models/*
+#models/*
+*.pt
+*.caffemodel
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
