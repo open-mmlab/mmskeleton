@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def stgcn_visualize(pose, edge, feature, video, label=None):
+def stgcn_visualize(pose, edge, feature, video, label=None, label_sequence=None):
 
     C, T, V, M = pose.shape
     T = len(video)
@@ -11,13 +11,12 @@ def stgcn_visualize(pose, edge, feature, video, label=None):
 
         # image resize
         H, W, c = frame.shape
-        frame = cv2.repsize(frame, (540*W//H, 540))
+        frame = cv2.resize(frame, (540*W//H, 540))
         H, W, c = frame.shape
         scale_factor = 2
         
-        skeleton = frame * 0
-
         # draw skeleton
+        skeleton = frame * 0
         for m in range(M):
             for i, j in edge:
                 xi = pose[0, t, i, m]
@@ -71,8 +70,12 @@ def stgcn_visualize(pose, edge, feature, video, label=None):
         cv2.rectangle(img, (0, int(2*H*0.015)), (2*W, int(2*H*0.065)), (255,255,255), -1)
 
         if label is not None:
+            label_name = label
+            if label_sequence is not None:
+                label_name += ':'
+                label_name += label_sequence[int(t/4)]
             position = (int(W*0.9),int(H*0.1))
-            cv2.putText(img, label, position, cv2.FONT_HERSHEY_COMPLEX,  0.5*scale_factor, (0, 0, 0))
+            cv2.putText(img, label_name, position, cv2.FONT_HERSHEY_COMPLEX,  0.5*scale_factor, (0, 0, 0))
 
         images.append(img)
     return images
