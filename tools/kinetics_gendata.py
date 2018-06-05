@@ -1,16 +1,17 @@
-import numpy as np
-import argparse
+
 import os
 import sys
 import pickle
+import argparse
+
+import numpy as np
+from numpy.lib.format import open_memmap
+
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from st_gcn.feeder.feeder_kinetics import Feeder_kinetics
-from numpy.lib.format import open_memmap
-import pickle
+from feeder.feeder_kinetics import Feeder_kinetics
 
 toolbar_width = 30
-
 
 def print_toolbar(rate, annotation=''):
     # setup toolbar
@@ -81,4 +82,6 @@ if __name__ == '__main__':
         data_out_path = '{}/{}_data.npy'.format(arg.out_folder, p)
         label_out_path = '{}/{}_label.pkl'.format(arg.out_folder, p)
 
+        if not os.path.exists(arg.out_folder):
+            os.makedirs(arg.out_folder)
         gendata(data_path, label_path, data_out_path, label_out_path)

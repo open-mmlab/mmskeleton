@@ -1,6 +1,0 @@
-ntuxsub-tcn.pt
-ntuxsub-st_gcn.pt
-ntuxview-tcn.pt
-ntuxview-st_gcn.pt
-kinetics-tcn.pt
-kinetics-st_gcn.pt
