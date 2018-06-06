@@ -18,14 +18,14 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ### Visulization of ST-GCN in Action
-A demo for skeleton based action recognition:
+Our demo for skeleton based action recognition:
 <p align="center">
     <img src="resource/info/demo_video.gif", width="1200">
 </p>
 
 
 ST-GCN is able to exploit local pattern and correlation from human skeletons.
-Above demo and below figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
+Below figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
 
 
 <table style="width:100%; table-layout:fixed;">
