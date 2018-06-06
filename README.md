@@ -87,10 +87,9 @@ To visualize how ST-GCN exploit local correlation and local pattern, we compute 
 
 Run the demo by this command:
 ```
-python main.py demo --openpose <path to openpose build directory> [--video <path to your video>]
+python main.py demo --openpose <path to openpose build directory> [--video <path to your video> --device <gpu0> <gpu1>]
 ```
 A video as above will be generated.
-
 
 ## Data Preparation
 
