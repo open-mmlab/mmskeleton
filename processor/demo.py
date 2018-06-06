@@ -109,7 +109,7 @@ class Demo(IO):
         # region arguments yapf: disable
         # openpose
         parser.add_argument('--video',
-            default='./resource/media/Kop0sDqOn-c.mp4',
+            default='./resource/media/ta_chi.mp4',
             help='Path to video')
         parser.add_argument('--openpose',
             default='3dparty/openpose/build',
