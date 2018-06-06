@@ -38,9 +38,9 @@ class Demo(IO):
             render_pose=0)
         command_line = openpose + ' '
         command_line += ' '.join([f'--{k} {v}' for k, v in openpose_args.items()])
-        shutil.rmtree(output_snippets_dir, ignore_errors=True)
-        os.makedirs(output_snippets_dir)
-        os.system(command_line)
+        # shutil.rmtree(output_snippets_dir, ignore_errors=True)
+        # os.makedirs(output_snippets_dir)
+        # os.system(command_line)
 
         # pack openpose ouputs
         video = utils.video.get_video_frames(self.arg.video)
@@ -60,32 +60,40 @@ class Demo(IO):
         pose, _ = utils.video.video_info_parsing(video_info)
         data = torch.from_numpy(pose)
         data = data.unsqueeze(0)
-        data = data.float().to(self.dev)
+        data = data.float().to(self.dev).detach()
 
         # extract feature
         print('\nNetwork forwad...')
+        self.model.eval()
         output, feature = self.model.extract_feature(data)
         output = output[0]
         feature = feature[0]
         intensity = (feature*feature).sum(dim=0)**0.5
         intensity = intensity.cpu().detach().numpy()
+        label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax(dim=0)
+        print(f'Prediction result: {label_name[label]}')
         print('Done.')
 
         # visualization
         print('\nVisualization...')
-        # label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax(dim=0)
-        # label_sequence = output.sum(dim=3).sum(dim=2).argmax(dim=0)
-        # label_name_sequence = [label_name[l] for l in label_sequence]
-        label = output.argmax(dim=0)
+        label_sequence = output.sum(dim=2).argmax(dim=0)
+        label_name_sequence = [[label_name[p] for p in l ]for l in label_sequence]
         edge = self.model.graph.edge
-        images = utils.visualization.stgcn_visualize(pose, edge, intensity, video, label_name[label])
+        images = utils.visualization.stgcn_visualize(
+            pose, edge, intensity, video, None , label_name_sequence)
         print('Done.')
 
         # save video
+        print('\nSaving...')
         if not os.path.exists(output_result_dir):
             os.makedirs(output_result_dir)
-        skvideo.io.vwrite(output_result_path, np.stack(images), outputdict={
-                    '-b': '300000000'})
+        # skvideo.io.vwrite(output_result_path, np.stack(images), outputdict={
+        #             '-b': '300000000'})
+        writer = skvideo.io.FFmpegWriter(output_result_path,
+                                        outputdict={'-b': '300000000'})
+        for img in images:
+            writer.writeFrame(img)
+        writer.close()
         print(f'The Demo result has been saved in {output_result_path}.')
 
     @staticmethod
