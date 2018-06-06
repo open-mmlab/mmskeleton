@@ -19,7 +19,7 @@ This repository holds the codebase, dataset and models for the paper>
 
 ### Demo
 <p align="center">
-    <img src="resource/info/demo_video.gif", width="800">
+    <img src="resource/info/demo_video.gif", width="1200">
 </p>
 
 ### Visulization of ST-GCN in Action
