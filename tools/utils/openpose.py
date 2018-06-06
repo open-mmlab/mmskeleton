@@ -6,7 +6,8 @@ def json_pack(snippets_dir, video_name, frame_width, frame_height, label='unknow
     p = Path(snippets_dir)
     for path in p.glob(video_name+'*.json'):
         json_path = str(path)
-        frame_id = int(path.stem.split('_')[1])
+        print(path)
+        frame_id = int(path.stem.split('_')[-2])
         frame_data = {'frame_index': frame_id}
         data = json.load(open(json_path))
         skeletons = []

@@ -8,7 +8,6 @@ backup/*
 model/*
 *.pt
 *.caffemodel
-resource/media
 cache/
 
 # Byte-compiled / optimized / DLL files
