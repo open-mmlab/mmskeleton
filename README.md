@@ -7,7 +7,8 @@ A graph convolutional network for skeleton based action recognition.
 
 ## News & Updates
 - June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
-- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration.
+- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration. You can switch to the old version [v0.1.0](https://github.com/yysijie/st-gcn/tree/v0.1.0)
+to acquire the original setting in the paper.
 
 ## Introduction
 This repository holds the codebase, dataset and models for the paper>
@@ -62,6 +63,11 @@ Our codebase is based on **Python3.6**. There are a few dependencies to run the 
 - [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) (Optional: for demo only)
 - Other Python libraries can be installed by `pip install -r requirements.txt`
 
+### Installation
+```
+cd torchlight; python setup.py install; cd ..
+```
+
 ### Get pretrained models
 We provided the pretrained model weithts of our **ST-GCN**. The model weights can be downloaded by running the script
 ```
@@ -71,17 +77,24 @@ The downloaded models will be stored under ```./models```.
 <!-- If you get an error message after running above command, you can also obtain models from [GoogleDrive](https://drive.google.com/open?id=1koTe3ces06NCntVdfLxF7O2Z4l_5csnX) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fst-gcn&parentPath=%2FShare), and manually put them into ```./models```. -->
 
 ## Demo
-To visualize how ST-GCN exploit local correlation and local pattern, we compute the feature vector magnitude of each node in the final spatial temporal graph, and overlay them on the original video. **Openpose** should be ready for extracting human skeletons from videos as the input of our model.
+To visualize how ST-GCN exploit local correlation and local pattern, we compute the feature vector magnitude of each node in the final spatial temporal graph, and overlay them on the original video. **Openpose** should be ready for extracting human skeletons from videos as the input of our model. The skeleton based action recognition results is also shwon thereon.
 
 Run the demo by this command:
 ```
 python main.py demo --openpose <path to openpose build directory> [--video <path to your video>]
 ```
+A video as below will be generated.
+<p align="center">
+    <img src="resource/info/demo_video.gif", width="800">
+</p>
 
 ## Data Preparation
 
+We experimented on two skeleton-based action recognition datasts: **Kinetics-skeleton** and **NTU RGB+D**. The experiments on NTU RGB+D
+is not currently supported in this new version.
+
 ### Kinetics-skeleton
-[Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/) is a video-based dataset for action recognition which only provide raw video clips without skeleton data. To obatin the joint locations, we first resized all videos to the resolution of 340x256 and converted the frame rate to 30 fps.  Then, we extracted skeletons from each frame in Kinetics by [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose). The extracted skeleton data we called **Kinetics-skeleton**(7.5GB) can be directly downloaded from [GoogleDrive](https://drive.google.com/open?id=1SPQ6FmFsjGg3f59uCWfdUWI-5HJM_YhZ) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fkinetics-skeleton&parentPath=%2FShare).
+[Kinetics](https://deepmind.com/research/open-source/open-source-datasets/kinetics/) is a video-based dataset for action recognition which only provide raw video clips without skeleton data. Kinetics dataset include To obatin the joint locations, we first resized all videos to the resolution of 340x256 and converted the frame rate to 30 fps.  Then, we extracted skeletons from each frame in Kinetics by [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose). The extracted skeleton data we called **Kinetics-skeleton**(7.5GB) can be directly downloaded from [GoogleDrive](https://drive.google.com/open?id=1SPQ6FmFsjGg3f59uCWfdUWI-5HJM_YhZ) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fkinetics-skeleton&parentPath=%2FShare).
 
 After uncompressing, rebuild the database by this command:
 ```
@@ -127,16 +140,20 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
 |Baseline[1]| 20.3    | 83.1     |  74.3    |
-|**ST-GCN** (Ours)| **30.6**| **88.9** | **80.7** | 
+|**ST-GCN** (Ours)| **30.8**| **88.9** | **80.7** | 
 
 [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
 
 ## Training
-To train a new ST-GCN model, run 
+To train a new ST-GCN model, run
 ```
+python main.py recognition -c config/st_gcn/kinetics-skeleton/train.yaml [--work-dir <work folder>]
+```
+<!-- ```
 python main.py recognition -c config/st_gcn/<dataset>/train.yaml [--work-dir <work folder>]
 ```
-where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, depending on the dataset you want to use. The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
+where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, depending on the dataset you want to use. -->
+The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
 
 You can modify the training parameters such as ```work-dir```, ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
