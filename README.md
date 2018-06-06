@@ -17,8 +17,12 @@ This repository holds the codebase, dataset and models for the paper>
 
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
-### Visulization of ST-GCN in Action
+### Demo
+<p align="center">
+    <img src="resource/info/demo_video.gif", width="800">
+</p>
 
+### Visulization of ST-GCN in Action
 
 <table style="width:100%; table-layout:fixed;">
   <tr>
@@ -83,10 +87,8 @@ Run the demo by this command:
 ```
 python main.py demo --openpose <path to openpose build directory> [--video <path to your video>]
 ```
-A video as below will be generated.
-<p align="center">
-    <img src="resource/info/demo_video.gif", width="800">
-</p>
+A video as above will be generated.
+
 
 ## Data Preparation
 
