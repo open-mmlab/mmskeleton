@@ -17,14 +17,16 @@ This repository holds the codebase, dataset and models for the paper>
 
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
-### Demo
+### Visulization of ST-GCN in Action
 This demo is for skeleton based action recognition.
 <p align="center">
     <img src="resource/info/demo_video.gif", width="1200">
 </p>
 
 
-### Visulization of ST-GCN in Action
+ST-GCN is able to exploit local pattern and correlation from human skeletons.
+Above demo and below figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
+
 
 <table style="width:100%; table-layout:fixed;">
   <tr>
@@ -57,10 +59,8 @@ This demo is for skeleton based action recognition.
   </tr>
 </table>
 
-ST-GCN is able to exploit local pattern and correlation from human skeletons.
-Above figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
+The first row of above results is from **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**. 
 
-The first row of results is from  **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**. 
 
 ## Prerequisites
 Our codebase is based on **Python3.6**. There are a few dependencies to run the code. The major libraries we depend are
