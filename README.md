@@ -18,7 +18,7 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ### Visulization of ST-GCN in Action
-This demo is for skeleton based action recognition.
+A demo for skeleton based action recognition:
 <p align="center">
     <img src="resource/info/demo_video.gif", width="1200">
 </p>
