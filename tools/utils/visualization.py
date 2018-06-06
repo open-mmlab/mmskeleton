@@ -20,7 +20,7 @@ def stgcn_visualize(pose, edge, feature, video, label=None, label_sequence=None)
         text = frame * 0
         for m in range(M):
             score = pose[2, t, :, m].mean()
-            if score <0.1:
+            if score <0.3:
                 continue
 
             for i, j in edge:
@@ -59,6 +59,9 @@ def stgcn_visualize(pose, edge, feature, video, label=None, label_sequence=None)
         feature = np.abs(feature)
         feature = feature/feature.mean()
         for m in range(M):
+            score = pose[2, t, :, m].mean()
+            if score <0.3:
+                continue
 
             f = feature[t//4, :, m] ** 5
             if f.mean() != 0:
