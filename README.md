@@ -89,7 +89,7 @@ Run the demo by this command:
 ```
 python main.py demo --openpose <path to openpose build directory> [--video <path to your video> --device <gpu0> <gpu1>]
 ```
-A video as above will be generated.
+A video as above will be generated and saved under ```data/demo_result/```.
 
 ## Data Preparation
 
