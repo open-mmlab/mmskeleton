@@ -129,9 +129,9 @@ python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
 
 <!-- Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```. -->
 
-To speed up evaluation by multi-gpu inference or modify batch size for reducing the memory cost, set ```--test-batch-size``` and ```--device``` like:
+To speed up evaluation by multi-gpu inference or modify batch size for reducing the memory cost, set ```--test_batch_size``` and ```--device``` like:
 ```
-python main.py recognition -c <config file> --test-batch-size <batch size> --device <gpu0> <gpu1> ...
+python main.py recognition -c <config file> --test_batch_size <batch size> --device <gpu0> <gpu1> ...
 ```
 
 ### Results
@@ -147,15 +147,15 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 ## Training
 To train a new ST-GCN model, run
 ```
-python main.py recognition -c config/st_gcn/kinetics-skeleton/train.yaml [--work-dir <work folder>]
+python main.py recognition -c config/st_gcn/kinetics-skeleton/train.yaml [--work_dir <work folder>]
 ```
 <!-- ```
-python main.py recognition -c config/st_gcn/<dataset>/train.yaml [--work-dir <work folder>]
+python main.py recognition -c config/st_gcn/<dataset>/train.yaml [--work_dir <work folder>]
 ```
 where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, depending on the dataset you want to use. -->
 The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
 
-You can modify the training parameters such as ```work-dir```, ```batch-size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
+You can modify the training parameters such as ```work_dir```, ```batch_size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
 
 Finally, custom model evaluation can be achieved by this command as we mentioned above:
 ```
