@@ -71,8 +71,7 @@ The downloaded models will be stored under ```./models```.
 <!-- If you get an error message after running above command, you can also obtain models from [GoogleDrive](https://drive.google.com/open?id=1koTe3ces06NCntVdfLxF7O2Z4l_5csnX) or [BaiduYun](https://pan.baidu.com/s/1dwKG2TLvG-R1qeIiE4MjeA#list/path=%2FShare%2FAAAI18%2Fst-gcn&parentPath=%2FShare), and manually put them into ```./models```. -->
 
 ## Demo
-Our graph convolutional networks represent human skeleton sequences by
-**spatial temporal graph**, which maintain the spatial structure in the network propagation. To visualize how ST-GCN exploit local correlation and pattern, we compute the feature vector magnitude of each node in the final spatial temporal graph, and overlay them on the original video. **Openpose** should be ready for extracting human skeletons from videos as the input of our model.
+To visualize how ST-GCN exploit local correlation and local pattern, we compute the feature vector magnitude of each node in the final spatial temporal graph, and overlay them on the original video. **Openpose** should be ready for extracting human skeletons from videos as the input of our model.
 
 Run the demo by this command:
 ```

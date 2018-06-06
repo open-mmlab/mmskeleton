@@ -38,9 +38,9 @@ class Demo(IO):
             render_pose=0)
         command_line = openpose + ' '
         command_line += ' '.join([f'--{k} {v}' for k, v in openpose_args.items()])
-        # shutil.rmtree(output_snippets_dir, ignore_errors=True)
-        # os.makedirs(output_snippets_dir)
-        # os.system(command_line)
+        shutil.rmtree(output_snippets_dir, ignore_errors=True)
+        os.makedirs(output_snippets_dir)
+        os.system(command_line)
 
         # pack openpose ouputs
         video = utils.video.get_video_frames(self.arg.video)
