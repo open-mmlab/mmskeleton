@@ -29,7 +29,7 @@ class Demo(IO):
         with open(label_name_path) as f:
             label_name = f.readlines()
             label_name = [line.rstrip() for line in label_name]
-
+    
         # pose estimation
         openpose_args = dict(
             video=self.arg.video,
@@ -45,7 +45,8 @@ class Demo(IO):
         # pack openpose ouputs
         video = utils.video.get_video_frames(self.arg.video)
         height, width, _ = video[0].shape
-        video_info = utils.openpose.json_pack(output_snippets_dir, video_name, width, height)
+        video_info = utils.openpose.json_pack(
+            output_snippets_dir, video_name, width, height)
         if not os.path.exists(output_sequence_dir):
             os.makedirs(output_sequence_dir)
         with open(output_sequence_path, 'w') as outfile:
@@ -80,15 +81,13 @@ class Demo(IO):
         label_name_sequence = [[label_name[p] for p in l ]for l in label_sequence]
         edge = self.model.graph.edge
         images = utils.visualization.stgcn_visualize(
-            pose, edge, intensity, video, None , label_name_sequence)
+            pose, edge, intensity, video,label_name[label] , label_name_sequence, self.arg.height)
         print('Done.')
 
         # save video
         print('\nSaving...')
         if not os.path.exists(output_result_dir):
             os.makedirs(output_result_dir)
-        # skvideo.io.vwrite(output_result_path, np.stack(images), outputdict={
-        #             '-b': '300000000'})
         writer = skvideo.io.FFmpegWriter(output_result_path,
                                         outputdict={'-b': '300000000'})
         for img in images:
@@ -107,15 +106,18 @@ class Demo(IO):
             description='Demo for Spatial Temporal Graph Convolution Network')
 
         # region arguments yapf: disable
-        # openpose
         parser.add_argument('--video',
-            default='./resource/media/ta_chi.mp4',
+            default='./resource/media/skateboarding.mp4',
             help='Path to video')
         parser.add_argument('--openpose',
             default='3dparty/openpose/build',
             help='Path to openpose')
         parser.add_argument('--output_dir',
             default='./data/demo_result',
+            help='Path to save results')
+        parser.add_argument('--height',
+            default=1080,
+            type=int,
             help='Path to save results')
         parser.set_defaults(config='./config/st_gcn/kinetics-skeleton/demo.yaml')
         parser.set_defaults(print_log=False)
