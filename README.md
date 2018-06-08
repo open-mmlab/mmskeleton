@@ -5,19 +5,18 @@ A graph convolutional network for skeleton based action recognition.
     <img src="resource/info/pipeline.png">
 </div>
 
-## News & Updates
-- June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
-- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration. You can switch to the old version [v0.1.0](https://github.com/yysijie/st-gcn/tree/v0.1.0)
-to acquire the original setting in the paper.
-
-## Introduction
 This repository holds the codebase, dataset and models for the paper>
 
 **Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition** Sijie Yan, Yuanjun Xiong and Dahua Lin, AAAI 2018.
 
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
-### Visulization of ST-GCN in Action
+## News & Updates
+- June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
+- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration. You can switch to the old version [v0.1.0](https://github.com/yysijie/st-gcn/tree/v0.1.0)
+to acquire the original setting in the paper.
+
+## Visulization of ST-GCN in Action
 Our demo for skeleton based action recognition:
 <p align="center">
     <img src="resource/info/demo_video.gif", width="1200">
