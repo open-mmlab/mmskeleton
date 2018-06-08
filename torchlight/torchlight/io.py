@@ -15,8 +15,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 
-# from torchpack.runner.hooks import PaviLogger
-
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore",category=FutureWarning)
     import h5py
@@ -31,14 +29,13 @@ class IO():
         self.pavi_logger = None
         self.session_file = None
         self.model_text = ''
-
-    def log(self, *args, **kwargs):
-        pass
         
     # PaviLogger is removed in this version
-    # def log(self, *args, **kwargs):
+    def log(self, *args, **kwargs):
+        pass
     #     try:
     #         if self.pavi_logger is None:
+    #             from torchpack.runner.hooks import PaviLogger
     #             url = 'http://pavi.parrotsdnn.org/log'
     #             with open(self.session_file, 'r') as f:
     #                 info = dict(
