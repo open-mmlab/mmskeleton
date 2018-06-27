@@ -57,10 +57,13 @@ class IO():
         self.io.save_arg(self.arg)
 
         # gpu
-        gpus = torchlight.visible_gpu(self.arg.device)
-        torchlight.occupy_gpu(gpus)
-        self.gpus = gpus
-        self.dev = "cuda:0"
+        if self.arg.use_gpu:
+            gpus = torchlight.visible_gpu(self.arg.device)
+            torchlight.occupy_gpu(gpus)
+            self.gpus = gpus
+            self.dev = "cuda:0"
+        else:
+            self.dev = "cpu"
 
     def load_model(self):
         self.model = self.io.load_model(self.arg.model,
@@ -73,14 +76,14 @@ class IO():
 
     def gpu(self):
         # move modules to gpu
-        self.model = self.model.cuda()
+        self.model = self.model.to(self.dev)
         for name, value in vars(self).items():
             cls_name = str(value.__class__)
             if cls_name.find('torch.nn.modules') != -1:
-                setattr(self, name, value.cuda())
+                setattr(self, name, value.to(self.dev))
 
         # model parallel
-        if len(self.gpus) > 1:
+        if self.arg.use_gpu and len(self.gpus) > 1:
             self.model = nn.DataParallel(self.model, device_ids=self.gpus)
 
     def start(self):
@@ -97,6 +100,7 @@ class IO():
         parser.add_argument('-c', '--config', default=None, help='path to the configuration file')
 
         # processor
+        parser.add_argument('--use_gpu', type=str2bool, default=True, help='use GPUs or not')
         parser.add_argument('--device', type=int, default=0, nargs='+', help='the indexes of GPUs for training or testing')
 
         # visulize and debug

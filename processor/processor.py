@@ -161,6 +161,7 @@ class Processor(IO):
         parser.add_argument('--save_result', type=str2bool, default=False, help='if ture, the output of the model will be stored')
         parser.add_argument('--start_epoch', type=int, default=0, help='start training from which epoch')
         parser.add_argument('--num_epoch', type=int, default=80, help='stop training in which epoch')
+        parser.add_argument('--use_gpu', type=str2bool, default=True, help='use GPUs or not')
         parser.add_argument('--device', type=int, default=0, nargs='+', help='the indexes of GPUs for training or testing')
 
         # visulize and debug
