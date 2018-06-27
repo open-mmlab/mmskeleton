@@ -37,7 +37,7 @@ class Feeder(torch.utils.data.Dataset):
                  random_move=False,
                  window_size=-1,
                  debug=False,
-                 mmap=False):
+                 mmap=True):
         self.debug = debug
         self.data_path = data_path
         self.label_path = label_path
