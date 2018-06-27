@@ -66,6 +66,7 @@ Our codebase is based on **Python3.6**. There are a few dependencies to run the 
 - Python (>=3.6)
 - [PyTorch](http://pytorch.org/) (Release version 0.4.0)
 - [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) (Optional: for demo only)
+- FFmpeg (Optional: for demo only)
 - Other Python libraries can be installed by `pip install -r requirements.txt`
 
 ### Installation
