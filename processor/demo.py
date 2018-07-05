@@ -35,7 +35,8 @@ class Demo(IO):
             video=self.arg.video,
             write_json=output_snippets_dir,
             display=0,
-            render_pose=0)
+            render_pose=0, 
+            model_pose='COCO')
         command_line = openpose + ' '
         command_line += ' '.join([f'--{k} {v}' for k, v in openpose_args.items()])
         shutil.rmtree(output_snippets_dir, ignore_errors=True)
