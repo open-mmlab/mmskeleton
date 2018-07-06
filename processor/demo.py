@@ -18,13 +18,13 @@ class Demo(IO):
     """
     def start(self):
 
-        openpose = f'{self.arg.openpose}/examples/openpose/openpose.bin'
+        openpose = '{}/examples/openpose/openpose.bin'.format(self.arg.openpose)
         video_name = self.arg.video.split('/')[-1].split('.')[0]
-        output_snippets_dir = f'./data/openpose_estimation/snippets/{video_name}'
+        output_snippets_dir = './data/openpose_estimation/snippets/{}'.format(video_name)
         output_sequence_dir = './data/openpose_estimation/data'
-        output_sequence_path = f'{output_sequence_dir}/{video_name}.json'
+        output_sequence_path = '{}/{}.json'.format(output_sequence_dir, video_name)
         output_result_dir = self.arg.output_dir
-        output_result_path = f'{output_result_dir}/{video_name}.mp4'
+        output_result_path = '{}/{}.mp4'.format(output_result_dir, video_name)
         label_name_path = './resource/kinetics_skeleton/label_name.txt'
         with open(label_name_path) as f:
             label_name = f.readlines()
@@ -38,7 +38,7 @@ class Demo(IO):
             render_pose=0, 
             model_pose='COCO')
         command_line = openpose + ' '
-        command_line += ' '.join([f'--{k} {v}' for k, v in openpose_args.items()])
+        command_line += ' '.join(['--{} {}'.format(k, v) for k, v in openpose_args.items()])
         shutil.rmtree(output_snippets_dir, ignore_errors=True)
         os.makedirs(output_snippets_dir)
         os.system(command_line)
@@ -73,7 +73,7 @@ class Demo(IO):
         intensity = (feature*feature).sum(dim=0)**0.5
         intensity = intensity.cpu().detach().numpy()
         label = output.sum(dim=3).sum(dim=2).sum(dim=1).argmax(dim=0)
-        print(f'Prediction result: {label_name[label]}')
+        print('Prediction result: {}'.format(label_name[label]))
         print('Done.')
 
         # visualization
@@ -94,7 +94,7 @@ class Demo(IO):
         for img in images:
             writer.writeFrame(img)
         writer.close()
-        print(f'The Demo result has been saved in {output_result_path}.')
+        print('The Demo result has been saved in {}.'.format(output_result_path))
 
     @staticmethod
     def get_parser(add_help=False):

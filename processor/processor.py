@@ -67,18 +67,18 @@ class Processor(IO):
 
     def show_epoch_info(self):
         for k, v in self.epoch_info.items():
-            self.io.print_log(f"\t{k}: {v}")
+            self.io.print_log('\t{}: {}'.format(k, v))
         if self.arg.pavi_log:
             self.io.log('train', self.meta_info['iter'], self.epoch_info)
 
     def show_iter_info(self):
         if self.meta_info['iter'] % self.arg.log_interval == 0:
-            info = f"\tIter {self.meta_info['iter']} Done."
+            info ='\tIter {} Done.'.format(self.meta_info['iter'])
             for k, v in self.iter_info.items():
                 if isinstance(v, float):
-                    info = info + f' | {k}: {v:.4f}'
+                    info = info + ' | {}: {:.4f}'.format(k, v)
                 else:
-                    info = info + f' | {k}: {v}'
+                    info = info + ' | {}: {}'.format(k, v)
 
             self.io.print_log(info)
 
@@ -101,7 +101,7 @@ class Processor(IO):
         self.show_epoch_info()
 
     def start(self):
-        self.io.print_log(f'Parameters:\n{str(vars(self.arg))}\n')
+        self.io.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
 
         # training phase
         if self.arg.phase == 'train':
@@ -109,30 +109,30 @@ class Processor(IO):
                 self.meta_info['epoch'] = epoch
 
                 # training
-                self.io.print_log(f"Training epoch: {epoch}")
+                self.io.print_log('Training epoch: {}'.format(epoch))
                 self.train()
-                self.io.print_log(f'Done.')
+                self.io.print_log('Done.')
 
                 # save model
                 if ((epoch + 1) % self.arg.save_interval == 0) or (
                         epoch + 1 == self.arg.num_epoch):
-                    filename = f'epoch{epoch + 1}_model.pt'
+                    filename = 'epoch{}_model.pt'.format(epoch + 1)
                     self.io.save_model(self.model, filename)
 
                 # evaluation
                 if ((epoch + 1) % self.arg.eval_interval == 0) or (
                         epoch + 1 == self.arg.num_epoch):
-                    self.io.print_log(f'Eval epoch: {epoch}')
+                    self.io.print_log('Eval epoch: {}'.format(epoch))
                     self.test()
-                    self.io.print_log(f'Done.')
+                    self.io.print_log('Done.')
         # test phase
         elif self.arg.phase == 'test':
 
             # the path of weights must be appointed
             if self.arg.weights is None:
                 raise ValueError('Please appoint --weights.')
-            self.io.print_log(f'Model:   {self.arg.model}.')
-            self.io.print_log(f'Weights: {self.arg.weights}.')
+            self.io.print_log('Model:   {}.'.format(self.arg.model))
+            self.io.print_log('Weights: {}.'.format(self.arg.weights))
 
             # evaluation
             self.io.print_log('Evaluation Start:')

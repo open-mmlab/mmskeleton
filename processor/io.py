@@ -42,7 +42,7 @@ class IO():
             key = vars(p).keys()
             for k in default_arg.keys():
                 if k not in key:
-                    print(f'Unknown Arguments: {k}')
+                    print('Unknown Arguments: {}'.format(k))
                     assert k in key
 
             parser.set_defaults(**default_arg)
@@ -87,7 +87,7 @@ class IO():
             self.model = nn.DataParallel(self.model, device_ids=self.gpus)
 
     def start(self):
-        self.io.print_log(f'Parameters:\n{str(vars(self.arg))}\n')
+        self.io.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
 
     @staticmethod
     def get_parser(add_help=False):
