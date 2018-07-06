@@ -73,7 +73,7 @@ class REC_Processor(Processor):
         rank = self.result.argsort()
         hit_top_k = [l in rank[i, -k:] for i, l in enumerate(self.label)]
         accuracy = sum(hit_top_k) * 1.0 / len(hit_top_k)
-        self.io.print_log(f'\tTop{k}: {100 * accuracy:.2f}%')
+        self.io.print_log('\tTop{}: {:.2f}%'.format(k, 100 * accuracy))
 
     def train(self):
         self.model.train()
@@ -98,7 +98,7 @@ class REC_Processor(Processor):
 
             # statistics
             self.iter_info['loss'] = loss.data.item()
-            self.iter_info['lr'] = f'{self.lr:.6f}'
+            self.iter_info['lr'] = '{:.6f}'.format(self.lr)
             loss_value.append(self.iter_info['loss'])
             self.show_iter_info()
             self.meta_info['iter'] += 1
