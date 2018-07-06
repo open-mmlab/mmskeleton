@@ -62,8 +62,7 @@ The first row of above results is from **NTU-RGB+D** dataset, and the second row
 
 
 ## Prerequisites
-Our codebase is based on **Python3**. There are a few dependencies to run the code. The major libraries we depend are
-- Python (>=3.5)
+Our codebase is based on **Python3** (>=3.5). There are a few dependencies to run the code. The major libraries we depend are
 - [PyTorch](http://pytorch.org/) (Release version 0.4.0)
 - [Openpose@92cdcad](https://github.com/yysijie/openpose) (Optional: for demo only)
 - FFmpeg (Optional: for demo only), which can be installed by `sudo apt-get install ffmpeg`
