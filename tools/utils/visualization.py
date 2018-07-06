@@ -99,25 +99,45 @@ def stgcn_visualize(pose,
         rgb_result[rgb_result > 255] = 255
         rgb_result.astype(np.uint8)
 
-        position = (int(W * 0.02), int(H * 0.96))
-        params = (position, cv2.FONT_HERSHEY_TRIPLEX, 0.5 * scale_factor,
-                  (0, 255, 0))
-        cv2.putText(frame, 'original video', *params)
-        cv2.putText(skeleton, 'pose esitimation (inputs of st-gcn)', *params)
-        cv2.putText(skeleton_result, 'attention + prediction', *params)
-        cv2.putText(rgb_result, 'attention + rgb', *params)
+        put_text(skeleton, 'inputs of st-gcn', (0.1, 0.5))
+
+        text_1 = cv2.imread('./resource/demo_asset/original_video.png', cv2.IMREAD_UNCHANGED)
+        text_2 = cv2.imread('./resource/demo_asset/pose_estimation.png', cv2.IMREAD_UNCHANGED)
+        text_3 = cv2.imread('./resource/demo_asset/attention+prediction.png', cv2.IMREAD_UNCHANGED)
+        text_4 = cv2.imread('./resource/demo_asset/attention+rgb.png', cv2.IMREAD_UNCHANGED)
+        
+        blend(frame, text_1)
+        blend(skeleton, text_2)
+        blend(skeleton_result, text_3)
+        blend(rgb_result, text_4)
 
         if label is not None:
             label_name = 'voting result: ' + label
-            t_w, t_h = cv2.getTextSize(
-                label_name, cv2.FONT_HERSHEY_TRIPLEX, 0.5 * scale_factor, thickness=1)[0]
-            position = (int(W * 0.5 - t_w * 0.5) , int(H * 0.1))
-            cv2.putText(skeleton_result, label_name, position,
-                        cv2.FONT_HERSHEY_TRIPLEX, 0.5 * scale_factor,
-                        (0, 255, 0), thickness=1)
+            put_text(skeleton_result, label_name, (0.1, 0.5))
 
         img0 = np.concatenate((frame, skeleton), axis=1)
         img1 = np.concatenate((skeleton_result, rgb_result), axis=1)
         img = np.concatenate((img0, img1), axis=0)
 
         yield img
+
+def put_text(img, text, position, scale_factor=1):
+    t_w, t_h = cv2.getTextSize(
+        text, cv2.FONT_HERSHEY_TRIPLEX, scale_factor, thickness=1)[0]
+    H, W, _ = img.shape
+    position = (int(W * position[1] - t_w * 0.5), int(H * position[0] - t_h * 0.5))
+    params = (position, cv2.FONT_HERSHEY_TRIPLEX, scale_factor,
+            (255,255,255))
+    cv2.putText(img, text, *params)
+
+def blend(background, foreground, dx=20, dy=10, fy=0.7):
+
+    foreground = cv2.resize(foreground, (0,0), fx = fy, fy= fy)
+    h,w = foreground.shape[:2]
+    b,g,r,a = cv2.split(foreground)
+    mask = np.dstack((a,a,a))
+    rgb = np.dstack((b,g,r))
+
+    canvas = background[-h-dy:-dy,dx:w+dx]
+    imask = mask>0
+    canvas[imask] = rgb[imask]
