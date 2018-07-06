@@ -115,7 +115,7 @@ class IO():
         if not os.path.exists(self.work_dir):
             os.makedirs(self.work_dir)
         with open(self.session_file, 'w') as f:
-            f.write(f"# command line: {' '.join(sys.argv)}\n\n")
+            f.write('# command line: {}\n\n'.format(' '.join(sys.argv)))
             yaml.dump(arg_dict, f, default_flow_style=False, indent=4)
 
     def print_log(self, str, print_time=True):
