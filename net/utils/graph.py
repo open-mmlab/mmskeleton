@@ -6,7 +6,7 @@ class Graph():
     Args:
         strategy (string): must be one of the follow candidates
         - uniform: Uniform Labeling
-        - dastance: Distance Partitioning
+        - distance: Distance Partitioning
         - spatial: Spatial Configuration
         For more information, please refer to the section 'Partition Strategies'
             in our paper (https://arxiv.org/abs/1801.07455).
