@@ -162,7 +162,7 @@ You can modify the training parameters such as ```work_dir```, ```batch_size```,
 
 Finally, custom model evaluation can be achieved by this command as we mentioned above:
 ```
-python main.py -c config/st_gcn/<dataset>/test.yaml --weights <path to model weights>
+python main.py recognition -c config/st_gcn/<dataset>/test.yaml --weights <path to model weights>
 ```
 
 ## Citation
