@@ -28,7 +28,7 @@ class Model(nn.Module):
     """
 
     def __init__(self, in_channels, num_class, graph_args,
-                 edge_importance_weighting, pre_drop=False, **kwargs):
+                 edge_importance_weighting, predrop=False, firstdrop=True, **kwargs):
         super().__init__()
 
         # load graph
@@ -41,9 +41,11 @@ class Model(nn.Module):
         temporal_kernel_size = 9
         kernel_size = (temporal_kernel_size, spatial_kernel_size)
         self.data_bn = nn.BatchNorm1d(in_channels * A.size(1))
-        kwargs0 = {k: v for k, v in kwargs.items() if k != 'dropout'}
-        print(kwargs0)
-        if pre_drop: st_gcn = st_gcn_predrop
+        kwargs0 = {k: v for k, v in kwargs.items() if k != 'dropout' or firstdrop}
+        if predrop:
+            st_gcn = st_gcn_predrop
+        else:
+            st_gcn = st_gcn_postdrop
         self.st_gcn_networks = nn.ModuleList((
             st_gcn(in_channels, 64, kernel_size, 1, residual=False, **kwargs0),
             st_gcn(64, 64, kernel_size, 1, **kwargs),
@@ -118,7 +120,7 @@ class Model(nn.Module):
 
         return output, feature
 
-class st_gcn(nn.Module):
+class st_gcn_postdrop(nn.Module):
     r"""Applies a spatial temporal graph convolution over an input graph sequence.
 
     Args:
