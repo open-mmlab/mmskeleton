@@ -120,15 +120,14 @@ To evaluate ST-GCN model pretrained on **Kinetcis-skeleton**, run
 ```
 python main.py recognition -c config/st_gcn/kinetics-skeleton/test.yaml
 ```
-
-<!-- For **cross-view** evaluation in **NTU RGB+D**, run
+For **cross-view** evaluation in **NTU RGB+D**, run
 ```
-python main.py --config config/st_gcn/nturgbd-cross-view/test.yaml
+python main.py recognition -c config/st_gcn/ntu-xview/test.yaml
 ```
 For **cross-subject** evaluation in **NTU RGB+D**, run
 ```
-python main.py --config config/st_gcn/nturgbd-cross-subject/test.yaml
-``` -->
+python main.py recognition -c config/st_gcn/ntu-xsub/test.yaml
+``` 
 
 <!-- Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```. -->
 
@@ -143,7 +142,7 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
 |Baseline[1]| 20.3    | 83.1     |  74.3    |
-|**ST-GCN** (Ours)| **30.8**| **88.9** | **80.7** | 
+|**ST-GCN** (Ours)| **31.6**| **88.8** | **81.2** | 
 
 [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
 
