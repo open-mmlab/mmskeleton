@@ -1,4 +1,4 @@
-weights: ./models/kinetics-st_gcn.pt
+weights: ./models/st_gcn.kinetics.pt
 
 # model
 model: net.st_gcn.Model
