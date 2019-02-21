@@ -144,7 +144,7 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
 |Baseline[1]| 20.3    | 83.1     |  74.3    |
-|**ST-GCN** (Ours)| **31.6**| **88.8** | **81.2** | 
+|**ST-GCN** (Ours)| **31.6**| **88.8** | **81.6** | 
 
 [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
 
