@@ -12,7 +12,7 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ## News & Updates
-- Feb. 21, 2019 - We provide pretrained models and training scripts for **NTU-RGB+D** dataset.
+- Feb. 21, 2019 - We provide pretrained models and training scripts on all datasets for you to achieve the performance we mentioned in the paper.
 - June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
 - June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration. You can switch to the old version [v0.1.0](https://github.com/yysijie/st-gcn/tree/v0.1.0)
 to acquire the original setting in the paper.
