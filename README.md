@@ -12,6 +12,7 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ## News & Updates
+- Feb. 21, 2019 - We provide pretrained models and training script for NTU-RGB+D dataset.
 - June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
 - June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration. You can switch to the old version [v0.1.0](https://github.com/yysijie/st-gcn/tree/v0.1.0)
 to acquire the original setting in the paper.
@@ -104,12 +105,13 @@ After uncompressing, rebuild the database by this command:
 python tools/kinetics_gendata.py --data_path <path to kinetics-skeleton>
 ```
 
-<!-- ### NTU RGB+D
-NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp). Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
+### NTU RGB+D
+NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp).
+Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation:
 ```
 python tools/ntu_gendata.py --data_path <path to nturgbd+d_skeletons>
 ```
-where the ```<path to nturgbd+d_skeletons>``` points to the 3D skeletons modality of NTU RGB+D dataset you download. -->
+where the ```<path to nturgbd+d_skeletons>``` points to the 3D skeletons modality of NTU RGB+D dataset you download.
 
 ## Testing Pretrained Models
 
@@ -148,13 +150,11 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 
 ## Training
 To train a new ST-GCN model, run
+
 ```
-python main.py recognition -c config/st_gcn/kinetics-skeleton/train.yaml [--work_dir <work folder>]
-```
-<!-- ```
 python main.py recognition -c config/st_gcn/<dataset>/train.yaml [--work_dir <work folder>]
 ```
-where the ```<dataset>``` must be ```nturgbd-cross-view```, ```nturgbd-cross-subject``` or ```kinetics-skeleton```, depending on the dataset you want to use. -->
+where the ```<dataset>``` must be ```ntu-xsub```, ```ntu-xview``` or ```kinetics-skeleton```, depending on the dataset you want to use.
 The training results, including **model weights**, configurations and logging files, will be saved under the ```./work_dir``` by default or ```<work folder>``` if you appoint it.
 
 You can modify the training parameters such as ```work_dir```, ```batch_size```, ```step```, ```base_lr``` and ```device``` in the command line or configuration files. The order of priority is:  command line > config file > default parameter. For more information, use ```main.py -h```.
