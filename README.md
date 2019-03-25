@@ -14,8 +14,7 @@ This repository holds the codebase, dataset and models for the paper>
 ## News & Updates
 - Feb. 21, 2019 - We provide pretrained models and training scripts on **NTU-RGB+D** and **kinetics-skeleton** datasets. So that you can achieve the performance we mentioned in the paper.
 - June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
-- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration. You can switch to the old version [v0.1.0](https://github.com/yysijie/st-gcn/tree/v0.1.0)
-to acquire the original setting in the paper.
+- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration.
 
 ## Visulization of ST-GCN in Action
 Our demo for skeleton based action recognition:
