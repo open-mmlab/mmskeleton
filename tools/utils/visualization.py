@@ -106,10 +106,13 @@ def stgcn_visualize(pose,
         text_3 = cv2.imread('./resource/demo_asset/attention+prediction.png', cv2.IMREAD_UNCHANGED)
         text_4 = cv2.imread('./resource/demo_asset/attention+rgb.png', cv2.IMREAD_UNCHANGED)
         
-        blend(frame, text_1)
-        blend(skeleton, text_2)
-        blend(skeleton_result, text_3)
-        blend(rgb_result, text_4)
+        try:
+            blend(frame, text_1)
+            blend(skeleton, text_2)
+            blend(skeleton_result, text_3)
+            blend(rgb_result, text_4)
+        except:
+            pass
 
         if label is not None:
             label_name = 'voting result: ' + label
