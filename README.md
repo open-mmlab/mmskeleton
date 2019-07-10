@@ -12,6 +12,7 @@ This repository holds the codebase, dataset and models for the paper>
 [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 ## News & Updates
+- July. 10, 2019 - We provide processed data on NTU-RGB+D and kinetics-skeleton.
 - Feb. 21, 2019 - We provide pretrained models and training scripts on **NTU-RGB+D** and **kinetics-skeleton** datasets. So that you can achieve the performance we mentioned in the paper.
 - June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
 - June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration.
