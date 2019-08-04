@@ -14,6 +14,7 @@ if __name__ == '__main__':
     processors = dict()
     processors['recognition'] = import_class('processor.recognition.REC_Processor')
     processors['demo'] = import_class('processor.demo.Demo')
+    processors['camera'] = import_class('processor.demo_camera.DemoCamera')
     #endregion yapf: enable
 
     # add sub-parser
