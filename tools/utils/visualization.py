@@ -27,8 +27,8 @@ def stgcn_visualize(pose,
         text = frame * 0
         for m in range(M):
             score = pose[2, t, :, m].mean()
-            if score < 0.3:
-                continue
+            # if score < 0.3:
+            #     continue
 
             for i, j in edge:
                 xi = pose[0, t, i, m]
