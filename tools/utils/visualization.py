@@ -8,7 +8,8 @@ def stgcn_visualize(pose,
                     video,
                     label=None,
                     label_sequence=None,
-                    height=1080):
+                    height=1080,
+                    fps=None):
 
     _, T, V, M = pose.shape
     T = len(video)
@@ -18,7 +19,7 @@ def stgcn_visualize(pose,
 
         # image resize
         H, W, c = frame.shape
-        frame = cv2.resize(frame, (height * W // H //2 , height//2))
+        frame = cv2.resize(frame, (height * W // H // 2, height//2))
         H, W, c = frame.shape
         scale_factor = 2 * height / 1080
 
@@ -26,9 +27,10 @@ def stgcn_visualize(pose,
         skeleton = frame * 0
         text = frame * 0
         for m in range(M):
-            score = pose[2, t, :, m].mean()
-            # if score < 0.3:
-            #     continue
+
+            score = pose[2, t, :, m].max()
+            if score < 0.3:
+                continue
 
             for i, j in edge:
                 xi = pose[0, t, i, m]
@@ -45,7 +47,10 @@ def stgcn_visualize(pose,
                 cv2.line(skeleton, (xi, yi), (xj, yj), (255, 255, 255),
                          int(np.ceil(2 * scale_factor)))
 
-            body_label = label_sequence[t // 4][m]
+            if label_sequence is not None:
+                body_label = label_sequence[t // 4][m]
+            else:
+                body_label = ''
             x_nose = int((pose[0, t, 0, m] + 0.5) * W)
             y_nose = int((pose[1, t, 0, m] + 0.5) * H)
             x_neck = int((pose[0, t, 1, m] + 0.5) * W)
@@ -68,7 +73,7 @@ def stgcn_visualize(pose,
         feature = np.abs(feature)
         feature = feature / feature.mean()
         for m in range(M):
-            score = pose[2, t, :, m].mean()
+            score = pose[2, t, :, m].max()
             if score < 0.3:
                 continue
 
@@ -101,11 +106,15 @@ def stgcn_visualize(pose,
 
         put_text(skeleton, 'inputs of st-gcn', (0.1, 0.5))
 
-        text_1 = cv2.imread('./resource/demo_asset/original_video.png', cv2.IMREAD_UNCHANGED)
-        text_2 = cv2.imread('./resource/demo_asset/pose_estimation.png', cv2.IMREAD_UNCHANGED)
-        text_3 = cv2.imread('./resource/demo_asset/attention+prediction.png', cv2.IMREAD_UNCHANGED)
-        text_4 = cv2.imread('./resource/demo_asset/attention+rgb.png', cv2.IMREAD_UNCHANGED)
-        
+        text_1 = cv2.imread(
+            './resource/demo_asset/original_video.png', cv2.IMREAD_UNCHANGED)
+        text_2 = cv2.imread(
+            './resource/demo_asset/pose_estimation.png', cv2.IMREAD_UNCHANGED)
+        text_3 = cv2.imread(
+            './resource/demo_asset/attention+prediction.png', cv2.IMREAD_UNCHANGED)
+        text_4 = cv2.imread(
+            './resource/demo_asset/attention+rgb.png', cv2.IMREAD_UNCHANGED)
+
         try:
             blend(frame, text_1)
             blend(skeleton, text_2)
@@ -124,23 +133,26 @@ def stgcn_visualize(pose,
 
         yield img
 
+
 def put_text(img, text, position, scale_factor=1):
     t_w, t_h = cv2.getTextSize(
         text, cv2.FONT_HERSHEY_TRIPLEX, scale_factor, thickness=1)[0]
     H, W, _ = img.shape
-    position = (int(W * position[1] - t_w * 0.5), int(H * position[0] - t_h * 0.5))
+    position = (int(W * position[1] - t_w * 0.5),
+                int(H * position[0] - t_h * 0.5))
     params = (position, cv2.FONT_HERSHEY_TRIPLEX, scale_factor,
-            (255,255,255))
+              (255, 255, 255))
     cv2.putText(img, text, *params)
+
 
 def blend(background, foreground, dx=20, dy=10, fy=0.7):
 
-    foreground = cv2.resize(foreground, (0,0), fx = fy, fy= fy)
-    h,w = foreground.shape[:2]
-    b,g,r,a = cv2.split(foreground)
-    mask = np.dstack((a,a,a))
-    rgb = np.dstack((b,g,r))
+    foreground = cv2.resize(foreground, (0, 0), fx=fy, fy=fy)
+    h, w = foreground.shape[:2]
+    b, g, r, a = cv2.split(foreground)
+    mask = np.dstack((a, a, a))
+    rgb = np.dstack((b, g, r))
 
-    canvas = background[-h-dy:-dy,dx:w+dx]
-    imask = mask>0
+    canvas = background[-h-dy:-dy, dx:w+dx]
+    imask = mask > 0
     canvas[imask] = rgb[imask]
