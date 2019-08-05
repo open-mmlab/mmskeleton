@@ -21,17 +21,16 @@ class DemoRealtime(IO):
     The Openpose python-api is required for this demo.
 
     Since the pre-trained model is trained on videos with 30fps,
-    and Openpose is hard to achieve this high speed,
-    if you want to predict actions by **camera**,
+    and Openpose is hard to achieve this high speed in the single GPU,
+    if you want to predict actions by **camera** in realtime,
     either data interpolation or new pre-trained model
-    is required in the realtime inference.
+    is required.
 
     Pull requests are always welcome.
     """
 
 
     def start(self):
-
         # load openpose python api
         if self.arg.openpose is not None:
             sys.path.append('{}/python'.format(self.arg.openpose))
