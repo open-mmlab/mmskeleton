@@ -1,4 +1,5 @@
 weights: ./models/st_gcn.kinetics.pt
+model_fps: 30
 
 # model
 model: net.st_gcn.Model

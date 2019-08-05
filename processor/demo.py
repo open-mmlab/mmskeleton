@@ -118,8 +118,7 @@ class Demo(IO):
             help='Path to save results')
         parser.add_argument('--height',
             default=1080,
-            type=int,
-            help='Path to save results')
+            type=int)
         parser.set_defaults(config='./config/st_gcn/kinetics-skeleton/demo.yaml')
         parser.set_defaults(print_log=False)
         # endregion yapf: enable
