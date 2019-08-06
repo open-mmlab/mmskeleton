@@ -75,7 +75,6 @@ class DemoOffline(IO):
         for t in range(num_frame):
             frame_label_name = list()
             for m in range(num_person):
-                print(output.shape)
                 person_label = output[:, t, :, m].sum(dim=1).argmax(dim=0)
                 person_label_name = self.label_name[person_label]
                 frame_label_name.append(person_label_name)
