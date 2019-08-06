@@ -67,7 +67,7 @@ The first row of above results is from **NTU-RGB+D** dataset, and the second row
 ## Prerequisites
 - Python3 (>3.5)
 - [PyTorch](http://pytorch.org/)
-- [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) **with Python API**. (Optional: for demo only)
+- [Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) **with** [Python API](https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/installation.md#python-api). (Optional: for demo only)
 - Other Python libraries can be installed by `pip install -r requirements.txt`
 <!-- - FFmpeg (Optional: for demo only), which can be installed by `sudo apt-get install ffmpeg` -->
 
@@ -89,7 +89,7 @@ You can also obtain models from [GoogleDrive](https://drive.google.com/drive/fol
 
 <!-- To visualize how ST-GCN exploit local correlation and local pattern, we compute the feature vector magnitude of each node in the final spatial temporal graph, and overlay them on the original video. **Openpose** should be ready for extracting human skeletons from videos. The skeleton based action recognition results is also shwon thereon. -->
 
-**Openpose** [Python API](https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/installation.md#python-api) is required in this demo. You can use the following commands to run the demo.
+You can use the following commands to run the demo.
 
 ```shell
 # with offline pose estimation
@@ -108,6 +108,8 @@ Optional arguments:
 ```
 python main.py demo --video camera
 ``` -->
+
+<!-- Openpose Python API is required in the above demos. -->
 
 ## Data Preparation
 
