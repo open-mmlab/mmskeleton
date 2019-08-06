@@ -16,100 +16,35 @@ import tools.utils as utils
 
 import cv2
 
-class DemoRealtime(IO):
-    """ A demo for utilizing st-gcn in the realtime action recognition.
-    The Openpose python-api is required for this demo.
-
-    Since the pre-trained model is trained on videos with 30fps,
-    and Openpose is hard to achieve this high speed in the single GPU,
-    if you want to predict actions by **camera** in realtime,
-    either data interpolation or new pre-trained model
-    is required.
-
-    Pull requests are always welcome.
-    """
+class DemoOffline(IO):
 
     def start(self):
-        # load openpose python api
-        if self.arg.openpose is not None:
-            sys.path.append('{}/python'.format(self.arg.openpose))
-            sys.path.append('{}/build/python'.format(self.arg.openpose))
-        try:
-            from openpose import pyopenpose as op
-        except:
-            print('Can not find Openpose Python API.')
-            return
-
-        video_name = self.arg.video.split('/')[-1].split('.')[0]
+        
+        # initiate
         label_name_path = './resource/kinetics_skeleton/label_name.txt'
         with open(label_name_path) as f:
             label_name = f.readlines()
             label_name = [line.rstrip() for line in label_name]
             self.label_name = label_name
 
-        # initiate
-        opWrapper = op.WrapperPython()
-        params = dict(model_folder='./models', model_pose='COCO')
-        opWrapper.configure(params)
-        opWrapper.start()
-        self.model.eval()
-        pose_tracker = naive_pose_tracker()
+        # pose estimation
+        video, data_numpy = self.pose_estimation()
 
-        if self.arg.video == 'camera_source':
-            video_capture = cv2.VideoCapture(0)
-        else:
-            video_capture = cv2.VideoCapture(self.arg.video)
+        # action recognition
+        data = torch.from_numpy(data_numpy)
+        data = data.unsqueeze(0)
+        data = data.float().to(self.dev).detach()  # (1, channel, frame, joint, person)
 
-        # start recognition
-        start_time = time.time()
-        frame_index = 0
-        while(True):
+        # model predict
+        voting_label_name, video_label_name, output, intensity = self.predict(data)
 
-            tic = time.time()
+        # render the video
+        images = self.render_video(data_numpy, voting_label_name,
+                            video_label_name, intensity, video)
 
-            # get image
-            ret, orig_image = video_capture.read()
-            if orig_image is None:
-                break
-            source_H, source_W, _ = orig_image.shape
-            orig_image = cv2.resize(
-                orig_image, (256 * source_W // source_H, 256))
-            H, W, _ = orig_image.shape
-            
-            # pose estimation
-            datum = op.Datum()
-            datum.cvInputData = orig_image
-            opWrapper.emplaceAndPop([datum])
-            multi_pose = datum.poseKeypoints  # (num_person, num_joint, 3)
-            if len(multi_pose.shape) != 3:
-                continue
-
-            # normalization
-            multi_pose[:, :, 0] = multi_pose[:, :, 0]/W
-            multi_pose[:, :, 1] = multi_pose[:, :, 1]/H
-            multi_pose[:, :, 0:2] = multi_pose[:, :, 0:2] - 0.5
-            multi_pose[:, :, 0][multi_pose[:, :, 2] == 0] = 0
-            multi_pose[:, :, 1][multi_pose[:, :, 2] == 0] = 0
-
-            # pose tracking
-            if self.arg.video == 'camera_source':
-                frame_index = int((time.time() - start_time)*self.arg.fps)
-            else:
-                frame_index += 1
-            pose_tracker.update(multi_pose, frame_index)
-            data_numpy = pose_tracker.get_skeleton_sequence()
-            data = torch.from_numpy(data_numpy)
-            data = data.unsqueeze(0)
-            data = data.float().to(self.dev).detach()  # (1, channel, frame, joint, person)
-
-            # model predict
-            voting_label_name, video_label_name, output, intensity = self.predict(
-                data)
-
-            # visualization
-            app_fps = 1 / (time.time() - tic)
-            image = self.render(data_numpy, voting_label_name,
-                                video_label_name, intensity, orig_image, app_fps)
+        # visualize
+        for image in images:
+            image = image.astype(np.uint8)
             cv2.imshow("ST-GCN", image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -140,24 +75,86 @@ class DemoRealtime(IO):
         for t in range(num_frame):
             frame_label_name = list()
             for m in range(num_person):
+                print(output.shape)
                 person_label = output[:, t, :, m].sum(dim=1).argmax(dim=0)
                 person_label_name = self.label_name[person_label]
                 frame_label_name.append(person_label_name)
             video_label_name.append(frame_label_name)
         return voting_label_name, video_label_name, output, intensity
 
-    def render(self, data_numpy, voting_label_name, video_label_name, intensity, orig_image, fps=0):
+    def render_video(self, data_numpy, voting_label_name, video_label_name, intensity, video):
         images = utils.visualization.stgcn_visualize(
-            data_numpy[:, [-1]],
+            data_numpy,
             self.model.graph.edge,
-            intensity[[-1]], [orig_image],
+            intensity, video,
             voting_label_name,
-            [video_label_name[-1]],
-            self.arg.height,
-            fps=fps)
-        image = next(images)
-        image = image.astype(np.uint8)
-        return image
+            video_label_name,
+            self.arg.height)
+        return images
+
+    def pose_estimation(self):
+        # load openpose python api
+        if self.arg.openpose is not None:
+            sys.path.append('{}/python'.format(self.arg.openpose))
+            sys.path.append('{}/build/python'.format(self.arg.openpose))
+        try:
+            from openpose import pyopenpose as op
+        except:
+            print('Can not find Openpose Python API.')
+            return
+
+
+        video_name = self.arg.video.split('/')[-1].split('.')[0]
+
+        # initiate
+        opWrapper = op.WrapperPython()
+        params = dict(model_folder='./models', model_pose='COCO')
+        opWrapper.configure(params)
+        opWrapper.start()
+        self.model.eval()
+        video_capture = cv2.VideoCapture(self.arg.video)
+        video_length = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+        pose_tracker = naive_pose_tracker(data_frame=video_length)
+
+        # pose estimation
+        start_time = time.time()
+        frame_index = 0
+        video = list()
+        while(True):
+
+            # get image
+            ret, orig_image = video_capture.read()
+            if orig_image is None:
+                break
+            source_H, source_W, _ = orig_image.shape
+            orig_image = cv2.resize(
+                orig_image, (256 * source_W // source_H, 256))
+            H, W, _ = orig_image.shape
+            video.append(orig_image)
+
+            # pose estimation
+            datum = op.Datum()
+            datum.cvInputData = orig_image
+            opWrapper.emplaceAndPop([datum])
+            multi_pose = datum.poseKeypoints  # (num_person, num_joint, 3)
+            if len(multi_pose.shape) != 3:
+                continue
+
+            # normalization
+            multi_pose[:, :, 0] = multi_pose[:, :, 0]/W
+            multi_pose[:, :, 1] = multi_pose[:, :, 1]/H
+            multi_pose[:, :, 0:2] = multi_pose[:, :, 0:2] - 0.5
+            multi_pose[:, :, 0][multi_pose[:, :, 2] == 0] = 0
+            multi_pose[:, :, 1][multi_pose[:, :, 2] == 0] = 0
+
+            # pose tracking
+            pose_tracker.update(multi_pose, frame_index)
+            frame_index += 1
+
+            print('Pose estimation ({}/{}).'.format(frame_index, video_length))
+
+        data_numpy = pose_tracker.get_skeleton_sequence()
+        return video, data_numpy
 
     @staticmethod
     def get_parser(add_help=False):
@@ -187,7 +184,7 @@ class DemoRealtime(IO):
                             type=int,
                             help='height of frame in the output video.')
         parser.set_defaults(
-            config='./config/st_gcn/kinetics-skeleton/demo_realtime.yaml')
+            config='./config/st_gcn/kinetics-skeleton/demo_offline.yaml')
         parser.set_defaults(print_log=False)
         # endregion yapf: enable
 
