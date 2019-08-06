@@ -101,10 +101,10 @@ python main.py demo [--video ${PATH_TO_VIDEO}] [--openpose ${PATH_TO_OPENPOSE}]
 
 Optional arguments:
 
-- `PATH_TO_OPENPOSE`: It is required if `PYTHONPATH` doesn't contain the Openpose Python API.
+- `PATH_TO_OPENPOSE`: It is required if the Openpose Python API is not in `PYTHONPATH`.
 - `PATH_TO_VIDEO`: Filename of the input video.
 
-<!-- The realtime demo also support to load video streams from camera source.
+<!-- The realtime demo also support to load video streams from camera source by
 ```
 python main.py demo --video camera
 ``` -->
