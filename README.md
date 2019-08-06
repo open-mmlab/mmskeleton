@@ -3,9 +3,7 @@
 A graph convolutional network for skeleton-based action recognition.
 
 <div align="center">
-
     <img src="resource/info/pipeline.png">
-
 </div>
 
 This repository holds the codebase, dataset and models for the paper>
@@ -31,46 +29,36 @@ Our demo for skeleton-based action recognition:
     <img src="resource/info/demo_video.gif", width="1200">
 
 </p>
-
 ST-GCN is able to exploit local pattern and correlation from human skeletons.
 Below figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
-
 <table style="width:100%; table-layout:fixed; ">
   <tr>
-
     <td><img width="150px" src="resource/info/S001C001P001R001A044_w.gif"></td>
     <td><img width="150px" src="resource/info/S003C001P008R001A008_w.gif"></td>
     <td><img width="150px" src="resource/info/S002C001P010R001A017_w.gif"></td>
     <td><img width="150px" src="resource/info/S003C001P008R001A002_w.gif"></td>
     <td><img width="150px" src="resource/info/S001C001P001R001A051_w.gif"></td>
-
   </tr>
   <tr>
-
     <td><font size="1">Touch head<font></td>
     <td><font size="1">Sitting down<font></td>
     <td><font size="1">Take off a shoe<font></td>
     <td><font size="1">Eat meal/snack<font></td>
     <td><font size="1">Kick other person<font></td>
-
   </tr>
   <tr>
-
     <td><img width="150px" src="resource/info/hammer_throw_w.gif"></td>
     <td><img width="150px" src="resource/info/clean_and_jerk_w.gif"></td>
     <td><img width="150px" src="resource/info/pull_ups_w.gif"></td>
     <td><img width="150px" src="resource/info/tai_chi_w.gif"></td>
     <td><img width="150px" src="resource/info/juggling_balls_w.gif"></td>
-
   </tr>
   <tr>
-
     <td><font size="1">Hammer throw<font></td>
     <td><font size="1">Clean and jerk<font></td>
     <td><font size="1">Pull ups<font></td>
     <td><font size="1">Tai chi<font></td>
     <td><font size="1">Juggling ball<font></td>
-
   </tr>
 </table>
 
