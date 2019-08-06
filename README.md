@@ -91,7 +91,7 @@ You can also obtain models from [GoogleDrive](https://drive.google.com/drive/fol
 
 **Openpose** [Python API](https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/installation.md#python-api) is required in this demo. You can use the following commands to run the demo.
 
-``` 
+```shell
 # with offline pose estimation
 python main.py demo_offline [--video ${PATH_TO_VIDEO}] [--openpose ${PATH_TO_OPENPOSE}]
 
