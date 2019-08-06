@@ -104,7 +104,7 @@ def stgcn_visualize(pose,
         rgb_result[rgb_result > 255] = 255
         rgb_result.astype(np.uint8)
 
-        put_text(skeleton, 'inputs of st-gcn', (0.1, 0.5))
+        put_text(skeleton, 'inputs of st-gcn', (0.15, 0.5))
 
         text_1 = cv2.imread(
             './resource/demo_asset/original_video.png', cv2.IMREAD_UNCHANGED)
@@ -126,6 +126,9 @@ def stgcn_visualize(pose,
         if label is not None:
             label_name = 'voting result: ' + label
             put_text(skeleton_result, label_name, (0.1, 0.5))
+
+        if fps is not None:
+            put_text(skeleton, 'fps:{:.2f}'.format(fps), (0.9, 0.5))
 
         img0 = np.concatenate((frame, skeleton), axis=1)
         img1 = np.concatenate((skeleton_result, rgb_result), axis=1)
