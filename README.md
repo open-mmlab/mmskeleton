@@ -1,23 +1,20 @@
-# Spatial Temporal Graph Convolutional Networks (ST-GCN)
-A graph convolutional network for skeleton-based action recognition.
+# MMSkeleton
+
+## News
+
+ST-GCN has joined into the [open-mmlab](https://github.com/open-mmlab) project in charge of [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/). 
+The new ST-GCN will be named as **MMSkeleton**.
+It is going to be an open source toolbox for skeleton-based human understanding,
+including but not limited to pose estimation, action recognition and skeleton sequence generation.
+
+## Introduction
+This repository holds the codebase, dataset and models for the paper:
+
+**Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition** Sijie Yan, Yuanjun Xiong and Dahua Lin, AAAI 2018. [[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
 
 <div align="center">
     <img src="resource/info/pipeline.png">
 </div>
-
-This repository holds the codebase, dataset and models for the paper>
-
-**Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition** Sijie Yan, Yuanjun Xiong and Dahua Lin, AAAI 2018.
-
-[[Arxiv Preprint]](https://arxiv.org/abs/1801.07455)
-
-## News & Updates
-- Aug. 6, 2019 - End-to-end action recognizer with Openpose Python API.
-- Aug. 5, 2019 - We complete the PyTorch 1.0 migration.
-- July. 10, 2019 - We provide processed data on NTU-RGB+D and kinetics-skeleton.
-- Feb. 21, 2019 - We provide pretrained models and training scripts on **NTU-RGB+D** and **kinetics-skeleton** datasets. So that you can achieve the performance we mentioned in the paper.
-- June. 5, 2018 - A demo for feature visualization and skeleton based action recognition is released.
-- June. 1, 2018 - We update our code base and complete the PyTorch 0.4.0 migration.
 
 ## Visulization of ST-GCN in Action
 Our demo for skeleton-based action recognition:
