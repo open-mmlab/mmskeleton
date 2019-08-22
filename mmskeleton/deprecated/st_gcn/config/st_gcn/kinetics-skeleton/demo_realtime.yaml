@@ -1,0 +1,15 @@
+weights: ./models/st_gcn.kinetics.pt
+model_fps: 30
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 3
+  num_class: 400
+  edge_importance_weighting: True
+  graph_args:
+    layout: 'openpose'
+    strategy: 'spatial'
+    
+# training
+device: [0]
