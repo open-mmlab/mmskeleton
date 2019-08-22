@@ -1,0 +1,35 @@
+work_dir: ./work_dir/recognition/ntu-xview/ST_GCN_TWO_STREAM
+
+# feeder
+feeder: feeder.feeder.Feeder
+train_feeder_args:
+  data_path: ./data/NTU-RGB-D/xview/train_data.npy
+  label_path: ./data/NTU-RGB-D/xview/train_label.pkl
+test_feeder_args:
+  data_path: ./data/NTU-RGB-D/xview/val_data.npy
+  label_path: ./data/NTU-RGB-D/xview/val_label.pkl
+
+# model
+model: net.st_gcn_twostream.Model
+model_args:
+  in_channels: 3
+  num_class: 60
+  dropout: 0.5
+  edge_importance_weighting: True
+  graph_args:
+    layout: 'ntu-rgb+d'
+    strategy: 'spatial'
+
+#optim
+weight_decay: 0.0001
+base_lr: 0.1
+step: [10, 50]
+
+# training
+device: [0,1,2,3]
+batch_size: 32 
+test_batch_size: 32
+num_epoch: 80
+
+
+

@@ -1,0 +1,36 @@
+work_dir: ./work_dir/recognition/kinetics_skeleton/ST_GCN
+
+# feeder
+feeder: feeder.feeder.Feeder
+train_feeder_args:
+  random_choose: True
+  random_move: True
+  window_size: 150 
+  data_path: ./data/Kinetics/kinetics-skeleton/train_data.npy
+  label_path: ./data/Kinetics/kinetics-skeleton/train_label.pkl
+test_feeder_args:
+  data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
+  label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 3
+  num_class: 400
+  edge_importance_weighting: True
+  graph_args:
+    layout: 'openpose'
+    strategy: 'spatial'
+
+# training
+device: [0,1,2,3]
+batch_size: 256 
+test_batch_size: 256
+
+#optim
+base_lr: 0.1
+step: [20, 30, 40, 50]
+num_epoch: 50
+
+
+

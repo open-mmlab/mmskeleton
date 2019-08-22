@@ -1,0 +1,22 @@
+weights: ./models/st_gcn.kinetics.pt
+
+# feeder
+feeder: feeder.feeder.Feeder
+test_feeder_args:
+  data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
+  label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 3
+  num_class: 400
+  edge_importance_weighting: True
+  graph_args:
+    layout: 'openpose'
+    strategy: 'spatial'
+
+# test 
+phase: test
+device: 0
+test_batch_size: 64

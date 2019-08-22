@@ -1,0 +1,24 @@
+weights: ./models/st_gcn.ntu-xsub.pt
+
+# feeder
+feeder: feeder.feeder.Feeder
+test_feeder_args:
+  data_path: ./data/NTU-RGB-D/xsub/val_data.npy
+  label_path: ./data/NTU-RGB-D/xsub/val_label.pkl
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 3
+  num_class: 60
+  dropout: 0.5
+  edge_importance_weighting: True
+  graph_args:
+    layout: 'ntu-rgb+d'
+    strategy: 'spatial'
+
+# test 
+phase: test
+device: 0
+test_batch_size: 64
+

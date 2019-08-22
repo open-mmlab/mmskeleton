@@ -1,0 +1,3 @@
+st_gcn.kinetics.pt
+st_gcn.ntu-xview.pt
+st_gcn.ntu-xsub.pt
