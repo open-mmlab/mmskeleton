@@ -1,7 +1,7 @@
 import os
 import subprocess
 import time
-from setuptools import Extension, find_packages, setup
+from setuptools import find_packages, setup
 
 def readme():
     with open('README.md', encoding='utf-8') as f:
@@ -76,6 +76,11 @@ def get_version():
         exec(compile(f.read(), version_file, 'exec'))
     return locals()['__version__']
 
+def get_requirements(filename='requirements.txt'):
+    here = os.path.dirname(os.path.realpath(__file__))
+    with open(os.path.join(here, filename), 'r') as f:
+        requires = [line.replace('\n', '') for line in f.readlines()]
+    return requires
 
 if __name__ == '__main__':
     write_version_py()
@@ -102,7 +107,6 @@ if __name__ == '__main__':
         license='Apache License 2.0',
         setup_requires=['pytest-runner'],
         tests_require=['pytest'],
-        install_requires=[
-            'mmcv>=0.2.10', 'numpy',  'torch>=1.1'
-        ],
+        dependency_links=['http://github.com/open-mmlab/mmdetection/tarball/master#egg=mmdetection-v1.0rc0'],
+        install_requires=get_requirements(),
         zip_safe=False)
