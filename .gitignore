@@ -109,3 +109,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# custom
+mmskeleton/version.py
+data
+.vscode
