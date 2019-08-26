@@ -4,6 +4,7 @@ processor_args:
   model: '.models.pseudo.model'
   model_args:
     in_channels: 3
+    out_channels: 60
     weight: null
   dataset: '.datasets.pseudo.dataset'
   dataset_args:
