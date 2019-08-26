@@ -1,7 +1,7 @@
 processor_cfg: 
   name: '.processor.pseudo.train'
 
-  optimizer: 'null'
+  optimizer: null
 
   model_cfg: 
     name: '.models.pseudo.model'
@@ -12,6 +12,3 @@ processor_cfg:
   dataset_cfg: 
     name: '.datasets.pseudo.dataset'
     data_path: null
-
-
-    
