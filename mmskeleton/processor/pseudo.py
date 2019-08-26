@@ -1,6 +1,6 @@
 from mmskeleton.utils import call_obj
 
 
-def train(model, model_args, dataset, dataset_args, optimizer):
-    model = call_obj(model, model_args)
-    dataset = call_obj(dataset, dataset_args)
+def train(model_cfg, dataset_cfg, optimizer):
+    model = call_obj(model_cfg)
+    dataset = call_obj(dataset_cfg)

@@ -1,11 +1,17 @@
-processor: '.processor.pseudo.train'
-processor_args:
+processor_cfg: 
+  name: '.processor.pseudo.train'
+
   optimizer: 'null'
-  model: '.models.pseudo.model'
-  model_args:
+
+  model_cfg: 
+    name: '.models.pseudo.model'
     in_channels: 3
     out_channels: 60
     weight: null
-  dataset: '.datasets.pseudo.dataset'
-  dataset_args:
+    
+  dataset_cfg: 
+    name: '.datasets.pseudo.dataset'
     data_path: null
+
+
+    
