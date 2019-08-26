@@ -87,7 +87,7 @@ if __name__ == '__main__':
     setup(
         name='mmskeleton',
         version=get_version(),
-        description='Open MMLab Human Understanding Toolbox',
+        description='Open MMLab Skeleton-based Human Understanding Toolbox',
         long_description=readme(),
         keywords='computer vision, human understanding, action recognition',
         url='https://github.com/open-mmlab/mmskeleton',
