@@ -9,7 +9,6 @@ from mmskeleton.utils import call_obj
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a action recognizer')
     parser.add_argument('config', help='train config file path')
-    parser.add_argument('--work_dir', help='the dir to save logs and models')
     args = parser.parse_args()
     return args
 
