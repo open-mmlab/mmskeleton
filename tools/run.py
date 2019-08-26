@@ -2,8 +2,9 @@ import argparse
 import os
 
 import torch
-import mmskeleton
 from mmcv import Config
+import mmskeleton
+from mmskeleton.utils import call_obj
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a action recognizer')
@@ -15,8 +16,8 @@ def parse_args():
 def main():
     args = parse_args()
     cfg = Config.fromfile(args.config)
-    print(type(cfg))
-    print(type(cfg.model))
+    processor = call_obj(cfg.processor, cfg.processor_args)
 
 if __name__ == "__main__":
     main()
+    

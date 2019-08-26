@@ -1,0 +1,10 @@
+processor: '.processor.pseudo.train'
+processor_args:
+  optimizer: 'null'
+  model: '.models.pseudo.model'
+  model_args:
+    in_channels: 3
+    weight: null
+  dataset: '.datasets.pseudo.dataset'
+  dataset_args:
+    data_path: null
