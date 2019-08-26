@@ -107,6 +107,5 @@ if __name__ == '__main__':
         license='Apache License 2.0',
         setup_requires=['pytest-runner'],
         tests_require=['pytest'],
-        dependency_links=['http://github.com/open-mmlab/mmdetection/tarball/master#egg=mmdetection-v1.0rc0'],
         install_requires=get_requirements(),
         zip_safe=False)
