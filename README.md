@@ -16,6 +16,6 @@ pip install -e .
 
 ``` shell
 # run a pseudo processor for training.
-python tools/run.py configs/pseudo/train.py
+python tools/run.py configs/pseudo/train.yaml
 ```
 
