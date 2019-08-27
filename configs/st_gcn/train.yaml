@@ -15,5 +15,6 @@ processor_cfg:
 
   # dataset setting
   dataset_cfg: 
-    name: '.datasets.pseudo.dataset'
-    data_path: null
+    name: '.datasets.SkeletonFeeder'
+    data_path: ./data/NTU-RGB-D/xview/train_data.npy
+    label_path: ./data/NTU-RGB-D/xview/train_label.pkl
