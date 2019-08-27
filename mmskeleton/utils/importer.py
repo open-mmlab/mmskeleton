@@ -19,4 +19,6 @@ def import_obj(name):
 def call_obj(name, **kwargs):
     if isinstance(name, dict):
         return call_obj(**name)
+    if isinstance(name, list):
+        return [call_obj(n) for n in name]
     return import_obj(name)(**kwargs)
