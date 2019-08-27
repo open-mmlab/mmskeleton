@@ -15,7 +15,7 @@ def parse_args():
 def main():
     args = parse_args()
     cfg = Config.fromfile(args.config)
-    call_obj(cfg.processor_cfg)
+    call_obj(**cfg.processor_cfg)
 
 if __name__ == "__main__":
     main()
