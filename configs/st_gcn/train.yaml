@@ -1,6 +1,5 @@
 processor_cfg: 
-  name: '.processor.pseudo.train'
-  optimizer: null
+  name: '.processor.recognizer.train'
 
   # model setting
   model_cfg: 
@@ -18,3 +17,26 @@ processor_cfg:
     name: '.datasets.SkeletonFeeder'
     data_path: ./data/NTU-RGB-D/xview/train_data.npy
     label_path: ./data/NTU-RGB-D/xview/train_label.pkl
+  
+  # dataloader setting
+  batch_size: 64 
+
+  # optimizer setting
+  optimizer_cfg:
+    name: 'torch.optim.SGD'
+    lr: 0.1
+    momentum: 0.9
+    nesterov: true
+    weight_decay: 0.0001
+
+  # runner setting
+  work_dir: work_dir/tmp
+  log_level: 0
+  lr_config:
+    policy: 'step'
+    step: [10, 50]
+  total_epochs: 80
+  gpus: 4
+
+  # device: [0,1,2,3]
+  # test_batch_size: 64

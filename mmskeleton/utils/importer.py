@@ -15,10 +15,5 @@ def import_obj(name):
     except AttributeError:
         raise ImportError('Object {} cannot be found.'.format(class_str))
 
-
 def call_obj(name, **kwargs):
-    if isinstance(name, dict):
-        return call_obj(**name)
-    if isinstance(name, list):
-        return [call_obj(n) for n in name]
     return import_obj(name)(**kwargs)
