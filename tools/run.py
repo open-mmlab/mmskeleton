@@ -44,16 +44,13 @@ def parse_cfg():
         if 'bind_to' not in info:
             continue
         value = getattr(args, key)
-
-
-        if isinstance(value, str):
-            value = "'{}'".format(value)
         set_attr(cfg, info['bind_to'], value)
     
     return cfg
 
 def main():
     cfg = parse_cfg()
+    print(cfg)
     call_obj(**cfg.processor_cfg)
 
 if __name__ == "__main__":
