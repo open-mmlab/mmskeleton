@@ -1,8 +1,5 @@
 # MMSkeleton
 
-## Updates
-[2019-08-29] MMSkeleton v0.5 is released.
-
 ## Introduction
 
 MMSkeleton is an open source toolbox for skeleton-based human understanding.
@@ -11,6 +8,9 @@ It is a part of the [open-mmlab](https://github.com/open-mmlab) project develope
 <p align="center">
     <img src="demo/recognition/demo_video.gif", width="700">
 </p>
+
+## Updates
+[2019-08-29] MMSkeleton v0.5 is released.
 
 ## Features
 
@@ -26,25 +26,11 @@ It is a part of the [open-mmlab](https://github.com/open-mmlab) project develope
     - 2D/3D pose estimation
     - pose tracking
 
-
 ## Getting Started
-
-First, install mmsksleton by:
-``` shell
-python setup.py develop
-```
-Any application in mmskeleton, such as training a action recognizer, is described by a configuration file. It can be started by a uniform command:
-``` shell
-python run.py $CONFIG_FILE [--options $OPTHION]
-```
-Optional arguments `options` are defined in configuration files,
-check them via:
-``` shell
-python run.py $CONFIG_FILE -h
-```
+Please see [GETTING_STARTED.md](./doc/GETTING_STARTED.md) for the basic usage of MMSkeleton.
 
 ## License
-The project is release under the [Apache 2.0 license](https://github.com/open-mmlab/mmskeleton/blob/master/LICENSE).
+The project is release under the [Apache 2.0 license](./LICENSE).
 
 ## Citation
 Please cite the following paper if you use this repository in your reseach.
