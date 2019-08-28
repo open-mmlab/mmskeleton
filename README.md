@@ -2,8 +2,8 @@
 
 ## Introduction
 
-MMSkeleton is an open source toolbox for skeleton-based human understanding, 
-including but not limited to pose estimation, action recognition and skeleton sequence generation.
+MMSkeleton is an open source toolbox for skeleton-based human understanding.
+<!-- including but not limited to pose estimation, action recognition and skeleton sequence generation. -->
 It is a part of the [open-mmlab](https://github.com/open-mmlab) project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
 
 <p align="center">
@@ -11,11 +11,10 @@ It is a part of the [open-mmlab](https://github.com/open-mmlab) project develope
 </p>
 
 ## Installation
-
 ``` shell
-pip install -e .
+python setup.py develop
+# or "pip install -e ."
 ```
-
 
 ## Run
 
