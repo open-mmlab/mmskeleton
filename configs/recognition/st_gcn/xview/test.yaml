@@ -10,7 +10,7 @@ argparse_cfg:
 
 
 processor_cfg: 
-  name: '.processor.recognizer.test'
+  name: '.processor.recognition.test'
   checkpoint:
 
   # model setting
@@ -27,8 +27,8 @@ processor_cfg:
   # dataset setting
   dataset_cfg: 
     name: '.datasets.SkeletonFeeder'
-    data_path: ./data/NTU-RGB-D/xsub/val_data.npy
-    label_path: ./data/NTU-RGB-D/xsub/val_label.pkl
+    data_path: ./data/NTU-RGB-D/xview/val_data.npy
+    label_path: ./data/NTU-RGB-D/xview/val_label.pkl
     # debug: true
 
   # dataloader setting
