@@ -10,7 +10,7 @@ argparse_cfg:
 
 
 processor_cfg: 
-  name: '.processor.recognizer.test'
+  name: '.processor.recognition.test'
   checkpoint:
 
   # model setting

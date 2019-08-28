@@ -58,6 +58,7 @@ def train(
     resume_from=None,
     load_from=None,
 ):
+
     # prepare data loaders
     if isinstance(dataset_cfg, dict):
         dataset_cfg = [dataset_cfg]
