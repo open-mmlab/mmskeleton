@@ -4,7 +4,7 @@
 - Linux (Windows is not officially supported)
 - Python 3.5+ (Python 2 is not supported)
 - [PyTorch 1.1](http://pytorch.org/) or higher
-- CUDA 9.0 or higher
+- CUDA
 
 **Install mmskeleton**
 
