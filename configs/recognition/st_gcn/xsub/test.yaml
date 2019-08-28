@@ -8,7 +8,6 @@ argparse_cfg:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
 
-
 processor_cfg: 
   name: '.processor.recognition.test'
   checkpoint:
