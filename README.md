@@ -29,16 +29,15 @@ It is a part of the [open-mmlab](https://github.com/open-mmlab) project develope
 First, install mmsksleton by:
 ``` shell
 python setup.py develop
-# or "pip install -e ."
 ```
 Any application in mmskeleton, such as training a action recognizer, is described by a configuration file. It can be started by a uniform command:
 ``` shell
-python run.py <config file> [--options OPTHION]
+python run.py $CONFIG_FILE [--options $OPTHION]
 ```
-Optional arguments `options` are also defined in configuration files,
+Optional arguments `options` are defined in configuration files,
 check them via:
 ``` shell
-python run.py <config file> -h
+python run.py $CONFIG_FILE -h
 ```
 
 ## License
