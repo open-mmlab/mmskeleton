@@ -8,10 +8,25 @@ import mmskeleton
 from mmskeleton.utils import call_obj
 
 
+""" Configuration Formation 
+
+argparse_cfg:
+  <shortcut_name 1>:
+    bind_to: <full variable path>
+    help: <help message>
+  <shortcut_name 2>:
+    ...
+
+processor_cfg: 
+  name: <full processor path>
+  ...
+
+"""
+
 
 def parse_cfg():
     parser = argparse.ArgumentParser(description='Run a processor')
-    parser.add_argument('config', help='processor config file path')
+    parser.add_argument('config', help='configuration file path')
 
     # add argument from configuration file
     cfg = Config.fromfile(sys.argv[1])
