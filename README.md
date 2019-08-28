@@ -1,5 +1,8 @@
 # MMSkeleton
 
+## Updates
+[2019-08-29] MMSkeleton v0.5 is released.
+
 ## Introduction
 
 MMSkeleton is an open source toolbox for skeleton-based human understanding.
