@@ -1,6 +1,5 @@
 import sys
 
-
 def import_obj(name):
     if not isinstance(name, str):
         raise ImportError('Object name should be a string.')
@@ -17,3 +16,23 @@ def import_obj(name):
 
 def call_obj(name, **kwargs):
     return import_obj(name)(**kwargs)
+
+def set_attr(obj, name, value):
+    if not isinstance(name, str):
+        raise ImportError('Attribute name should be a string.')
+    
+    attr, _sep, others = name.partition('.')
+    if others == '':
+        setattr(obj, attr, value)
+    else:
+        set_attr(getattr(obj, attr), others, value)
+
+def get_attr(obj, name):
+    if not isinstance(name, str):
+        raise ImportError('Attribute name should be a string.')
+    
+    attr, _sep, others = name.partition('.')
+    if others == '':
+        return getattr(obj, attr)
+    else:
+        return get_attr(getattr(obj, attr), others)

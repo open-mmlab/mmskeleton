@@ -1,10 +1,11 @@
 argparse_cfg:
   gpus: 
     bind_to: processor_cfg.gpus
-    help:
+    help: number of gpus
   work_dir: 
     bind_to: processor_cfg.work_dir
-
+  batch_size: 
+    bind_to: processor_cfg.batch_size
 
 processor_cfg: 
   name: '.processor.recognizer.train'
