@@ -2,10 +2,18 @@ argparse_cfg:
   gpus: 
     bind_to: processor_cfg.gpus
     help: number of gpus
+    
   work_dir: 
     bind_to: processor_cfg.work_dir
+    help: the dir to save logs and models
+
   batch_size: 
     bind_to: processor_cfg.batch_size
+
+  resume_from:
+    bind_to: processor_cfg.resume_from
+    help: the checkpoint file to resume from
+
 
 processor_cfg: 
   name: '.processor.recognizer.train'
