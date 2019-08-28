@@ -34,7 +34,7 @@ def parse_cfg():
         if 'bind_to' not in info:
             continue
         default = get_attr(cfg, info['bind_to'])
-        kwargs = dict(default=default, type=type(default))
+        kwargs = dict(default=default)
         kwargs.update({k:v for k,v in info.items() if k != 'bind_to'})
         parser.add_argument('--' + key, **kwargs)
     args = parser.parse_args()
@@ -50,7 +50,6 @@ def parse_cfg():
 
 def main():
     cfg = parse_cfg()
-    print(cfg)
     call_obj(**cfg.processor_cfg)
 
 if __name__ == "__main__":
