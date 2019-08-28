@@ -7,7 +7,7 @@ python setup.py develop
 
 **Usage:**
 
-Any application in mmskeleton is described by a configuration file. It can be started by a uniform command:
+Any application in mmskeleton is described by a configuration file. That can be started by a uniform command:
 ``` shell
 python run.py $CONFIG_FILE [--options $OPTHION]
 ```
