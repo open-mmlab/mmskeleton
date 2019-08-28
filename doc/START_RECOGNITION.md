@@ -32,15 +32,15 @@ python run.py configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml [optional ar
 where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
 
 All outputs (log files and ) will be saved to the working directory, which is specified by `work_dir` in the config file.
-If you want to specify the working directory in the command, you can add an argument `--work_dir ${YOUR_WORK_DIR}`. Check all optional arguments via adding `-h` argument.
+If you want to specify the working directory in the command, you can add an argument `--work_dir ${YOUR_WORK_DIR}`. Check all optional arguments via adding `--help` argument.
 
 Model evaluation can be achieved by:
 ``` shell
-python run.py configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml --checkpoint $CHECKPOINT_FILE [optional arguments]
+python run.py configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml --checkpoint $CHECKPOINT_FILE
 ```
 
 ### Results
-The expected **Top-1** **accuracy** of provided models are shown here:
+The expected **Top-1** **accuracy** are shown here:
 
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
