@@ -7,7 +7,7 @@ including but not limited to pose estimation, action recognition and skeleton se
 It is a part of the [open-mmlab](https://github.com/open-mmlab) project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
 
 <p align="center">
-    <img src="demo/recognition/demo_video.gif", width="600">
+    <img src="demo/recognition/demo_video.gif", width="800">
 </p>
 
 ## Installation
