@@ -27,7 +27,7 @@ It is a part of the [open-mmlab](https://github.com/open-mmlab) project develope
     - pose tracking
 
 ## Getting Started
-Please see [GETTING_STARTED.md](./doc/GETTING_STARTED.md) for the basic usage of MMSkeleton.
+Please see [GETTING_STARTED.md](./doc/GETTING_STARTED.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for the basic usage of MMSkeleton.
 
 ## License
 The project is release under the [Apache 2.0 license](./LICENSE).
