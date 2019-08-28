@@ -1,9 +1,9 @@
 argparse_cfg:
   gpus: 
-    param: processor_cfg.gpus
+    bind_to: processor_cfg.gpus
     help:
   work_dir: 
-    param: processor_cfg.work_dir
+    bind_to: processor_cfg.work_dir
 
 
 processor_cfg: 
