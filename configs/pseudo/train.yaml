@@ -1,3 +1,9 @@
+argparse_cfg:
+  data_path: 
+    bind_to: processor_cfg.dataset_cfg.data_path
+    help: 'path for loading data'
+
+
 processor_cfg: 
   name: '.processor.pseudo.train'
   optimizer: null
@@ -8,4 +14,4 @@ processor_cfg:
     weight: null
   dataset_cfg: 
     name: '.datasets.pseudo.dataset'
-    data_path: null
+    data_path: './data/pseudo'
