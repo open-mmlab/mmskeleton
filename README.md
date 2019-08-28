@@ -20,5 +20,9 @@ python tools/run.py configs/pseudo/train.yaml
 
 # train st-gcn.
 python tools/run.py configs/st_gcn/train.yaml
+
+# show help message
+python <config file> -h
+
 ```
 
