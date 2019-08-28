@@ -17,5 +17,8 @@ pip install -e .
 ``` shell
 # run a pseudo processor for training.
 python tools/run.py configs/pseudo/train.yaml
+
+# train st-gcn.
+python tools/run.py configs/st_gcn/train.yaml
 ```
 

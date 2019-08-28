@@ -54,8 +54,7 @@ def parse_cfg():
 
 def main():
     cfg = parse_cfg()
-    print(cfg)
-    # call_obj(**cfg.processor_cfg)
+    call_obj(**cfg.processor_cfg)
 
 if __name__ == "__main__":
     main()
