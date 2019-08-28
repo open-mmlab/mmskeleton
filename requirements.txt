@@ -1,1 +1,2 @@
-mmdet @ https://github.com/open-mmlab/mmdetection/archive/v1.0rc0.tar.gz
+torch
+# mmdet @ https://github.com/open-mmlab/mmdetection/archive/v1.0rc0.tar.gz

@@ -2,7 +2,7 @@
 
 ## News
 
-ST-GCN has joined into the [open-mmlab](https://github.com/open-mmlab) project in charge of [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/). 
+ST-GCN has joined into the [open-mmlab](https://github.com/open-mmlab) project in charge of [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
 The new ST-GCN will be named as **MMSkeleton**.
 It is going to be an open source toolbox for skeleton-based human understanding,
 including but not limited to pose estimation, action recognition and skeleton sequence generation.
@@ -24,7 +24,7 @@ Our demo for skeleton-based action recognition:
 
 
 ST-GCN is able to exploit local pattern and correlation from human skeletons.
-Below figures show the neural response magnitude of each node in the last layer of our ST-GCN. 
+Below figures show the neural response magnitude of each node in the last layer of our ST-GCN.
 
 
 <table style="width:100%; table-layout:fixed;">
@@ -58,7 +58,7 @@ Below figures show the neural response magnitude of each node in the last layer 
   </tr>
 </table>
 
-The first row of above results is from **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**. 
+The first row of above results is from **NTU-RGB+D** dataset, and the second row is from **Kinetics-skeleton**.
 
 
 ## Prerequisites
@@ -112,11 +112,11 @@ python main.py demo --video camera
 
 We experimented on two skeleton-based action recognition datasts: **Kinetics-skeleton** and **NTU RGB+D**.
 Before training and testing, for convenience of fast data loading,
-the datasets should be converted to proper file structure. 
-You can download the pre-processed data from 
+the datasets should be converted to proper file structure.
+You can download the pre-processed data from
 [GoogleDrive](https://drive.google.com/open?id=103NOL9YYZSW1hLoWmYnv5Fs8mK-Ij7qb)
 and extract files with
-``` 
+```
 cd st-gcn
 unzip <path to st-gcn-processed-data.zip>
 ```
@@ -156,7 +156,7 @@ python main.py recognition -c config/st_gcn/ntu-xview/test.yaml
 For **cross-subject** evaluation in **NTU RGB+D**, run
 ```
 python main.py recognition -c config/st_gcn/ntu-xsub/test.yaml
-``` 
+```
 
 <!-- Similary, the configuration file for testing baseline models can be found under the ```./config/baseline```. -->
 
@@ -171,9 +171,9 @@ The expected **Top-1** **accuracy** of provided models are shown here:
 | Model| Kinetics-<br>skeleton (%)|NTU RGB+D <br> Cross View (%) |NTU RGB+D <br> Cross Subject (%) |
 | :------| :------: | :------: | :------: |
 |Baseline[1]| 20.3    | 83.1     |  74.3    |
-|**ST-GCN** (Ours)| **31.6**| **88.8** | **81.6** | 
+|**ST-GCN** (Ours)| **31.6**| **88.8** | **81.6** |
 
-[1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. 
+[1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW.
 
 ## Training
 To train a new ST-GCN model, run
