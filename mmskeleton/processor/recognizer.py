@@ -1,10 +1,9 @@
 from collections import OrderedDict
 import torch
 from mmskeleton.utils import call_obj, import_obj
-from mmcv.runner import DistSamplerSeedHook, Runner, obj_from_dict
+from mmcv.runner import Runner
 from mmcv import Config
 from mmcv.parallel import MMDataParallel
-
 
 def train(
     work_dir,
