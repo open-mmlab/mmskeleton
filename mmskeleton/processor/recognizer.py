@@ -1,9 +1,46 @@
 from collections import OrderedDict
 import torch
+import logging
+import numpy as np
 from mmskeleton.utils import call_obj, import_obj
-from mmcv.runner import Runner
-from mmcv import Config
+from mmcv.runner import Runner, load_checkpoint
+from mmcv import Config, ProgressBar
 from mmcv.parallel import MMDataParallel
+
+def test(model_cfg, dataset_cfg, checkpoint, batch_size=64, gpus=1, workers=4):
+    dataset = call_obj(**dataset_cfg)
+    data_loader = torch.utils.data.DataLoader(
+        dataset=dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=workers)
+
+    # put model on gpus
+    if isinstance(model_cfg, list):
+        model = [call_obj(**c) for c in model_cfg]
+        model = torch.nn.Sequential(*model)
+    else:
+        model = call_obj(**model_cfg)
+    model = MMDataParallel(model, device_ids=range(gpus)).cuda()
+    models = torch.nn.ModuleList((model, ))
+    load_checkpoint(models, checkpoint, map_location='cpu')
+    model.eval()
+
+    results = []
+    labels = []
+    prog_bar = ProgressBar(len(dataset))
+    for data, label in data_loader:
+        with torch.no_grad():
+            output = model(data).data.cpu().numpy()
+        results.append(output)
+        labels.append(label)
+        for i in range(len(data)):
+            prog_bar.update()
+    results = np.concatenate(results)
+    labels = np.concatenate(labels)
+
+    print('Top 1: {:.2f}%'.format(100 * topk_accuracy(results, labels, 1)))
+    print('Top 5: {:.2f}%'.format(100 * topk_accuracy(results, labels, 5)))
 
 def train(
     work_dir,
@@ -56,6 +93,7 @@ def train(
     workflow = [tuple(w) for w in workflow]
     runner.run(data_loaders, workflow, total_epochs)
 
+# process a batch of data
 def batch_processor(models, datas, train_mode):
 
     data, label = datas

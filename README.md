@@ -20,6 +20,8 @@ python tools/run.py configs/pseudo/train.yaml
 
 # train st-gcn.
 python tools/run.py configs/st_gcn/train.yaml
+# test st-gcn.
+python tools/run.py configs/st_gcn/test.yaml --checkpoint $CHECKPOINT_PATH
 
 # show help message
 python <config file> -h
