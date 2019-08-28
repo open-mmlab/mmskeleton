@@ -18,4 +18,5 @@ python run.py $CONFIG_FILE -h
 ```
 
 **Example:**
-Please see [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a skeleton-based action recognitoin model.
+
+See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a skeleton-based action recognitoin model.

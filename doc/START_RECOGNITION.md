@@ -29,7 +29,8 @@ To train a ST-GCN model, run
 ``` shell
 python run.py configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml [optional arguments]
 ```
-, where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
+where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
+
 All outputs (log files and ) will be saved to the working directory, which is specified by `work_dir` in the config file.
 If you want to specify the working directory in the command, you can add an argument `--work_dir ${YOUR_WORK_DIR}`. Check all optional arguments via adding `-h` argument.
 
