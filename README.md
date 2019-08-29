@@ -34,7 +34,7 @@ The project is release under the [Apache 2.0 license](./LICENSE).
 
 ## Contributing
 We appreciate all contributions to improve MMSkeleton.
-Please refer to [CONTRUBUTING.md](./doc/CONTRUBUTING.md) for the contributing guideline.
+Please refer to [CONTRIBUTING.md](./doc/CONTRIBUTING.md) for the contributing guideline.
 
 
 ## Citation
