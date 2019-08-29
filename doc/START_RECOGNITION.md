@@ -27,7 +27,7 @@ unzip <path to st-gcn-processed-data.zip>
 To train a ST-GCN model, run
 
 ``` shell
-python run.py configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml [optional arguments]
+mmskl configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml [optional arguments]
 ```
 where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
 
@@ -36,7 +36,7 @@ If you want to specify the working directory in the command, you can add an argu
 
 Model evaluation can be achieved by:
 ``` shell
-python run.py configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml --checkpoint $CHECKPOINT_FILE
+mmskl configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml --checkpoint $CHECKPOINT_FILE
 ```
 
 ### Results
