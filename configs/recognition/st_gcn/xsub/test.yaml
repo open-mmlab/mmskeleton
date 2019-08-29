@@ -1,32 +1,31 @@
 argparse_cfg:
-  gpus: 
+  gpus:
     bind_to: processor_cfg.gpus
     help: number of gpus
-  batch_size: 
+  batch_size:
     bind_to: processor_cfg.batch_size
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
 
-
-processor_cfg: 
-  name: '.processor.recognition.test'
+processor_cfg:
+  name: ".processor.recognition.test"
   checkpoint:
 
   # model setting
   model_cfg:
-    name: '.models.backbones.ST_GCN'
+    name: ".models.backbones.ST_GCN"
     in_channels: 3
     num_class: 60
     dropout: 0.5
     edge_importance_weighting: True
     graph_cfg:
-      layout: 'ntu-rgb+d'
-      strategy: 'spatial'
+      layout: "ntu-rgb+d"
+      strategy: "spatial"
 
   # dataset setting
-  dataset_cfg: 
-    name: '.datasets.SkeletonFeeder'
+  dataset_cfg:
+    name: ".datasets.SkeletonFeeder"
     data_path: ./data/NTU-RGB-D/xsub/val_data.npy
     label_path: ./data/NTU-RGB-D/xsub/val_label.pkl
     # debug: true

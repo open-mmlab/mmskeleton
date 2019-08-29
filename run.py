@@ -6,8 +6,6 @@ import torch
 from mmcv import Config
 import mmskeleton
 from mmskeleton.utils import call_obj, set_attr, get_attr
-
-
 """ Configuration Structure 
 
 argparse_cfg:
@@ -35,7 +33,7 @@ def parse_cfg():
             continue
         default = get_attr(cfg, info['bind_to'])
         kwargs = dict(default=default)
-        kwargs.update({k:v for k,v in info.items() if k != 'bind_to'})
+        kwargs.update({k: v for k, v in info.items() if k != 'bind_to'})
         parser.add_argument('--' + key, **kwargs)
     args = parser.parse_args()
 
@@ -45,13 +43,14 @@ def parse_cfg():
             continue
         value = getattr(args, key)
         set_attr(cfg, info['bind_to'], value)
-    
+
     return cfg
+
 
 def main():
     cfg = parse_cfg()
     call_obj(**cfg.processor_cfg)
 
+
 if __name__ == "__main__":
     main()
-    

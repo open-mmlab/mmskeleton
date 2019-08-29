@@ -15,6 +15,7 @@ from torchvision import datasets, transforms
 # operation
 from .utils import skeleton
 
+
 class SkeletonFeeder(torch.utils.data.Dataset):
     """ Feeder for skeleton-based action recognition
     Arguments:
@@ -26,7 +27,6 @@ class SkeletonFeeder(torch.utils.data.Dataset):
         normalization: If true, normalize input sequence
         debug: If true, only use the first 100 samples
     """
-
     def __init__(self,
                  data_path,
                  label_path,
@@ -56,7 +56,7 @@ class SkeletonFeeder(torch.utils.data.Dataset):
             self.data = np.load(self.data_path, mmap_mode='r')
         else:
             self.data = np.load(self.data_path)
-            
+
         if self.debug:
             self.label = self.label[0:100]
             self.data = self.data[0:100]
@@ -71,7 +71,7 @@ class SkeletonFeeder(torch.utils.data.Dataset):
         # get data
         data_numpy = np.array(self.data[index])
         label = self.label[index]
-        
+
         # processing
         if self.random_choose:
             data_numpy = skeleton.random_choose(data_numpy, self.window_size)

@@ -17,6 +17,7 @@ num_joint = 25
 max_frame = 300
 toolbar_width = 30
 
+
 def print_toolbar(rate, annotation=''):
     # setup toolbar
     sys.stdout.write("{}[".format(annotation))
@@ -50,12 +51,12 @@ def gendata(data_path,
     for filename in os.listdir(data_path):
         if filename in ignored_samples:
             continue
-        action_class = int(
-            filename[filename.find('A') + 1:filename.find('A') + 4])
-        subject_id = int(
-            filename[filename.find('P') + 1:filename.find('P') + 4])
-        camera_id = int(
-            filename[filename.find('C') + 1:filename.find('C') + 4])
+        action_class = int(filename[filename.find('A') + 1:filename.find('A') +
+                                    4])
+        subject_id = int(filename[filename.find('P') + 1:filename.find('P') +
+                                  4])
+        camera_id = int(filename[filename.find('C') + 1:filename.find('C') +
+                                 4])
 
         if benchmark == 'xview':
             istraining = (camera_id in training_cameras)
@@ -79,18 +80,20 @@ def gendata(data_path,
         pickle.dump((sample_name, list(sample_label)), f)
     # np.save('{}/{}_label.npy'.format(out_path, part), sample_label)
 
-    fp = open_memmap(
-        '{}/{}_data.npy'.format(out_path, part),
-        dtype='float32',
-        mode='w+',
-        shape=(len(sample_label), 3, max_frame, num_joint, max_body))
+    fp = open_memmap('{}/{}_data.npy'.format(out_path, part),
+                     dtype='float32',
+                     mode='w+',
+                     shape=(len(sample_label), 3, max_frame, num_joint,
+                            max_body))
 
     for i, s in enumerate(sample_name):
-        print_toolbar(i * 1.0 / len(sample_label),
-                      '({:>5}/{:<5}) Processing {:>5}-{:<5} data: '.format(
-                          i + 1, len(sample_name), benchmark, part))
-        data = read_xyz(
-            os.path.join(data_path, s), max_body=max_body, num_joint=num_joint)
+        print_toolbar(
+            i * 1.0 / len(sample_label),
+            '({:>5}/{:<5}) Processing {:>5}-{:<5} data: '.format(
+                i + 1, len(sample_name), benchmark, part))
+        data = read_xyz(os.path.join(data_path, s),
+                        max_body=max_body,
+                        num_joint=num_joint)
         fp[i, :, 0:data.shape[1], :, :] = data
     end_toolbar()
 
@@ -98,8 +101,8 @@ def gendata(data_path,
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='NTU-RGB-D Data Converter.')
-    parser.add_argument(
-        '--data_path', default='data/NTU-RGB-D/nturgb+d_skeletons')
+    parser.add_argument('--data_path',
+                        default='data/NTU-RGB-D/nturgb+d_skeletons')
     parser.add_argument(
         '--ignored_sample_path',
         default='resource/NTU-RGB-D/samples_with_missing_skeletons.txt')
@@ -114,9 +117,8 @@ if __name__ == '__main__':
             out_path = os.path.join(arg.out_folder, b)
             if not os.path.exists(out_path):
                 os.makedirs(out_path)
-            gendata(
-                arg.data_path,
-                out_path,
-                arg.ignored_sample_path,
-                benchmark=b,
-                part=p)
+            gendata(arg.data_path,
+                    out_path,
+                    arg.ignored_sample_path,
+                    benchmark=b,
+                    part=p)

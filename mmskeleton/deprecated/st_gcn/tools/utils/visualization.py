@@ -19,7 +19,7 @@ def stgcn_visualize(pose,
 
         # image resize
         H, W, c = frame.shape
-        frame = cv2.resize(frame, (height * W // H // 2, height//2))
+        frame = cv2.resize(frame, (height * W // H // 2, height // 2))
         H, W, c = frame.shape
         scale_factor = 2 * height / 1080
 
@@ -106,14 +106,14 @@ def stgcn_visualize(pose,
 
         put_text(skeleton, 'inputs of st-gcn', (0.15, 0.5))
 
-        text_1 = cv2.imread(
-            './resource/demo_asset/original_video.png', cv2.IMREAD_UNCHANGED)
-        text_2 = cv2.imread(
-            './resource/demo_asset/pose_estimation.png', cv2.IMREAD_UNCHANGED)
-        text_3 = cv2.imread(
-            './resource/demo_asset/attention+prediction.png', cv2.IMREAD_UNCHANGED)
-        text_4 = cv2.imread(
-            './resource/demo_asset/attention+rgb.png', cv2.IMREAD_UNCHANGED)
+        text_1 = cv2.imread('./resource/demo_asset/original_video.png',
+                            cv2.IMREAD_UNCHANGED)
+        text_2 = cv2.imread('./resource/demo_asset/pose_estimation.png',
+                            cv2.IMREAD_UNCHANGED)
+        text_3 = cv2.imread('./resource/demo_asset/attention+prediction.png',
+                            cv2.IMREAD_UNCHANGED)
+        text_4 = cv2.imread('./resource/demo_asset/attention+rgb.png',
+                            cv2.IMREAD_UNCHANGED)
 
         try:
             blend(frame, text_1)
@@ -138,13 +138,15 @@ def stgcn_visualize(pose,
 
 
 def put_text(img, text, position, scale_factor=1):
-    t_w, t_h = cv2.getTextSize(
-        text, cv2.FONT_HERSHEY_TRIPLEX, scale_factor, thickness=1)[0]
+    t_w, t_h = cv2.getTextSize(text,
+                               cv2.FONT_HERSHEY_TRIPLEX,
+                               scale_factor,
+                               thickness=1)[0]
     H, W, _ = img.shape
     position = (int(W * position[1] - t_w * 0.5),
                 int(H * position[0] - t_h * 0.5))
-    params = (position, cv2.FONT_HERSHEY_TRIPLEX, scale_factor,
-              (255, 255, 255))
+    params = (position, cv2.FONT_HERSHEY_TRIPLEX, scale_factor, (255, 255,
+                                                                 255))
     cv2.putText(img, text, *params)
 
 
@@ -156,6 +158,6 @@ def blend(background, foreground, dx=20, dy=10, fy=0.7):
     mask = np.dstack((a, a, a))
     rgb = np.dstack((b, g, r))
 
-    canvas = background[-h-dy:-dy, dx:w+dx]
+    canvas = background[-h - dy:-dy, dx:w + dx]
     imask = mask > 0
     canvas[imask] = rgb[imask]

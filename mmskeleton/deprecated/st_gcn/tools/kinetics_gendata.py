@@ -1,4 +1,3 @@
-
 import os
 import sys
 import pickle
@@ -12,6 +11,7 @@ sys.path.append(
 from feeder.feeder_kinetics import Feeder_kinetics
 
 toolbar_width = 30
+
 
 def print_toolbar(rate, annotation=''):
     # setup toolbar
@@ -38,27 +38,26 @@ def gendata(
         num_person_out=2,  #then choose 2 persons with the highest score 
         max_frame=300):
 
-    feeder = Feeder_kinetics(
-        data_path=data_path,
-        label_path=label_path,
-        num_person_in=num_person_in,
-        num_person_out=num_person_out,
-        window_size=max_frame)
+    feeder = Feeder_kinetics(data_path=data_path,
+                             label_path=label_path,
+                             num_person_in=num_person_in,
+                             num_person_out=num_person_out,
+                             window_size=max_frame)
 
     sample_name = feeder.sample_name
     sample_label = []
 
-    fp = open_memmap(
-        data_out_path,
-        dtype='float32',
-        mode='w+',
-        shape=(len(sample_name), 3, max_frame, 18, num_person_out))
+    fp = open_memmap(data_out_path,
+                     dtype='float32',
+                     mode='w+',
+                     shape=(len(sample_name), 3, max_frame, 18,
+                            num_person_out))
 
     for i, s in enumerate(sample_name):
         data, label = feeder[i]
-        print_toolbar(i * 1.0 / len(sample_name),
-                      '({:>5}/{:<5}) Processing data: '.format(
-                          i + 1, len(sample_name)))
+        print_toolbar(
+            i * 1.0 / len(sample_name),
+            '({:>5}/{:<5}) Processing data: '.format(i + 1, len(sample_name)))
         fp[i, :, 0:data.shape[1], :, :] = data
         sample_label.append(label)
 
@@ -69,10 +68,10 @@ def gendata(
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Kinetics-skeleton Data Converter.')
-    parser.add_argument(
-        '--data_path', default='data/Kinetics/kinetics-skeleton')
-    parser.add_argument(
-        '--out_folder', default='data/Kinetics/kinetics-skeleton')
+    parser.add_argument('--data_path',
+                        default='data/Kinetics/kinetics-skeleton')
+    parser.add_argument('--out_folder',
+                        default='data/Kinetics/kinetics-skeleton')
     arg = parser.parse_args()
 
     part = ['train', 'val']
