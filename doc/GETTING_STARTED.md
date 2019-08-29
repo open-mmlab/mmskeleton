@@ -5,7 +5,7 @@
 python setup.py develop
 ```
 
-**Usage:**
+**Basic usage:**
 
 Any application in mmskeleton is described by a configuration file. That can be started by a uniform command:
 ``` shell
@@ -23,4 +23,4 @@ mmskl $CONFIG_FILE -h
 
 **Example:**
 
-See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a skeleton-based action recognitoin model.
+See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a model for skeleton-based action recognitoin.

@@ -23,7 +23,8 @@ processor_cfg:
 
 
 def parse_cfg():
-    parser = argparse.ArgumentParser(description='Run a processor')
+
+    parser = argparse.ArgumentParser(description='Run a processor.')
     parser.add_argument('config', help='configuration file path')
 
     if len(sys.argv) <= 1:
@@ -35,8 +36,10 @@ def parse_cfg():
 
     # load argument setting from configuration file
     cfg = Config.fromfile(sys.argv[1])
+    if 'description' in cfg:
+        parser.description = cfg.description
     if 'argparse_cfg' not in cfg:
-        cfg.argparse_cfg = dict * ()
+        cfg.argparse_cfg = dict()
     for key, info in cfg.argparse_cfg.items():
         if 'bind_to' not in info:
             continue

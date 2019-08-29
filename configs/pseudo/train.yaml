@@ -1,3 +1,5 @@
+description: This is a pseudo processor.
+
 argparse_cfg:
   data_path:
     bind_to: processor_cfg.dataset_cfg.data_path
