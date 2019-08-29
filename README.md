@@ -21,7 +21,7 @@ It is a part of the [open-mmlab](https://github.com/open-mmlab) project develope
 - **Multiple tasks**
 
     MMSkeleton addresses to multiple tasks in human understanding, including but not limited to:
-    - skeleton-based action recognition
+    - skeleton-based action recognition: [[ST-GCN]](./doc/START_RECOGNITION.md)
     - skeleton-based action generation
     - 2D/3D pose estimation
     - pose tracking
