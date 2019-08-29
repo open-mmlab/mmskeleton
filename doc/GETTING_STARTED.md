@@ -1,6 +1,6 @@
 ## Getting Started
 
-**Install mmsksleton:**
+**Install mmskeleton:**
 ``` shell
 python setup.py develop
 ```
@@ -9,12 +9,14 @@ python setup.py develop
 
 Any application in mmskeleton is described by a configuration file. That can be started by a uniform command:
 ``` shell
-mmskl $CONFIG_FILE [--options $OPTHION]
-# or
 python run.py $CONFIG_FILE [--options $OPTHION]
 ```
-Optional arguments `options` are defined in configuration files,
-check them via:
+which is equivalent to
+```
+mmskl $CONFIG_FILE [--options $OPTHION]
+```
+Optional arguments `options` are defined in configuration files.
+You can check them via:
 ``` shell
 mmskl $CONFIG_FILE -h
 ```
