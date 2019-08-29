@@ -3,10 +3,12 @@ import subprocess
 import time
 from setuptools import find_packages, setup
 
+
 def readme():
     with open('README.md', encoding='utf-8') as f:
         content = f.read()
     return content
+
 
 MAJOR = 0
 MINOR = 1
@@ -18,7 +20,6 @@ version_file = 'mmskeleton/version.py'
 
 
 def get_git_hash():
-
     def _minimal_ext_cmd(cmd):
         # construct minimal environment
         env = {}
@@ -30,8 +31,8 @@ def get_git_hash():
         env['LANGUAGE'] = 'C'
         env['LANG'] = 'C'
         env['LC_ALL'] = 'C'
-        out = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, env=env).communicate()[0]
+        out = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                               env=env).communicate()[0]
         return out
 
     try:
@@ -76,36 +77,38 @@ def get_version():
         exec(compile(f.read(), version_file, 'exec'))
     return locals()['__version__']
 
+
 def get_requirements(filename='requirements.txt'):
     here = os.path.dirname(os.path.realpath(__file__))
     with open(os.path.join(here, filename), 'r') as f:
         requires = [line.replace('\n', '') for line in f.readlines()]
     return requires
 
+
 if __name__ == '__main__':
     write_version_py()
-    setup(
-        name='mmskeleton',
-        version=get_version(),
-        description='Open MMLab Skeleton-based Human Understanding Toolbox',
-        long_description=readme(),
-        keywords='computer vision, human understanding, action recognition',
-        url='https://github.com/open-mmlab/mmskeleton',
-        packages=find_packages(exclude=('configs', 'tools', 'demo')),
-        package_data={'mmskeleton.ops': ['*/*.so']},
-        classifiers=[
-            'Development Status :: 4 - Beta',
-            'License :: OSI Approved :: Apache Software License',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.4',
-            'Programming Language :: Python :: 3.5',
-            'Programming Language :: Python :: 3.6',
-        ],
-        license='Apache License 2.0',
-        setup_requires=['pytest-runner'],
-        tests_require=['pytest'],
-        install_requires=get_requirements(),
-        zip_safe=False)
+    setup(name='mmskeleton',
+          version=get_version(),
+          scripts=['./tools/mmskl'],
+          description='Open MMLab Skeleton-based Human Understanding Toolbox',
+          long_description=readme(),
+          keywords='computer vision, human understanding, action recognition',
+          url='https://github.com/open-mmlab/mmskeleton',
+          packages=find_packages(exclude=('configs', 'tools', 'demo')),
+          package_data={'mmskeleton.ops': ['*/*.so']},
+          classifiers=[
+              'Development Status :: 4 - Beta',
+              'License :: OSI Approved :: Apache Software License',
+              'Operating System :: OS Independent',
+              'Programming Language :: Python :: 2',
+              'Programming Language :: Python :: 2.7',
+              'Programming Language :: Python :: 3',
+              'Programming Language :: Python :: 3.4',
+              'Programming Language :: Python :: 3.5',
+              'Programming Language :: Python :: 3.6',
+          ],
+          license='Apache License 2.0',
+          setup_requires=['pytest-runner'],
+          tests_require=['pytest'],
+          install_requires=get_requirements(),
+          zip_safe=False)

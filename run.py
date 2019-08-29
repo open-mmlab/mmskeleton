@@ -26,8 +26,17 @@ def parse_cfg():
     parser = argparse.ArgumentParser(description='Run a processor')
     parser.add_argument('config', help='configuration file path')
 
+    if len(sys.argv) <= 1:
+        args = parser.parse_args()
+        return
+    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+        args = parser.parse_args()
+        return
+
     # load argument setting from configuration file
     cfg = Config.fromfile(sys.argv[1])
+    if 'argparse_cfg' not in cfg:
+        cfg.argparse_cfg = dict * ()
     for key, info in cfg.argparse_cfg.items():
         if 'bind_to' not in info:
             continue
