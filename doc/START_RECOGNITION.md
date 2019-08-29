@@ -1,4 +1,4 @@
-## Start Action Recognition
+## Start Action Recognition Using ST-GCN
 
 This repository holds the codebase for the paper:
 
@@ -13,8 +13,8 @@ This repository holds the codebase for the paper:
 
 We experimented on two skeleton-based action recognition datasts: **Kinetics-skeleton** and **NTU RGB+D**.
 Before training and testing, for the convenience of fast data loading,
-the datasets should be converted to proper format.
-Download the pre-processed data from
+the datasets should be converted to the proper format.
+Please download the pre-processed data from
 [GoogleDrive](https://drive.google.com/open?id=103NOL9YYZSW1hLoWmYnv5Fs8mK-Ij7qb)
 and extract files with
 ```
