@@ -6,6 +6,7 @@ from torch.autograd import Variable
 from net.utils.tgcn import ConvTemporalGraphical
 from net.utils.graph import Graph
 
+
 class Model(nn.Module):
     r"""Spatial temporal graph convolutional networks.
 
@@ -25,14 +26,15 @@ class Model(nn.Module):
             :math:`V_{in}` is the number of graph nodes,
             :math:`M_{in}` is the number of instance in a frame.
     """
-
     def __init__(self, in_channels, num_class, graph_args,
                  edge_importance_weighting, **kwargs):
         super().__init__()
 
         # load graph
         self.graph = Graph(**graph_args)
-        A = torch.tensor(self.graph.A, dtype=torch.float32, requires_grad=False)
+        A = torch.tensor(self.graph.A,
+                         dtype=torch.float32,
+                         requires_grad=False)
         self.register_buffer('A', A)
 
         # build networks
@@ -115,6 +117,7 @@ class Model(nn.Module):
 
         return output, feature
 
+
 class st_gcn(nn.Module):
     r"""Applies a spatial temporal graph convolution over an input graph sequence.
 
@@ -139,7 +142,6 @@ class st_gcn(nn.Module):
             :math:`V` is the number of graph nodes.
 
     """
-
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -178,11 +180,10 @@ class st_gcn(nn.Module):
 
         else:
             self.residual = nn.Sequential(
-                nn.Conv2d(
-                    in_channels,
-                    out_channels,
-                    kernel_size=1,
-                    stride=(stride, 1)),
+                nn.Conv2d(in_channels,
+                          out_channels,
+                          kernel_size=1,
+                          stride=(stride, 1)),
                 nn.BatchNorm2d(out_channels),
             )
 

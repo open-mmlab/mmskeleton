@@ -28,7 +28,6 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         num_person_out: The number of people the feeder in the output sequence
         debug: If true, only use the first 100 samples
     """
-
     def __init__(self,
                  data_path,
                  label_path,
@@ -137,8 +136,8 @@ class Feeder_kinetics(torch.utils.data.Dataset):
         # sort by score
         sort_index = (-data_numpy[2, :, :, :].sum(axis=1)).argsort(axis=1)
         for t, s in enumerate(sort_index):
-            data_numpy[:, t, :, :] = data_numpy[:, t, :, s].transpose((1, 2,
-                                                                       0))
+            data_numpy[:, t, :, :] = data_numpy[:, t, :, s].transpose(
+                (1, 2, 0))
         data_numpy = data_numpy[:, :, :, 0:self.num_person_out]
 
         # match poses between 2 frames

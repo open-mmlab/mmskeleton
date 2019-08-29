@@ -20,7 +20,8 @@ def read_skeleton(file):
                 ]
                 body_info = {
                     k: float(v)
-                    for k, v in zip(body_info_key, f.readline().split())
+                    for k, v in zip(body_info_key,
+                                    f.readline().split())
                 }
                 body_info['numJoint'] = int(f.readline())
                 body_info['jointInfo'] = []
@@ -32,7 +33,8 @@ def read_skeleton(file):
                     ]
                     joint_info = {
                         k: float(v)
-                        for k, v in zip(joint_info_key, f.readline().split())
+                        for k, v in zip(joint_info_key,
+                                        f.readline().split())
                     }
                     body_info['jointInfo'].append(joint_info)
                 frame_info['bodyInfo'].append(body_info)

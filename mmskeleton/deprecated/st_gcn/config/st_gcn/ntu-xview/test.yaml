@@ -14,11 +14,10 @@ model_args:
   dropout: 0.5
   edge_importance_weighting: True
   graph_args:
-    layout: 'ntu-rgb+d'
-    strategy: 'spatial'
+    layout: "ntu-rgb+d"
+    strategy: "spatial"
 
-# test 
+# test
 phase: test
 device: 0
 test_batch_size: 64
-

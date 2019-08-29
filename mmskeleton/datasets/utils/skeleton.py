@@ -148,8 +148,9 @@ def openpose_match(data_numpy):
     # generate data
     new_data_numpy = np.zeros(data_numpy.shape)
     for t in range(T):
-        new_data_numpy[:, t, :, :] = data_numpy[:, t, :, forward_map[
-            t]].transpose(1, 2, 0)
+        new_data_numpy[:, t, :, :] = data_numpy[:, t, :,
+                                                forward_map[t]].transpose(
+                                                    1, 2, 0)
     data_numpy = new_data_numpy
 
     # score sort
@@ -171,7 +172,8 @@ def top_k_by_category(label, score, top_k):
     accuracy_list = []
     for hit_per_category in hit_top_k:
         if hit_per_category:
-            accuracy_list.append(sum(hit_per_category) * 1.0 / len(hit_per_category))
+            accuracy_list.append(
+                sum(hit_per_category) * 1.0 / len(hit_per_category))
         else:
             accuracy_list.append(0.0)
     return accuracy_list

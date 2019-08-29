@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Graph():
     """ The Graph to model the skeletons extracted by the openpose
 
@@ -21,7 +22,6 @@ class Graph():
         dilation (int): controls the spacing between the kernel points
 
     """
-
     def __init__(self,
                  layout='openpose',
                  strategy='uniform',
@@ -31,8 +31,9 @@ class Graph():
         self.dilation = dilation
 
         self.get_edge(layout)
-        self.hop_dis = get_hop_distance(
-            self.num_node, self.edge, max_hop=max_hop)
+        self.hop_dis = get_hop_distance(self.num_node,
+                                        self.edge,
+                                        max_hop=max_hop)
         self.get_adjacency(strategy)
 
     def __str__(self):
@@ -42,20 +43,20 @@ class Graph():
         if layout == 'openpose':
             self.num_node = 18
             self_link = [(i, i) for i in range(self.num_node)]
-            neighbor_link = [(4, 3), (3, 2), (7, 6), (6, 5), (13, 12), (12,
-                                                                        11),
-                             (10, 9), (9, 8), (11, 5), (8, 2), (5, 1), (2, 1),
-                             (0, 1), (15, 0), (14, 0), (17, 15), (16, 14)]
+            neighbor_link = [(4, 3), (3, 2), (7, 6), (6, 5),
+                             (13, 12), (12, 11), (10, 9), (9, 8), (11, 5),
+                             (8, 2), (5, 1), (2, 1), (0, 1), (15, 0), (14, 0),
+                             (17, 15), (16, 14)]
             self.edge = self_link + neighbor_link
             self.center = 1
         elif layout == 'ntu-rgb+d':
             self.num_node = 25
             self_link = [(i, i) for i in range(self.num_node)]
-            neighbor_1base = [(1, 2), (2, 21), (3, 21), (4, 3), (5, 21),
-                              (6, 5), (7, 6), (8, 7), (9, 21), (10, 9),
-                              (11, 10), (12, 11), (13, 1), (14, 13), (15, 14),
-                              (16, 15), (17, 1), (18, 17), (19, 18), (20, 19),
-                              (22, 23), (23, 8), (24, 25), (25, 12)]
+            neighbor_1base = [(1, 2), (2, 21), (3, 21),
+                              (4, 3), (5, 21), (6, 5), (7, 6), (8, 7), (9, 21),
+                              (10, 9), (11, 10), (12, 11), (13, 1), (14, 13),
+                              (15, 14), (16, 15), (17, 1), (18, 17), (19, 18),
+                              (20, 19), (22, 23), (23, 8), (24, 25), (25, 12)]
             neighbor_link = [(i - 1, j - 1) for (i, j) in neighbor_1base]
             self.edge = self_link + neighbor_link
             self.center = 21 - 1
@@ -104,9 +105,8 @@ class Graph():
                             if self.hop_dis[j, self.center] == self.hop_dis[
                                     i, self.center]:
                                 a_root[j, i] = normalize_adjacency[j, i]
-                            elif self.hop_dis[j, self.
-                                              center] > self.hop_dis[i, self.
-                                                                     center]:
+                            elif self.hop_dis[j, self.center] > self.hop_dis[
+                                    i, self.center]:
                                 a_close[j, i] = normalize_adjacency[j, i]
                             else:
                                 a_further[j, i] = normalize_adjacency[j, i]

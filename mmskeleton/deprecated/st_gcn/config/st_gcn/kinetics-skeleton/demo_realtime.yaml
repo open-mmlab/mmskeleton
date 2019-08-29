@@ -8,8 +8,8 @@ model_args:
   num_class: 400
   edge_importance_weighting: True
   graph_args:
-    layout: 'openpose'
-    strategy: 'spatial'
-    
+    layout: "openpose"
+    strategy: "spatial"
+
 # training
 device: [0]

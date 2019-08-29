@@ -17,8 +17,8 @@ model_args:
   dropout: 0.5
   edge_importance_weighting: True
   graph_args:
-    layout: 'ntu-rgb+d'
-    strategy: 'spatial'
+    layout: "ntu-rgb+d"
+    strategy: "spatial"
 
 #optim
 weight_decay: 0.0001
@@ -26,10 +26,7 @@ base_lr: 0.1
 step: [10, 50]
 
 # training
-device: [0,1,2,3]
-batch_size: 32 
+device: [0, 1, 2, 3]
+batch_size: 32
 test_batch_size: 32
 num_epoch: 80
-
-
-
