@@ -1,6 +1,15 @@
 ## Getting Started
 
 **Install mmskeleton:**
+
+Clone mmskeleton from github:
+
+``` shell
+git clone https://github.com/open-mmlab/mmskeleton.git
+cd mmskeleton
+```
+
+Install:
 ``` shell
 python setup.py develop
 ```
