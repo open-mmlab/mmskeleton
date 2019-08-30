@@ -42,7 +42,7 @@ The expected accuracies are shown here:
 | NTU RGB+D Cross Subject |       81.57        |       96.85        | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmskeleton/models/st-gcn/st_gcn.ntu-xsub-300b57d4.pth)  |
 
 
-## Training
+### Training
 
 To train a ST-GCN model, run
 
