@@ -31,9 +31,7 @@ The evaluation of pre-trained models on three datasets can be achieved by:
 mmskl configs/st_gcn/recognition/st_gcn/$DATASET/test.yaml
 ```
 where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
-
 Models will be downloaded automatically before testing.
-
 The expected accuracies are shown here:
 
 | Dataset                 | Top-1 Accuracy (%) | Top-5 Accuracy (%) |                                                      Download                                                      |
@@ -56,7 +54,7 @@ All outputs (log files and ) will be saved to the default working directory.
 That can be changed by modifying the configuration file
 or adding a optional argument `--work_dir $WORKING_DIRECTORY` in the command line.
 
-After that, evaluate your models can be achieved by:
+After that, evaluate your models by:
 
 ``` shell
 mmskl configs/st_gcn/recognition/st_gcn/$DATASET/test.yaml --checkpoint $CHECKPOINT_FILE
