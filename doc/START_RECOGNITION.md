@@ -21,7 +21,8 @@ and extract files with
 cd st-gcn
 unzip <path to st-gcn-processed-data.zip>
 ```
-If you want to process data by yourself, please refer to [PROCESS_SKELETON_DATA.md](./PROCESS_SKELETON_DATA.md) for more details.
+
+If you want to process data by yourself, please refer to [SKELETON_DATA.md](./SKELETON_DATA.md) for more details.
 
 ### Evaluate Pretrained Models
 
