@@ -8,4 +8,4 @@ We will **stop supporting** this repository soon.
 
 You are welcome to migrate to new 
 [MMSkeleton](https://github.com/open-mmlab/mmskeleton).
-If you want to use old ST-GCN, please refer to [st-gcn branch](https://github.com/open-mmlab/mmskeleton/tree/st-gcn) of MMSkeleton.
+If you want to use old ST-GCN, please refer to [OLD_README.md](./OLD_README.md).
