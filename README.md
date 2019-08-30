@@ -1,12 +1,15 @@
-# Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition
+# ST-GCN
 
 ## Reminder
 
-ST-GCN has transferred to **[MMSkeleton](https://github.com/open-mmlab/mmskeleton)**,
+ST-GCN has transferred to MMSkeleton,
 and keep on developing as an flexible open source toolbox for skeleton-based human understanding.
+Custom networks, data loaders and checkpoints of old st-gcn are compatible with MMSkeleton.
 
-Custom networks, data loaders and checkpoints of old st-gcn are compatible with mmskeleton.
-We will stop supporting this repository soon. Please migrate to new **[MMSkeleton](https://github.com/open-mmlab/mmskeleton)**.
+
+We will **stop supporting** this repository soon.
+Click [here](https://github.com/open-mmlab/mmskeleton) to visit MMSkeleton
+
 
 
 ## Introduction
