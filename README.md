@@ -1,10 +1,11 @@
 ## Reminder
 
-ST-GCN has transferred to **MMSkeleton**,
+ST-GCN has transferred to MMSkeleton,
 and keep on developing as an flexible open source toolbox for skeleton-based human understanding.
 
 Custom networks, data loaders and checkpoints of old st-gcn are compatible with MMSkeleton.
-We will **stop supporting** this repository soon. You are welcome to migrate to new 
-**[MMSkeleton](https://github.com/open-mmlab/mmskeleton)**.
+We will **stop supporting** this repository soon.
 
+You are welcome to migrate to new 
+[MMSkeleton](https://github.com/open-mmlab/mmskeleton).
 If you want to use old ST-GCN, please refer to [st-gcn branch](https://github.com/open-mmlab/mmskeleton/tree/st-gcn) of MMSkeleton.
