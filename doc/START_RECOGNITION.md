@@ -22,6 +22,27 @@ cd st-gcn
 unzip <path to st-gcn-processed-data.zip>
 ```
 
+
+### Evaluate Pretrained Models
+
+The evaluation of pre-trained models on three datasets can be achieved by:
+
+``` shell
+mmskl configs/st_gcn/recognition/st_gcn/$DATASET/test.yaml
+```
+where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
+
+Models will be downloaded automatically before testing.
+
+The expected accuracies are shown here:
+
+| Dataset                 | Top-1 Accuracy (%) | Top-5 Accuracy (%) |                                                      Download                                                      |
+|:------------------------|:------------------:|:------------------:|:------------------------------------------------------------------------------------------------------------------:|
+| Kinetics-skeleton       |       31.60        |       53.68        | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmskeleton/models/st-gcn/st_gcn.kinetics-6fa43f73.pth)  |
+| NTU RGB+D Cross View    |       88.76        |       98.83        | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmskeleton/models/st-gcn/st_gcn.ntu-xview-9ba67746.pth) |
+| NTU RGB+D Cross Subject |       81.57        |       96.85        | [model](https://open-mmlab.s3.ap-northeast-2.amazonaws.com/mmskeleton/models/st-gcn/st_gcn.ntu-xsub-300b57d4.pth)  |
+
+
 ## Training
 
 To train a ST-GCN model, run
@@ -29,22 +50,14 @@ To train a ST-GCN model, run
 ``` shell
 mmskl configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml [optional arguments]
 ```
-where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
 
-All outputs (log files and ) will be saved to the working directory, which is specified by `work_dir` in the config file.
-If you want to specify the working directory in the command, you can add an argument `--work_dir ${YOUR_WORK_DIR}`. Check all optional arguments via adding `--help` argument.
+The usage of optional arguments can be checked via adding `--help` argument.
+All outputs (log files and ) will be saved to the default working directory.
+That can be changed by modifying the configuration file
+or adding a optional argument `--work_dir $WORKING_DIRECTORY` in the command line.
 
-Model evaluation can be achieved by:
+After that, evaluate your models can be achieved by:
+
 ``` shell
-mmskl configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml --checkpoint $CHECKPOINT_FILE
+mmskl configs/st_gcn/recognition/st_gcn/$DATASET/test.yaml --checkpoint $CHECKPOINT_FILE
 ```
-
-### Results
-The expected **Top-1** **accuracy** are shown here:
-
-| Model             | Kinetics-<br>skeleton (%) | NTU RGB+D <br> Cross View (%) | NTU RGB+D <br> Cross Subject (%) |
-|:------------------|:-------------------------:|:-----------------------------:|:--------------------------------:|
-| **ST-GCN** (Ours) |         **31.6**          |           **88.8**            |             **81.6**             |
-
-<!-- |                   |        Baseline[1]        |             20.3              |            83.1|74.3|            | -->
-<!-- [1] Kim, T. S., and Reiter, A. 2017. Interpretable 3d human action analysis with temporal convolutional networks. In BNMW CVPRW. -->

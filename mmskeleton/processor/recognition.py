@@ -2,8 +2,8 @@ from collections import OrderedDict
 import torch
 import logging
 import numpy as np
-from mmskeleton.utils import call_obj, import_obj
-from mmcv.runner import Runner, load_checkpoint
+from mmskeleton.utils import call_obj, import_obj, load_checkpoint
+from mmcv.runner import Runner
 from mmcv import Config, ProgressBar
 from mmcv.parallel import MMDataParallel
 
@@ -21,9 +21,8 @@ def test(model_cfg, dataset_cfg, checkpoint, batch_size=64, gpus=1, workers=4):
         model = torch.nn.Sequential(*model)
     else:
         model = call_obj(**model_cfg)
+    load_checkpoint(model, checkpoint, map_location='cpu')
     model = MMDataParallel(model, device_ids=range(gpus)).cuda()
-    models = torch.nn.ModuleList((model, ))
-    load_checkpoint(models, checkpoint, map_location='cpu')
     model.eval()
 
     results = []
@@ -80,11 +79,10 @@ def train(
     model.apply(weights_init)
     model = MMDataParallel(model, device_ids=range(gpus)).cuda()
     loss = call_obj(**loss_cfg)
-    models = torch.nn.ModuleList((model, loss))
 
     # build runner
     optimizer = call_obj(params=model.parameters(), **optimizer_cfg)
-    runner = Runner(models, batch_processor, optimizer, work_dir, log_level)
+    runner = Runner(model, batch_processor, optimizer, work_dir, log_level)
     runner.register_training_hooks(**training_hooks)
 
     if resume_from:
@@ -94,16 +92,15 @@ def train(
 
     # run
     workflow = [tuple(w) for w in workflow]
-    runner.run(data_loaders, workflow, total_epochs)
+    runner.run(data_loaders, workflow, total_epochs, loss=loss)
 
 
 # process a batch of data
-def batch_processor(models, datas, train_mode):
+def batch_processor(model, datas, train_mode, loss):
 
     data, label = datas
     data = data.cuda()
     label = label.cuda()
-    model, loss = models
 
     # forward
     output = model(data)

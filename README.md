@@ -3,7 +3,8 @@
 ## Introduction
 
 MMSkeleton is an open source toolbox for skeleton-based human understanding.
-It is a part of the [open-mmlab](https://github.com/open-mmlab) project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
+It is a part of the [open-mmlab](https://github.com/open-mmlab) project in the charge of [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
+MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysijie/st-gcn).
 
 <p align="center">
     <img src="demo/recognition/demo_video.gif", width="700">
