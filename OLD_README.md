@@ -63,7 +63,8 @@ The first row of above results is from **NTU-RGB+D** dataset, and the second row
 
 
 ### Installation
-```
+``` shell
+git clone https://github.com/yysijie/st-gcn.git; cd st-gcn
 cd torchlight; python setup.py install; cd ..
 ```
 
