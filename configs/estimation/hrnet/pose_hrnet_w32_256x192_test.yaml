@@ -1,0 +1,123 @@
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  work_dir:
+    bind_to: processor_cfg.work_dir
+    help: the dir to save logs and models
+  batch_size:
+    bind_to: processor_cfg.batch_size
+
+
+processor_cfg:
+  name: '.processor.twodimestimation.test'
+  model_cfg:
+    name: '.models.estimator.HRPoseEstimator'
+    backbone:
+      name: '.models.backbones.HRNet'
+      extra:
+        target_type: gaussian
+        stage1:
+          num_modules: 1
+          num_branches: 1
+          block: 'BOTTLENECK'
+          num_blocks:
+            - 4
+          num_channels:
+            - 64
+        stage2:
+          num_modules: 1
+          num_branches: 2
+          block: 'BASIC'
+          num_blocks:
+            - 4
+            - 4
+          num_channels:
+            - 32
+            - 64
+          fuse_method: SUM
+        stage3:
+          num_modules: 4
+          num_branches: 3
+          block: 'BASIC'
+          num_blocks:
+            - 4
+            - 4
+            - 4
+          num_channels:
+            - 32
+            - 64
+            - 128
+          fuse_method: SUM
+        stage4:
+          num_modules: 3
+          num_branches: 4
+          block: 'BASIC'
+          num_blocks:
+            - 4
+            - 4
+            - 4
+            - 4
+          num_channels:
+            - 32
+            - 64
+            - 128
+            - 256
+          fuse_method: SUM
+    skeleton_head:
+      name: '.models.skeleton_head.SimpleSkeletonHead'
+      num_convs: 1
+      in_channels: 32
+      kernel_size: 1
+      num_joints: 17
+      reg_loss:
+        name: '.models.loss.JointsMSELoss'
+        use_target_weight: False
+
+  dataset_cfg:
+    name: '.datasets.COCODataset'
+    cfg:
+      test:
+        rank: 0
+        out_dir: 'pass/'
+        color_rgb: true
+        data_format: jpg
+        rot_factor: 45
+        scale_factor: 0.35
+        flip: true
+        num_joints_half_body: 8
+        prob_half_body: 0.3
+        target_type: 'gaussian'
+        box_thre: 1.0
+        nms_thre: 1.0
+        image_thre: 0.0
+        soft_nms: false
+        oks_thre: 0.9
+        in_vis_thre: 0.2
+        bbox_file: 'data/coco/person_detection_results/COCO_val2017_detections_AP_H_56_person.json'
+        use_gt_bbox: false
+        image_size:
+          - 192
+          - 256
+        heatmap_size:
+          - 48
+          - 64
+        sigma: 2
+        loss_use_different_joints_weights: false
+        select_data: false
+    root: 'data/coco/'
+    image_set: 'val2017'
+    is_train: false
+
+  batch_size: 16
+  gpus: 4
+  checkpoint: 'log/hrnet_official/official.pth'
+
+  test_cfg:
+    flip: true
+    shift_heatmap:  true
+    post_process: true
+    rank: 0
+
+  work_dir: '../'
+

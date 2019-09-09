@@ -1,0 +1,127 @@
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  work_dir:
+    bind_to: processor_cfg.work_dir
+    help: the dir to save logs and models
+  batch_size:
+    bind_to: processor_cfg.batch_size
+  resume_from:
+    bind_to: processor_cfg.resume_from
+    help: the checkpoint file to resume from
+
+processor_cfg:
+  name: '.processor.twodimestimation.train'
+  model_cfg:
+    name: '.models.estimator.HRPoseEstimator'
+    backbone:
+      name: '.models.backbones.HRNet'
+      extra:
+        target_type: gaussian
+        stage1:
+          num_modules: 1
+          num_branches: 1
+          block: 'BOTTLENECK'
+          num_blocks:
+            - 4
+          num_channels:
+            - 64
+        stage2:
+          num_modules: 1
+          num_branches: 2
+          block: 'BASIC'
+          num_blocks:
+            - 4
+            - 4
+          num_channels:
+            - 32
+            - 64
+          fuse_method: SUM
+        stage3:
+          num_modules: 4
+          num_branches: 3
+          block: 'BASIC'
+          num_blocks:
+            - 4
+            - 4
+            - 4
+          num_channels:
+            - 32
+            - 64
+            - 128
+          fuse_method: SUM
+        stage4:
+          num_modules: 3
+          num_branches: 4
+          block: 'BASIC'
+          num_blocks:
+            - 4
+            - 4
+            - 4
+            - 4
+          num_channels:
+            - 32
+            - 64
+            - 128
+            - 256
+          fuse_method: SUM
+    skeleton_head:
+      name: '.models.skeleton_head.SimpleSkeletonHead'
+      num_convs: 1
+      in_channels: 32
+      kernel_size: 1
+      num_joints: 17
+      reg_loss:
+        name: '.models.loss.JointsMSELoss'
+        use_target_weight: False
+    pretrained: 'open-mmlab://msra/hrnetv2_w32'
+  dataset_cfg:
+    name: '.datasets.COCODataset'
+    cfg:
+      train:
+        out_dir: 'pass/'
+        color_rgb: true
+        data_format: jpg
+        rot_factor: 45
+        scale_factor: 0.35
+        flip: true
+        num_joints_half_body: 8
+        prob_half_body: 0.3
+        target_type: 'gaussian'
+        image_size:
+          - 192
+          - 256
+        heatmap_size:
+          - 48
+          - 64
+        sigma: 2
+        loss_use_different_joints_weights: false
+        select_data: false
+    root: 'data/coco/'
+    image_set: 'train2017'
+    is_train: true
+
+  batch_size: 32
+  gpus: 4
+  optimizer_cfg:
+    name: 'torch.optim.Adam'
+    lr: 0.001
+    weight_decay: 0.0001
+  workflow: [['train', 5]]
+  work_dir: '../'
+  log_level: 0
+  total_epochs: 210
+  training_hooks:
+    lr_config:
+      policy: 'step'
+      step: [170, 200]
+      gamma: 0.1
+    log_config:
+      interval: 1
+      hooks:
+        - type: TextLoggerHook
+    checkpoint_config:
+      interval: 10
+  resume_from:
+  load_from:
