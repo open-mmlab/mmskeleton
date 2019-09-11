@@ -1,6 +1,6 @@
 from mmskeleton.utils import call_obj
 import torch
-from mmcv.runner import load_checkpoint
+from mmskeleton.utils import load_checkpoint
 from .utils.infernce_utils import get_final_preds
 from mmcv.utils import Config
 from collections import OrderedDict
@@ -10,20 +10,20 @@ import math
 import numpy as np
 from mmskeleton.datasets.utils.coco_transform import flip_back
 
-flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8],
-                           [9, 10], [11, 12], [13, 14], [15, 16]]
-def init_twodimestimator(
-  config,
-  checkpoint = None,
-  device='cpu'
-):
+flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14],
+              [15, 16]]
+
+
+def init_twodimestimator(config, checkpoint=None, device='cpu'):
     if isinstance(config, str):
         config = Config.fromfile(config)
         config = config.processor_cfg
     elif isinstance(config, OrderedDict):
         config = config
     else:
-        raise ValueError('Input config type is: {}, expect "str" or "Orderdict"'.format(type(config)))
+        raise ValueError(
+            'Input config type is: {}, expect "str" or "Orderdict"'.format(
+                type(config)))
     model_cfg = config.model_cfg
 
     if isinstance(model_cfg, list):
@@ -37,12 +37,8 @@ def init_twodimestimator(
 
     return model
 
-def inference_twodimestimator(
-    model,
-    input,
-    meta,
-    flip=False
-):
+
+def inference_twodimestimator(model, input, meta, flip=False):
     with torch.no_grad():
         outputs = model.forward(input, return_loss=False)
         if isinstance(outputs, list):
@@ -67,13 +63,17 @@ def inference_twodimestimator(
             output = (output + output_flipped) * 0.5
         c = meta['center'].numpy()
         s = meta['scale'].numpy()
-        preds, maxvals = get_final_preds(
-            True, output.detach().cpu().numpy(), c, s)
+        preds, maxvals = get_final_preds(True,
+                                         output.detach().cpu().numpy(), c, s)
 
     return preds, maxvals
 
-def save_batch_image_with_joints( batch_image, batch_joints, batch_joints_vis,
-                                  nrow=8, padding=2):
+
+def save_batch_image_with_joints(batch_image,
+                                 batch_joints,
+                                 batch_joints_vis,
+                                 nrow=8,
+                                 padding=2):
     '''
     batch_image: [batch_size, channel, height, width]
     batch_joints: [batch_size, num_joints, 3],
@@ -101,6 +101,7 @@ def save_batch_image_with_joints( batch_image, batch_joints, batch_joints_vis,
                 joint[0] = x * width + padding + joint[0]
                 joint[1] = y * height + padding + joint[1]
                 if joint_vis[0]:
-                    cv2.circle(ndarr, (int(joint[0]), int(joint[1])), 2, [255, 0, 0], 2)
+                    cv2.circle(ndarr, (int(joint[0]), int(joint[1])), 2,
+                               [255, 0, 0], 2)
             k = k + 1
     return ndarr

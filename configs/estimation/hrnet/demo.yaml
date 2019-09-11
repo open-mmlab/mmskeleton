@@ -17,7 +17,7 @@ processor_cfg:
     bbox_thre: 0.8
   skeleton_cfg:
     model_cfg: configs/estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
-    checkpint_file: checkpoints/pose_hrnet_w32_256x192_official.pth
+    checkpint_file: checkpoints/pose_hrnet_w32_256x192_official-e6e09ec4.pth
     data_cfg:
       image_size:
         - 192
@@ -32,7 +32,7 @@ processor_cfg:
         - 0.224
         - 0.225
       post_process: true
-      save_image: true
-      save_dir: "save/"
+      save_video: true
+      save_dir: "work_dir/estimation_demo"
 
   gpus: 4

@@ -14,35 +14,24 @@ logger = logging.getLogger()
 import sys
 sys.setrecursionlimit(1000000)
 
-def save(image,
-         det_image,
-         pred,
-         name
-         ):
+
+def save(image, det_image, pred, name):
     batch_size = pred.shape[0]
     num_joints = pred.shape[1]
     cimage = np.expand_dims(image, axis=0)
     cimage = torch.from_numpy(cimage)
     pred = torch.from_numpy(pred)
-    cimage= cimage.permute(0, 3, 1, 2)
+    cimage = cimage.permute(0, 3, 1, 2)
     pred_vis = torch.ones((batch_size, num_joints, 1))
-    ndrr = save_batch_image_with_joints( cimage, pred, pred_vis)
-    mask = ndrr[:,:, 0]  == 255
-    print(mask.sum())
+    ndrr = save_batch_image_with_joints(cimage, pred, pred_vis)
+    mask = ndrr[:, :, 0] == 255
     mask = np.expand_dims(mask, axis=2)
     out = ndrr * mask + det_image * (1 - mask)
     mmcv.imwrite(out, name)
 
 
-def worker(
-  video_file,
-  index,
-  detection_cfg,
-  skeleton_cfg,
-  skeleon_data_cfg,
-  device,
-  result_queue
-):
+def worker(video_file, index, detection_cfg, skeleton_cfg, skeleon_data_cfg,
+           device, result_queue):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(device)
     video_frames = mmcv.VideoReader(video_file)
     # build model
@@ -55,7 +44,9 @@ def worker(
                                     device='cpu')
 
     end_time = time()
-    logger.info('Detection model has been built successfully, costing: {}'.format(end_time - beign_time))
+    logger.info(
+        'Detection model has been built successfully, costing: {}'.format(
+            end_time - beign_time))
     # build skeleton model
     logger.info('Begin to build estimation model')
     beign_time = time()
@@ -65,7 +56,9 @@ def worker(
                                           skeletion_checkpoint_file,
                                           device='cpu')
     end_time = time()
-    logger.info('Estimation model has been built successfully, costing: {}'.format(end_time - beign_time))
+    logger.info(
+        'Estimation model has been built successfully, costing: {}'.format(
+            end_time - beign_time))
     detection_model = detection_model.cuda()
 
     skeleton_model = skeleton_model.cuda()
@@ -75,34 +68,38 @@ def worker(
         draw_image = image.copy()
         bbox_result = inference_detector(detection_model, image)
 
-        person_bbox, labels = VideoDemo.bbox_filter(bbox_result, detection_cfg.bbox_thre)
+        person_bbox, labels = VideoDemo.bbox_filter(bbox_result,
+                                                    detection_cfg.bbox_thre)
 
         if len(person_bbox) > 0:
-            person, meta = VideoDemo.skeleton_preprocess(image[:,:,::-1], person_bbox, skeleon_data_cfg)
-            preds, maxvals = inference_twodimestimator(skeleton_model, person.cuda(), meta, True)
+            person, meta = VideoDemo.skeleton_preprocess(
+                image[:, :, ::-1], person_bbox, skeleon_data_cfg)
+            preds, maxvals = inference_twodimestimator(skeleton_model,
+                                                       person.cuda(), meta,
+                                                       True)
             results = VideoDemo.skeleton_postprocess(preds, maxvals, meta)
-            if skeleon_data_cfg.save_image:
-                file = skeleon_data_cfg.save_dir + '{}.png'.format(idx)
-                mmcv.imshow_det_bboxes(
-                    draw_image,
-                    person_bbox,
-                    labels,
-                    detection_model.CLASSES,
-                    score_thr=detection_cfg.bbox_thre,
-                    show=False,
-                    wait_time=0)
+            if skeleon_data_cfg.save_video:
+                file = os.path.join(skeleon_data_cfg.img_dir,
+                                    '{}.png'.format(idx))
+                mmcv.imshow_det_bboxes(draw_image,
+                                       person_bbox,
+                                       labels,
+                                       detection_model.CLASSES,
+                                       score_thr=detection_cfg.bbox_thre,
+                                       show=False,
+                                       wait_time=0)
                 save(image, draw_image, results, file)
 
         else:
             preds, maxvals = None, None
-            if skeleon_data_cfg.save_image:
-                file = skeleon_data_cfg.save_dir + '{}.png'.format(idx)
+            if skeleon_data_cfg.save_video:
+                file = os.path.join(skeleon_data_cfg.img_dir,
+                                    '{}.png'.format(idx))
                 mmcv.imwrite(image, file)
         skeleton_result['frame_index'] = idx
         skeleton_result['position_preds'] = preds
         skeleton_result['position_maxvals'] = maxvals
         result_queue.put(skeleton_result)
-
 
 
 def inference(
@@ -119,26 +116,23 @@ def inference(
     del video_frames
 
     data_cfg = skeleton_cfg.data_cfg
-    if data_cfg.save_image:
-        if not os.path.exists(data_cfg.save_dir):
-            os.mkdir(data_cfg.save_dir)
+    if data_cfg.save_video:
+        data_cfg.img_dir = os.path.join(data_cfg.save_dir,
+                                        '{}.img'.format(video_name))
+        if not os.path.exists(data_cfg.img_dir):
+            os.makedirs(data_cfg.img_dir)
 
     # multiprocess settings
     context = mp.get_context('spawn')
     result_queue = context.Queue(num_frames)
-    stride = int(np.ceil(num_frames/ gpus))
+    stride = int(np.ceil(num_frames / gpus))
     procs = []
     for d in range(gpus):
         e_record = min((d + 1) * stride, num_frames)
         shred_list = list(range(d * stride, e_record))
         p = context.Process(target=worker,
-                            args=(video_file,
-                                  shred_list,
-                                  detection_cfg,
-                                  skeleton_cfg,
-                                  data_cfg,
-                                  d,
-                                  result_queue))
+                            args=(video_file, shred_list, detection_cfg,
+                                  skeleton_cfg, data_cfg, d, result_queue))
         p.start()
         procs.append(p)
     all_result = []
@@ -149,5 +143,7 @@ def inference(
         prog_bar.update()
     for p in procs:
         p.join()
-    if len(all_result) == num_frames:
-        mmcv.frames2video(data_cfg.save_dir, video_name, filename_tmpl='{:01d}.png')
+    if len(all_result) == num_frames and data_cfg.save_video:
+        mmcv.frames2video(data_cfg.img_dir,
+                          os.path.join(data_cfg.save_dir, video_name),
+                          filename_tmpl='{:01d}.png')
