@@ -9,6 +9,7 @@ model/*
 *.pt
 *.caffemodel
 cache/
+checkpoints/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
