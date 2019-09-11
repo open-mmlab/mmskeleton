@@ -2,20 +2,22 @@ argparse_cfg:
   gpus:
     bind_to: processor_cfg.gpus
     help: number of gpus
-
+  video:
+    bind_to: processor_cfg.dataset_cfg.video_file
+    help: path to input video
 
 processor_cfg:
-  name: '.processor.image2skeleton.inference'
+  name: ".processor.image2skeleton.inference"
   dataset_cfg:
-    video_file: $ Path of Your Video Path
+    video_file: resource/media/skateboarding.mp4
 
   detection_cfg:
-    model_cfg: $ Path for Your Config of Detection Model in MMDetection
-    checkpoint_file:  $ Path for the CheckPoint of Upper Detection Model in MMDetection
+    model_cfg: configs/mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e.py
+    checkpoint_file: checkpoints/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e_20190408-0e50669c.pth
     bbox_thre: 0.8
   skeleton_cfg:
-    model_cfg: 'configs/estimation/hrnet/pose_hrnet_w32_256x192_test.yaml'
-    checkpint_file: 'checkpoints/pose_hrnet_w32_256x192_official.pth'
+    model_cfg: configs/estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
+    checkpint_file: checkpoints/pose_hrnet_w32_256x192_official.pth
     data_cfg:
       image_size:
         - 192
@@ -30,8 +32,7 @@ processor_cfg:
         - 0.224
         - 0.225
       post_process: true
-      save_image : true
-      save_dir: 'save/'
+      save_image: true
+      save_dir: "save/"
 
   gpus: 4
-
