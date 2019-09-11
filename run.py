@@ -45,7 +45,8 @@ def parse_cfg():
             continue
         default = get_attr(cfg, info['bind_to'])
         if 'type' not in info:
-            info['type'] = type(default)
+            if default is not None:
+                info['type'] = type(default)
         kwargs = dict(default=default)
         kwargs.update({k: v for k, v in info.items() if k != 'bind_to'})
         parser.add_argument('--' + key, **kwargs)
