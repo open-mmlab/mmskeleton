@@ -16,7 +16,7 @@ processor_cfg:
     checkpoint_file: checkpoints/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e_20190408-0e50669c.pth
     bbox_thre: 0.8
   skeleton_cfg:
-    model_cfg: configs/estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
+    model_cfg: configs/psoe_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
     checkpoint_file: checkpoints/pose_hrnet_w32_256x192_official.pth
     data_cfg:
       image_size:
@@ -33,6 +33,6 @@ processor_cfg:
         - 0.225
       post_process: true
       save_video: true
-      save_dir: "work_dir/estimation_demo"
+      save_dir: "work_dir/pose_estimation_demo"
 
   gpus: 8
