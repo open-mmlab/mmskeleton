@@ -51,7 +51,7 @@ def worker(video_file, index, detection_cfg, skeleton_cfg, skeleon_data_cfg,
     logger.info('Begin to build estimation model')
     beign_time = time()
     skeleton_model_file = skeleton_cfg.model_cfg
-    skeletion_checkpoint_file = skeleton_cfg.checkpint_file
+    skeletion_checkpoint_file = skeleton_cfg.checkpoint_file
     skeleton_model = init_twodimestimator(skeleton_model_file,
                                           skeletion_checkpoint_file,
                                           device='cpu')
