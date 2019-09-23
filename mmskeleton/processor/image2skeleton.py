@@ -5,6 +5,7 @@ import torch.multiprocessing as mp
 import numpy as np
 import cv2
 from time import time
+from mmskeleton.utils import cache_checkpoint, get_mmskeleton_url
 from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmdet.apis import init_detector, inference_detector, show_result_pyplot
 from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator, save_batch_image_with_joints
@@ -34,34 +35,23 @@ def worker(video_file, index, detection_cfg, skeleton_cfg, skeleon_data_cfg,
            device, result_queue):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(device)
     video_frames = mmcv.VideoReader(video_file)
-    # build model
-    logger.info('Begin to build detection model')
-    beign_time = time()
+
+    # load model
     detection_model_file = detection_cfg.model_cfg
-    detection_checkpoint_file = detection_cfg.checkpoint_file
+    detection_checkpoint_file = get_mmskeleton_url(
+        detection_cfg.checkpoint_file)
     detection_model = init_detector(detection_model_file,
                                     detection_checkpoint_file,
                                     device='cpu')
-
-    end_time = time()
-    logger.info(
-        'Detection model has been built successfully, costing: {}'.format(
-            end_time - beign_time))
-    # build skeleton model
-    logger.info('Begin to build estimation model')
-    beign_time = time()
     skeleton_model_file = skeleton_cfg.model_cfg
     skeletion_checkpoint_file = skeleton_cfg.checkpoint_file
     skeleton_model = init_twodimestimator(skeleton_model_file,
                                           skeletion_checkpoint_file,
                                           device='cpu')
-    end_time = time()
-    logger.info(
-        'Estimation model has been built successfully, costing: {}'.format(
-            end_time - beign_time))
-    detection_model = detection_model.cuda()
 
+    detection_model = detection_model.cuda()
     skeleton_model = skeleton_model.cuda()
+
     for idx in index:
         skeleton_result = dict()
         image = video_frames[idx]
@@ -107,6 +97,7 @@ def inference(
         skeleton_cfg,
         dataset_cfg,
         gpus=1,
+        worker_per_gpu=1,
 ):
     # get frame num
     video_file = dataset_cfg.video_file
@@ -119,25 +110,32 @@ def inference(
     if data_cfg.save_video:
         data_cfg.img_dir = os.path.join(data_cfg.save_dir,
                                         '{}.img'.format(video_name))
-        if not os.path.exists(data_cfg.img_dir):
-            os.makedirs(data_cfg.img_dir)
+
+        if os.path.exists(data_cfg.img_dir):
+            import shutil
+            shutil.rmtree(data_cfg.img_dir)
+
+        os.makedirs(data_cfg.img_dir)
+
+    # cache model checkpoints
+    cache_checkpoint(detection_cfg.checkpoint_file)
+    cache_checkpoint(skeleton_cfg.checkpoint_file)
 
     # multiprocess settings
     context = mp.get_context('spawn')
     result_queue = context.Queue(num_frames)
-    stride = int(np.ceil(num_frames / gpus))
     procs = []
-    for d in range(gpus):
-        e_record = min((d + 1) * stride, num_frames)
-        shred_list = list(range(d * stride, e_record))
+    for w in range(gpus * worker_per_gpu):
+        shred_list = list(range(w, num_frames, gpus * worker_per_gpu))
         p = context.Process(target=worker,
                             args=(video_file, shred_list, detection_cfg,
-                                  skeleton_cfg, data_cfg, d, result_queue))
+                                  skeleton_cfg, data_cfg, w % gpus,
+                                  result_queue))
         p.start()
         procs.append(p)
     all_result = []
     prog_bar = ProgressBar(num_frames)
-    for _ in range(num_frames):
+    for i in range(num_frames):
         t = result_queue.get()
         all_result.append(t)
         prog_bar.update()

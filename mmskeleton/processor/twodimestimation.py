@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from collections import OrderedDict
-from mmskeleton.utils import call_obj, import_obj, load_checkpoint
+from mmskeleton.utils import call_obj, import_obj, load_checkpoint, get_mmskeleton_url
 from mmcv import ProgressBar
 from mmcv.parallel import MMDataParallel
 from mmskeleton.datasets.utils.coco_transform import flip_back

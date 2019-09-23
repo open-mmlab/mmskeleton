@@ -1,23 +1,16 @@
-argparse_cfg:
-  gpus:
-    bind_to: processor_cfg.gpus
-    help: number of gpus
-  video:
-    bind_to: processor_cfg.dataset_cfg.video_file
-    help: path to input video
-
 processor_cfg:
   name: ".processor.image2skeleton.inference"
+  worker_per_gpu: 1
   dataset_cfg:
     video_file: resource/media/skateboarding.mp4
 
   detection_cfg:
     model_cfg: configs/mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e.py
-    checkpoint_file: checkpoints/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e_20190408-0e50669c.pth
+    checkpoint_file: mmskeleton://mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e
     bbox_thre: 0.8
   skeleton_cfg:
     model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
-    checkpoint_file: checkpoints/pose_hrnet_w32_256x192_official.pth
+    checkpoint_file: mmskeleton://pose_estimation/pose_hrnet_w32_256x192
     data_cfg:
       image_size:
         - 192
@@ -36,3 +29,22 @@ processor_cfg:
       save_dir: "work_dir/pose_estimation_demo"
 
   gpus: 8
+
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  video:
+    bind_to: processor_cfg.dataset_cfg.video_file
+    help: path to input video
+  worker_per_gpu:
+    bind_to: processor_cfg.worker_per_gpu
+    help: number of workers for each gpu
+  skeleton_model:
+    bind_to: processor_cfg.skeleton_cfg.model_cfg
+  skeleton_checkpoint:
+    bind_to: processor_cfg.skeleton_cfg.checkpoint_file
+  detection_model:
+    bind_to: processor_cfg.detection_cfg.model_cfg
+  detection_checkpoint:
+    bind_to: processor_cfg.detection_cfg.checkpoint_file

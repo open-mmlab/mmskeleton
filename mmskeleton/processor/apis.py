@@ -1,7 +1,6 @@
 from mmskeleton.utils import call_obj
 import torch
-# from mmskeleton.utils import load_checkpoint
-from mmcv.runner import load_checkpoint
+from mmskeleton.utils import load_checkpoint
 from .utils.infernce_utils import get_final_preds
 from mmcv.utils import Config
 from collections import OrderedDict

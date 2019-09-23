@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import logging
 
 import torch
 from mmcv import Config
@@ -21,6 +22,9 @@ processor_cfg:
 
 """
 
+config_shortcut = dict(
+    pose_estimation_demo='./configs/pose_estimation/hrnet/demo.yaml')
+
 
 def parse_cfg():
 
@@ -35,7 +39,11 @@ def parse_cfg():
         return
 
     # load argument setting from configuration file
+    if sys.argv[1] in config_shortcut:
+        sys.argv[1] = config_shortcut[sys.argv[1]]
+
     cfg = Config.fromfile(sys.argv[1])
+    print('Load configuration information from {}'.format(sys.argv[1]))
     if 'description' in cfg:
         parser.description = cfg.description
     if 'argparse_cfg' not in cfg:
