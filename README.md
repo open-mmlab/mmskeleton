@@ -11,8 +11,8 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 </p>
 
 ## Updates
-[2019-08-29] MMSkeleton v0.5 is released.
-[2019-09-23] Add video-based pose estimation demo.
+- [2019-08-29] MMSkeleton v0.5 is released.
+- [2019-09-23] Add video-based pose estimation demo.
 
 ## Getting Started
 Please see [INSTALL.md](./doc/INSTALL.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for the basic usage of MMSkeleton.
