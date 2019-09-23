@@ -17,7 +17,7 @@ To **verify** that mmskeleton installed correctly, use:
 mmskl pose_demo [--gpus $GPUS]
 ```
 
-**Basic usage:**
+### Basic usage:
 
 Any application in mmskeleton is described by a configuration file. That can be started by a uniform command:
 ``` shell
@@ -27,12 +27,12 @@ which is equivalent to
 ```
 mmskl $CONFIG_FILE [--options $OPTHION]
 ```
-Optional arguments `options` are defined in configuration files.
+Optional arguments `options` is defined in the configuration file.
 You can check them via:
 ``` shell
 mmskl $CONFIG_FILE -h
 ```
 
-**Example:**
+### Example:
 
 See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a model for skeleton-based action recognitoin.
