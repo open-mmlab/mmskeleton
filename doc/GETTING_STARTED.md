@@ -20,7 +20,7 @@ mmskl pose_demo [--gpus $GPUS]
 An generated video as below will be saved under the prompted path.
 
 <p align="center">
-    <img src="../demo/estimation/pose_demo.gif", width="700">
+    <img src="../demo/estimation/pose_demo.gif", width="500">
 </p>
 
 
