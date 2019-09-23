@@ -15,7 +15,7 @@ python setup.py develop
 To **verify** that mmskeleton installed correctly, use:
 ```shell
 mmskl pose_demo [--gpus $GPUS]
-# or "mmskl pose_demo_HD [--gpus $GPUS]"
+# or "mmskl pose_demo_HD [--gpus $GPUS]" for higher accuracy
 ```
 An generated video as below will be saved under the prompted path.
 
