@@ -23,7 +23,8 @@ processor_cfg:
 """
 
 config_shortcut = dict(
-    pose_estimation_demo='./configs/pose_estimation/hrnet/demo.yaml')
+    pose_demo='./configs/pose_estimation/hrnet/demo.yaml',
+    fast_pose_demo='./configs/pose_estimation/hrnet/demo_fast.yaml')
 
 
 def parse_cfg():
