@@ -6,7 +6,7 @@ import torch
 from mmcv import Config
 import mmskeleton
 from mmskeleton.utils import call_obj, set_attr, get_attr
-""" Configuration Structure 
+""" Configuration Structure
 
 argparse_cfg:
   <shortcut_name 1>:
@@ -15,7 +15,7 @@ argparse_cfg:
   <shortcut_name 2>:
     ...
 
-processor_cfg: 
+processor_cfg:
   name: <full processor path>
   ...
 
@@ -44,6 +44,9 @@ def parse_cfg():
         if 'bind_to' not in info:
             continue
         default = get_attr(cfg, info['bind_to'])
+        if 'type' not in info:
+            if default is not None:
+                info['type'] = type(default)
         kwargs = dict(default=default)
         kwargs.update({k: v for k, v in info.items() if k != 'bind_to'})
         parser.add_argument('--' + key, **kwargs)
