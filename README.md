@@ -12,6 +12,10 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 
 ## Updates
 [2019-08-29] MMSkeleton v0.5 is released.
+[2019-09-23] Add video-based pose estimation demo.
+
+## Getting Started
+Please see [INSTALL.md](./doc/INSTALL.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for the basic usage of MMSkeleton.
 
 ## Features
 
@@ -22,13 +26,11 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 - **Multiple tasks**
 
     MMSkeleton addresses to multiple tasks in human understanding, including but not limited to:
-    - skeleton-based action recognition: [[ST-GCN]](./doc/START_RECOGNITION.md)
-    - skeleton-based action generation
-    - 2D/3D pose estimation
-    - pose tracking
-
-## Getting Started
-Please see [INSTALL.md](./doc/INSTALL.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for the basic usage of MMSkeleton.
+    - [x] skeleton-based action recognition: [[ST-GCN]](./doc/START_RECOGNITION.md)
+    - [x] 2D pose estimation: [[START_POSE_ESTIMATION.md]](./doc/START_POSE_ESTIMATION.md)
+    - [ ] skeleton-based action generation
+    - [ ] 3D pose estimation
+    - [ ] pose tracking
 
 ## License
 The project is release under the [Apache 2.0 license](./LICENSE).

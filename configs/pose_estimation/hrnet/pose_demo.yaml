@@ -1,10 +1,9 @@
 processor_cfg:
   name: ".processor.image2skeleton.inference"
   gpus: 1
-  worker_per_gpu: 1
+  worker_per_gpu: 2
   dataset_cfg:
     video_file: resource/media/skateboarding.mp4
-
   detection_cfg:
     model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
     checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
@@ -27,7 +26,7 @@ processor_cfg:
         - 0.225
       post_process: true
       save_video: true
-      save_dir: "work_dir/fast_pose_demo"
+      save_dir: "work_dir/pose_demo"
 
 argparse_cfg:
   gpus:
