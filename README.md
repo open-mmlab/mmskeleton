@@ -14,17 +14,7 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 - [2019-08-29] MMSkeleton v0.5 is released.
 - [2019-09-23] Add video-based pose estimation demo.
 
-## Getting Started
-**Install** the mmskeleton:
-```shell
-python setup.py develop
-```
-To **verify** that mmskeleton installed correctly, use:
-```shell
-mmskl pose_demo [--gpus $GPUS]
-```
 
-Please see [INSTALL.md](./doc/INSTALL.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for more details of MMSkeleton.
 
 ## Features
 
@@ -40,6 +30,10 @@ Please see [INSTALL.md](./doc/INSTALL.md) and [START_RECOGNITION.md](./doc/START
     - [ ] skeleton-based action generation
     - [ ] 3D pose estimation
     - [ ] pose tracking
+
+## Getting Started
+
+Please see [GETTING_STARTED.md](./doc/GETTING_STARTED.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for more details of MMSkeleton.
 
 ## License
 The project is release under the [Apache 2.0 license](./LICENSE).

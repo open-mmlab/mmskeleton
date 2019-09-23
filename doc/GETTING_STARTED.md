@@ -1,17 +1,20 @@
 ## Getting Started
 
-**Install mmskeleton:**
-
-Clone mmskeleton from github:
+**Clone** mmskeleton from github:
 
 ``` shell
 git clone https://github.com/open-mmlab/mmskeleton.git
 cd mmskeleton
 ```
 
-Install:
+**Install** the mmskeleton:
 ``` shell
 python setup.py develop
+```
+
+To **verify** that mmskeleton installed correctly, use:
+```shell
+mmskl pose_demo [--gpus $GPUS]
 ```
 
 **Basic usage:**
