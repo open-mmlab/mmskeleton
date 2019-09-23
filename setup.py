@@ -110,5 +110,8 @@ if __name__ == '__main__':
           license='Apache License 2.0',
           setup_requires=['pytest-runner'],
           tests_require=['pytest'],
+          dependency_links=[
+              'git+https://github.com/open-mmlab/mmdetection#egg=mmdet'
+          ],
           install_requires=get_requirements(),
           zip_safe=False)

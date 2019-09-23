@@ -1,5 +1,6 @@
 processor_cfg:
   name: ".processor.image2skeleton.inference"
+  gpus: 1
   worker_per_gpu: 1
   dataset_cfg:
     video_file: resource/media/skateboarding.mp4
@@ -27,8 +28,6 @@ processor_cfg:
       post_process: true
       save_video: true
       save_dir: "work_dir/pose_estimation_demo"
-
-  gpus: 8
 
 argparse_cfg:
   gpus:

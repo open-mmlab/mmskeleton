@@ -134,6 +134,7 @@ def inference(
         p.start()
         procs.append(p)
     all_result = []
+    print('\nPose estimation start:')
     prog_bar = ProgressBar(num_frames)
     for i in range(num_frames):
         t = result_queue.get()
@@ -142,6 +143,9 @@ def inference(
     for p in procs:
         p.join()
     if len(all_result) == num_frames and data_cfg.save_video:
+        print('\n\nGenerate video:')
+        video_path = os.path.join(data_cfg.save_dir, video_name)
         mmcv.frames2video(data_cfg.img_dir,
-                          os.path.join(data_cfg.save_dir, video_name),
+                          video_path,
                           filename_tmpl='{:01d}.png')
+        print('Video was saved to {}'.format(video_path))
