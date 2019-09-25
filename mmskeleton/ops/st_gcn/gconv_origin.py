@@ -1,4 +1,5 @@
 # The based unit of graph convolutional networks.
+# This is the original implementation for ST-GCN papers.
 
 import torch
 import torch.nn as nn

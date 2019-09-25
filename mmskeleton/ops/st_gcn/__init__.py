@@ -1,2 +1,2 @@
-from .gconv_old import ConvTemporalGraphical
+from .gconv_origin import ConvTemporalGraphical
 from .graph import Graph
