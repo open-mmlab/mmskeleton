@@ -139,9 +139,11 @@ ext_modules = [
         include_dirs=[numpy_include, CUDA['include']]),
 ]
 
-setup(
-    name='nms',
-    ext_modules=ext_modules,
-    # inject our custom trigger
-    cmdclass={'build_ext': custom_build_ext},
-)
+if __name__ == "__main__":
+    pass
+    setup(
+        name='nms',
+        ext_modules=ext_modules,
+        # inject our custom trigger
+        cmdclass={'build_ext': custom_build_ext},
+    )
