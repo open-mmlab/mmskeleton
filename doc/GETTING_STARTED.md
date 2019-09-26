@@ -10,7 +10,6 @@ cd mmskeleton
 **Install** the mmskeleton:
 ``` shell
 python setup.py develop
-cd mmskeleton/ops; make; cd ../..
 ```
 
 To **verify** that mmskeleton installed correctly, use:
