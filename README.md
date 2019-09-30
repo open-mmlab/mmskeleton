@@ -45,13 +45,13 @@ Please refer to [CONTRIBUTING.md](./doc/CONTRIBUTING.md) for the contributing gu
 
 ## Citation
 Please cite the following paper if you use this repository in your reseach.
-```
 <!-- @inproceedings{stgcn2018aaai,
   title     = {Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition},
   author    = {Sijie Yan and Yuanjun Xiong and Dahua Lin},
   booktitle = {AAAI},
   year      = {2018},
 } -->
+```
 @misc{mmskeleton2019,
   author =       {Sijie Yan, Yuanjun Xiong, Jingbo Wang, Dahua Lin},
   title =        {MMSkeleton},
