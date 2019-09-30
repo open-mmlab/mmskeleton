@@ -18,4 +18,4 @@ Only the **3D skeletons**(5.8GB) modality is required in our experiments. After 
 ```
 python tools/data_processing/ntu_gendata.py --data_path <path to nturgbd+d_skeletons>
 ```
-where the ```<path to nturgbd+d_skeletons>``` points to the 3D skeletons modality of NTU RGB+D dataset you download.
+where the ```<path to nturgbd+d_skeletons>``` is the directory path of 3D skeletons annotations of the NTU RGB+D dataset you download.
