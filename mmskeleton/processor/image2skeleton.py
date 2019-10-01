@@ -149,3 +149,6 @@ def inference(
                           video_path,
                           filename_tmpl='{:01d}.png')
         print('Video was saved to {}'.format(video_path))
+
+    from IPython import embed
+    embed()
