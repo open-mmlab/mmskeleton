@@ -68,14 +68,14 @@ def write_version_py():
 # TIME: {}
 __version__ = '{}'
 short_version = '{}'
-mmskl_path = '{}'
+mmskl_home = '{}'
 """
     sha = get_hash()
     VERSION = SHORT_VERSION + '+' + sha
-    MMSKELETON_PATH = os.path.dirname(os.path.realpath(__file__))
+    MMSKELETON_HOME = os.path.dirname(os.path.realpath(__file__))
 
     with open(version_file, 'w') as f:
-        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION, MMSKELETON_PATH))
+        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION, MMSKELETON_HOME))
 
 
 def get_version():
