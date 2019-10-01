@@ -68,12 +68,14 @@ def write_version_py():
 # TIME: {}
 __version__ = '{}'
 short_version = '{}'
+mmskl_home = '{}'
 """
     sha = get_hash()
     VERSION = SHORT_VERSION + '+' + sha
+    MMSKELETON_HOME = os.path.dirname(os.path.realpath(__file__))
 
     with open(version_file, 'w') as f:
-        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION))
+        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION, MMSKELETON_HOME))
 
 
 def get_version():
@@ -143,7 +145,10 @@ if __name__ == '__main__':
                       include_dirs=[np.get_include()]),
             Extension(
                 'mmskeleton.ops.nms.gpu_nms',
-                ['mmskeleton/ops/nms/nms_kernel.cu', 'mmskeleton/ops/nms/gpu_nms.pyx'],
+                [
+                    'mmskeleton/ops/nms/nms_kernel.cu',
+                    'mmskeleton/ops/nms/gpu_nms.pyx'
+                ],
                 library_dirs=[CUDA['lib64']],
                 libraries=['cudart'],
                 language='c++',

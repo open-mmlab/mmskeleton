@@ -14,8 +14,8 @@ python setup.py develop
 
 To **verify** that mmskeleton installed correctly, use:
 ```shell
-mmskl pose_demo [--gpus $GPUS]
-# or "mmskl pose_demo_HD [--gpus $GPUS]" for a higher accuracy
+python mmskl.py pose_demo [--gpus $GPUS]
+# or "python mmskl.py pose_demo_HD [--gpus $GPUS]" for a higher accuracy
 ```
 An generated video as below will be saved under the prompted path.
 
@@ -29,7 +29,7 @@ An generated video as below will be saved under the prompted path.
 
 Any application in mmskeleton is described by a configuration file. That can be started by a uniform command:
 ``` shell
-python run.py $CONFIG_FILE [--options $OPTHION]
+python mmskl.py $CONFIG_FILE [--options $OPTHION]
 ```
 which is equivalent to
 ```

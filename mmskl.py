@@ -4,8 +4,8 @@ import sys
 import logging
 
 import torch
-from mmcv import Config
 import mmskeleton
+from mmcv import Config
 from mmskeleton.utils import call_obj, set_attr, get_attr
 """ Configuration Structure
 
