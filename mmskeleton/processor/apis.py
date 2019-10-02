@@ -5,7 +5,6 @@ import torchvision
 import math
 import numpy as np
 
-
 from mmskeleton.utils import call_obj
 from mmskeleton.utils import load_checkpoint
 from .utils.infernce_utils import get_final_preds
@@ -16,47 +15,8 @@ from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmskeleton.utils import get_mmskeleton_url
 from mmdet.apis import init_detector, inference_detector
 
-
 flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14],
               [15, 16]]
-
-
-def init_estimator(detection_cfg, skeleton_cfg, device = None):
-
-    detection_model_file = detection_cfg.model_cfg
-    detection_checkpoint_file = get_mmskeleton_url(
-        detection_cfg.checkpoint_file)
-    detection_model = init_detector(detection_model_file,
-                                    detection_checkpoint_file,
-                                    device='cpu')
-
-
-    skeleton_model_file = skeleton_cfg.model_cfg
-    skeletion_checkpoint_file = skeleton_cfg.checkpoint_file
-    skeleton_model = init_twodimestimator(skeleton_model_file,
-                                          skeletion_checkpoint_file,
-                                          device='cpu')
-
-    if device is not None:
-        os.environ["CUDA_VISIBLE_DEVICES"] = str(device)
-        detection_model = detection_model.cuda()
-        skeleton_model = skeleton_model.cuda()
-    return detection_model, skeleton_model
-
-def inference_estimator(detection_model, skeleton_model, detection_cfg, skeleton_cfg, image):
-    bbox_result = inference_detector(detection_model, image)
-    person_bbox, labels = VideoDemo.bbox_filter(bbox_result, detection_cfg.bbox_thre)
-    if len(person_bbox) > 0:
-        has_return = True
-        person, meta = VideoDemo.skeleton_preprocess(
-            image[:, :, ::-1], person_bbox, skeleton_cfg.data_cfg)
-        preds, maxvals = inference_twodimestimator(skeleton_model,
-                                                   person.cuda(), meta,
-                                                   True)
-    else:
-        has_return = False
-        preds, maxvals, meta = None, None, None
-    return preds, maxvals, meta, has_return
 
 
 def init_twodimestimator(config, checkpoint=None, device='cpu'):

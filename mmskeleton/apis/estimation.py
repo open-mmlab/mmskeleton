@@ -1,0 +1,53 @@
+import os
+from mmskeleton.datasets.utils.video_demo import VideoDemo
+from mmskeleton.utils import get_mmskeleton_url
+from mmdet.apis import init_detector, inference_detector
+from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator
+
+
+def init_pose_estimator(detection_cfg, skeleton_cfg, device=None):
+
+    detection_model_file = detection_cfg.model_cfg
+    detection_checkpoint_file = get_mmskeleton_url(
+        detection_cfg.checkpoint_file)
+    detection_model = init_detector(detection_model_file,
+                                    detection_checkpoint_file,
+                                    device='cpu')
+
+    skeleton_model_file = skeleton_cfg.model_cfg
+    skeletion_checkpoint_file = skeleton_cfg.checkpoint_file
+    skeleton_model = init_twodimestimator(skeleton_model_file,
+                                          skeletion_checkpoint_file,
+                                          device='cpu')
+
+    if device is not None:
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(device)
+        detection_model = detection_model.cuda()
+        skeleton_model = skeleton_model.cuda()
+
+    pose_estimator = (detection_model, skeleton_model, detection_cfg,
+                      skeleton_cfg)
+    return pose_estimator
+
+
+def inference_pose_estimator(pose_estimator, image):
+    detection_model, skeleton_model, detection_cfg, skeleton_cfg = pose_estimator
+    bbox_result = inference_detector(detection_model, image)
+    person_bbox, labels = VideoDemo.bbox_filter(bbox_result,
+                                                detection_cfg.bbox_thre)
+    if len(person_bbox) > 0:
+        has_return = True
+        person, meta = VideoDemo.skeleton_preprocess(image[:, :, ::-1],
+                                                     person_bbox,
+                                                     skeleton_cfg.data_cfg)
+        preds, maxvals = inference_twodimestimator(skeleton_model,
+                                                   person.cuda(), meta, True)
+    else:
+        has_return = False
+        preds, maxvals, meta = None, None, None
+
+    result = dict(position_preds=preds,
+                  position_maxvals=maxvals,
+                  meta=meta,
+                  has_return=has_return)
+    return result
