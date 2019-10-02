@@ -82,11 +82,15 @@ def inference(detection_cfg,
             p.join()
 
     # generate video
-    if len(all_result) == len(video_frames) and save_dir is not None:
+    if (len(all_result) == len(video_frames)) and (save_dir is not None):
         print('\n\nGenerate video:')
         video_name = video_file.strip('/n').split('/')[-1]
         video_path = os.path.join(save_dir, video_name)
         img_dir = os.path.join(save_dir, '{}.img'.format(video_name))
+        if os.path.exists(img_dir):
+            import shutil
+            shutil.rmtree(img_dir)
+        os.makedirs(img_dir)
         mmcv.frames2video(img_dir, video_path, filename_tmpl='{:01d}.png')
         print('Video was saved to {}'.format(video_path))
 
