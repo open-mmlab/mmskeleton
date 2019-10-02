@@ -3,11 +3,13 @@ processor_cfg:
   gpus: 1
   worker_per_gpu: 2
   video_file: resource/media/skateboarding.mp4
+  save_dir: "work_dir/pose_demo"
+
   detection_cfg:
     model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
     checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
     bbox_thre: 0.8
-  skeleton_cfg:
+  estimation_cfg:
     model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
     checkpoint_file: mmskeleton://pose_estimation/pose_hrnet_w32_256x192
     data_cfg:
@@ -24,7 +26,6 @@ processor_cfg:
         - 0.224
         - 0.225
       post_process: true
-  save_dir: "work_dir/pose_demo"
 
 argparse_cfg:
   gpus:
@@ -37,9 +38,9 @@ argparse_cfg:
     bind_to: processor_cfg.worker_per_gpu
     help: number of workers for each gpu
   skeleton_model:
-    bind_to: processor_cfg.skeleton_cfg.model_cfg
+    bind_to: processor_cfg.estimation_cfg.model_cfg
   skeleton_checkpoint:
-    bind_to: processor_cfg.skeleton_cfg.checkpoint_file
+    bind_to: processor_cfg.estimation_cfg.checkpoint_file
   detection_model:
     bind_to: processor_cfg.detection_cfg.model_cfg
   detection_checkpoint:
