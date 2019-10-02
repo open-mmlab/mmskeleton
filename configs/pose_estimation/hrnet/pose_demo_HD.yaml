@@ -1,9 +1,8 @@
 processor_cfg:
-  name: ".processor.image2skeleton.inference"
+  name: ".processor.pose_demo.inference"
   gpus: 1
   worker_per_gpu: 1
-  dataset_cfg:
-    video_file: resource/media/skateboarding.mp4
+  video_file: resource/media/skateboarding.mp4
 
   detection_cfg:
     model_cfg: configs/mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e.py
@@ -26,15 +25,14 @@ processor_cfg:
         - 0.224
         - 0.225
       post_process: true
-      save_video: true
-      save_dir: "work_dir/pose_demo"
+  save_dir: "work_dir/pose_demo_HD"
 
 argparse_cfg:
   gpus:
     bind_to: processor_cfg.gpus
     help: number of gpus
   video:
-    bind_to: processor_cfg.dataset_cfg.video_file
+    bind_to: processor_cfg.video_file
     help: path to input video
   worker_per_gpu:
     bind_to: processor_cfg.worker_per_gpu

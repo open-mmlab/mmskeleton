@@ -1,14 +1,19 @@
-from mmskeleton.utils import call_obj
+import os
+import cv2
 import torch
+import torchvision
+import math
+import numpy as np
+
+from mmskeleton.utils import call_obj
 from mmskeleton.utils import load_checkpoint
 from .utils.infernce_utils import get_final_preds
 from mmcv.utils import Config
 from collections import OrderedDict
-import cv2
-import torchvision
-import math
-import numpy as np
 from mmskeleton.datasets.utils.coco_transform import flip_back
+from mmskeleton.datasets.utils.video_demo import VideoDemo
+from mmskeleton.utils import get_mmskeleton_url
+from mmdet.apis import init_detector, inference_detector
 
 flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14],
               [15, 16]]
@@ -74,12 +79,7 @@ def save_batch_image_with_joints(batch_image,
                                  batch_joints_vis,
                                  nrow=8,
                                  padding=2):
-    '''
-    batch_image: [batch_size, channel, height, width]
-    batch_joints: [batch_size, num_joints, 3],
-    batch_joints_vis: [batch_size, num_joints, 1],
-    }
-    '''
+
     grid = torchvision.utils.make_grid(batch_image, nrow, padding, True)
     ndarr = grid.mul(255).clamp(0, 255).byte().permute(1, 2, 0).cpu().numpy()
     ndarr = ndarr.copy()

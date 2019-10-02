@@ -4,14 +4,14 @@ import mmcv
 import numpy as np
 from .coco_transform import xywh2cs, get_affine_transform
 from mmskeleton.ops.nms.nms import oks_nms
+
+
 class VideoDemo(object):
-    def __init__(self,):
-        super(VideoDemo,self).__init__()
+    def __init__(self, ):
+        super(VideoDemo, self).__init__()
+
     @staticmethod
-    def bbox_filter(
-            bbox_result,
-            bbox_thre=0.0
-    ):
+    def bbox_filter(bbox_result, bbox_thre=0.0):
         # clone from mmdetection
 
         if isinstance(bbox_result, tuple):
@@ -32,13 +32,8 @@ class VideoDemo(object):
         person_bboxes = person_bboxes[person_mask]
         return person_bboxes, labels[labels == person_id][person_mask]
 
-
     @staticmethod
-    def skeleton_preprocess(
-            image,
-            bboxes,
-            skeleton_cfg
-    ):
+    def skeleton_preprocess(image, bboxes, skeleton_cfg):
 
         # output collector
         result_list = []
@@ -60,12 +55,11 @@ class VideoDemo(object):
         for idx, bbox in enumerate(bboxes):
             x1, y1, x2, y2 = bbox[:4]
             w, h = x2 - x1, y2 - y1
-            center, scale = xywh2cs(x1, y1, h, w,  aspect_ratio, pixel_std)
+            center, scale = xywh2cs(x1, y1, h, w, aspect_ratio, pixel_std)
             trans = get_affine_transform(center, scale, 0, image_size)
-            transformed_image= cv2.warpAffine(
+            transformed_image = cv2.warpAffine(
                 image,
-                trans,
-                (int(image_size[0]), int(image_size[1])),
+                trans, (int(image_size[0]), int(image_size[1])),
                 flags=cv2.INTER_LINEAR)
             # transfer into Torch.Tensor
             transformed_image = transformed_image / 255.0
@@ -82,7 +76,7 @@ class VideoDemo(object):
         result = torch.from_numpy(np.array(result_list)).float()
         for name, data in meta.items():
             meta[name] = torch.from_numpy(np.array(data)).float()
-        return  result, meta
+        return result, meta
 
     @staticmethod
     def skeleton_postprocess(
@@ -123,14 +117,12 @@ class VideoDemo(object):
             # rescoring
             n_p['score'] = kpt_score * box_score
 
-            keep = oks_nms(
-                [_kpts[i] for i in range(len(_kpts))],
-                oks_thre
-            )
+            keep = oks_nms([_kpts[i] for i in range(len(_kpts))], oks_thre)
 
         if len(keep) == 0:
-            oks_nmsed_kpts.append(_kpts[ 'keypoints'])
+            oks_nmsed_kpts.append(_kpts['keypoints'])
         else:
-            oks_nmsed_kpts.append([_kpts[_keep]['keypoints'] for _keep in keep])
+            oks_nmsed_kpts.append(
+                [_kpts[_keep]['keypoints'] for _keep in keep])
 
-        return  np.array(oks_nmsed_kpts[0])
+        return np.array(oks_nmsed_kpts[0])
