@@ -1,13 +1,14 @@
 processor_cfg:
-  name: ".processor.pose_demo.inference"
+  name: ".processor.skeleton_dataset.build"
   gpus: 1
-  worker_per_gpu: 1
-  video_file: resource/data_example/skateboarding.mp4
-  save_dir: "work_dir/pose_demo_HD"
+  worker_per_gpu: 2
+  video_dir: resource/data_example
+  out_dir: "data/dataset_example"
+  category_annotation: resource/category_annotation_example.json
 
   detection_cfg:
-    model_cfg: configs/mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e.py
-    checkpoint_file: mmskeleton://mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e
+    model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
+    checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
     bbox_thre: 0.8
   estimation_cfg:
     model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
@@ -31,9 +32,9 @@ argparse_cfg:
   gpus:
     bind_to: processor_cfg.gpus
     help: number of gpus
-  video:
-    bind_to: processor_cfg.video_file
-    help: path to input video
+  video_dir:
+    bind_to: processor_cfg.video_dir
+    help: folder for videos
   worker_per_gpu:
     bind_to: processor_cfg.worker_per_gpu
     help: number of workers for each gpu

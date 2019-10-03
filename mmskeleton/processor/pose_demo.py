@@ -42,6 +42,7 @@ pose_estimators = dict()
 
 def worker(inputs, results, gpu, detection_cfg, estimation_cfg, render_image):
     worker_id = current_process()._identity[0] - 1
+    global pose_estimators
     if worker_id not in pose_estimators:
         pose_estimators[worker_id] = init_pose_estimator(detection_cfg,
                                                          estimation_cfg,
@@ -56,7 +57,7 @@ def worker(inputs, results, gpu, detection_cfg, estimation_cfg, render_image):
         res['frame_index'] = idx
 
         if render_image:
-            res['render_image'] = render(image, res['position_preds'],
+            res['render_image'] = render(image, res['joint_preds'],
                                          res['person_bbox'],
                                          detection_cfg.bbox_thre)
         results.put(res)
@@ -81,7 +82,7 @@ def inference(detection_cfg,
             res = inference_pose_estimator(model, image)
             res['frame_index'] = i
             if save_dir is not None:
-                res['render_image'] = render(image, res['position_preds'],
+                res['render_image'] = render(image, res['joint_preds'],
                                              res['person_bbox'],
                                              detection_cfg.bbox_thre)
             all_result.append(res)

@@ -50,8 +50,8 @@ def inference_pose_estimator(pose_estimator, image):
         has_return = False
         preds, maxvals, meta = None, None, None
 
-    result = dict(position_preds=preds,
-                  position_maxvals=maxvals,
+    result = dict(joint_preds=preds,
+                  joint_scores=maxvals,
                   meta=meta,
                   has_return=has_return,
                   person_bbox=person_bbox)

@@ -2,13 +2,14 @@ processor_cfg:
   name: ".processor.recognition_demo.inference"
   gpus: 1
   worker_per_gpu: 2
-  video_file: resource/media/skateboarding.mp4
+  video_file: resource/data_example/skateboarding.mp4
   save_dir: "work_dir/recognition_demo"
 
   detection_cfg:
     model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
     checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
     bbox_thre: 0.8
+
   estimation_cfg:
     model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
     checkpoint_file: mmskeleton://pose_estimation/pose_hrnet_w32_256x192
@@ -26,6 +27,17 @@ processor_cfg:
         - 0.224
         - 0.225
       post_process: true
+
+  recognition_cfg:
+    checkpoint_file: mmskeleton://st_gcn/kinetics-skeleton
+    model_cfg:
+      name: ".models.backbones.ST_GCN"
+      in_channels: 3
+      num_class: 400
+      edge_importance_weighting: True
+      graph_cfg:
+        layout: "openpose"
+        strategy: "spatial"
 
 argparse_cfg:
   gpus:
