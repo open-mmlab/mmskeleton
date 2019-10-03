@@ -13,6 +13,7 @@ from mmcv.utils import ProgressBar
 import os
 logger = logging.getLogger()
 import sys
+import shutil
 sys.setrecursionlimit(1000000)
 from mmskeleton.apis.estimation import init_pose_estimator, inference_pose_estimator
 from multiprocessing import Pool, current_process, Process, Manager
@@ -20,21 +21,52 @@ from multiprocessing import Pool, current_process, Process, Manager
 pose_estimators = dict()
 
 
-def worker(gpu,
-           detection_cfg,
-           estimation_cfg,
-           video_frames,
-           results,
-           frame_index=-1):
+def render(image, pred, person_bbox, bbox_thre):
+    if pred is None:
+        return image
+
+    det_image = image.copy()
+    mmcv.imshow_det_bboxes(det_image,
+                           person_bbox,
+                           np.zeros(len(person_bbox)).astype(int),
+                           class_names=['person'],
+                           score_thr=bbox_thre,
+                           show=False,
+                           wait_time=0)
+
+    batch_size = pred.shape[0]
+    num_joints = pred.shape[1]
+    cimage = np.expand_dims(image, axis=0)
+    cimage = torch.from_numpy(cimage)
+    pred = torch.from_numpy(pred)
+    cimage = cimage.permute(0, 3, 1, 2)
+    pred_vis = torch.ones((batch_size, num_joints, 1))
+    ndrr = save_batch_image_with_joints(cimage, pred, pred_vis)
+    mask = ndrr[:, :, 0] == 255
+    mask = np.expand_dims(mask, axis=2)
+    out = ndrr * mask + det_image * (1 - mask)
+    return np.uint8(out)
+
+
+def worker(inputs, results, gpu, detection_cfg, estimation_cfg, render_image):
     worker_id = current_process()._identity[0] - 1
     if worker_id not in pose_estimators:
         pose_estimators[worker_id] = init_pose_estimator(detection_cfg,
                                                          estimation_cfg,
                                                          device=gpu)
+    while not inputs.empty():
+        try:
+            idx, image = inputs.get_nowait()
+        except:
+            return
 
-    for image in video_frames:
         res = inference_pose_estimator(pose_estimators[worker_id], image)
-        res['frame_index'] = frame_index
+        res['frame_index'] = idx
+
+        if render_image:
+            res['render_image'] = render(image, res['position_preds'],
+                                         res['person_bbox'],
+                                         detection_cfg.bbox_thre)
         results.put(res)
 
 
@@ -47,6 +79,7 @@ def inference(detection_cfg,
 
     video_frames = mmcv.VideoReader(video_file)
     all_result = []
+    print('\nPose estimation:')
 
     # case for single process
     if gpus == 1 and worker_per_gpu == 1:
@@ -55,21 +88,29 @@ def inference(detection_cfg,
         for i, image in enumerate(video_frames):
             res = inference_pose_estimator(model, image)
             res['frame_index'] = i
+            if save_dir is not None:
+                res['render_image'] = render(image, res['position_preds'],
+                                             res['person_bbox'],
+                                             detection_cfg.bbox_thre)
             all_result.append(res)
             prog_bar.update()
 
     # case for multi-process
     else:
+        cache_checkpoint(detection_cfg.checkpoint_file)
+        cache_checkpoint(estimation_cfg.checkpoint_file)
         num_worker = gpus * worker_per_gpu
         procs = []
+        inputs = Manager().Queue(len(video_frames))
         results = Manager().Queue(len(video_frames))
+
+        for i, image in enumerate(video_frames):
+            inputs.put((i, image))
+
         for i in range(num_worker):
-            frames = [
-                f for j, f in enumerate(video_frames) if j % num_worker == i
-            ]
             p = Process(target=worker,
-                        args=(i % gpus, detection_cfg, estimation_cfg, frames,
-                              results))
+                        args=(inputs, results, i % gpus, detection_cfg,
+                              estimation_cfg, save_dir is not None))
             procs.append(p)
             p.start()
         for i in range(len(video_frames)):
@@ -81,17 +122,22 @@ def inference(detection_cfg,
         for p in procs:
             p.join()
 
+    # sort results
+    all_result = sorted(all_result, key=lambda x: x['frame_index'])
+
     # generate video
     if (len(all_result) == len(video_frames)) and (save_dir is not None):
         print('\n\nGenerate video:')
         video_name = video_file.strip('/n').split('/')[-1]
         video_path = os.path.join(save_dir, video_name)
-        img_dir = os.path.join(save_dir, '{}.img'.format(video_name))
-        if os.path.exists(img_dir):
-            import shutil
-            shutil.rmtree(img_dir)
-        os.makedirs(img_dir)
-        mmcv.frames2video(img_dir, video_path, filename_tmpl='{:01d}.png')
-        print('Video was saved to {}'.format(video_path))
+        vwriter = cv2.VideoWriter(video_path,
+                                  mmcv.video.io.VideoWriter_fourcc(*('mp4v')),
+                                  video_frames.fps, video_frames.resolution)
+        prog_bar = ProgressBar(len(video_frames))
+        for r in all_result:
+            vwriter.write(r['render_image'])
+            prog_bar.update()
+        vwriter.release()
+        print('\nVideo was saved to {}'.format(video_path))
 
     return all_result
