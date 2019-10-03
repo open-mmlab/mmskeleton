@@ -1,24 +1,13 @@
 import torch
 import mmcv
-import logging
-import torch.multiprocessing as mp
 import numpy as np
 import cv2
-from time import time
-from mmskeleton.utils import cache_checkpoint, get_mmskeleton_url
-from mmskeleton.datasets.utils.video_demo import VideoDemo
-from mmdet.apis import init_detector, inference_detector, show_result_pyplot
-from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator, save_batch_image_with_joints
-from mmcv.utils import ProgressBar
 import os
-logger = logging.getLogger()
-import sys
-import shutil
-sys.setrecursionlimit(1000000)
 from mmskeleton.apis.estimation import init_pose_estimator, inference_pose_estimator
-from multiprocessing import Pool, current_process, Process, Manager
-
-pose_estimators = dict()
+from multiprocessing import current_process, Process, Manager
+from mmskeleton.utils import cache_checkpoint
+from mmskeleton.processor.apis import save_batch_image_with_joints
+from mmcv.utils import ProgressBar
 
 
 def render(image, pred, person_bbox, bbox_thre):
@@ -46,6 +35,9 @@ def render(image, pred, person_bbox, bbox_thre):
     mask = np.expand_dims(mask, axis=2)
     out = ndrr * mask + det_image * (1 - mask)
     return np.uint8(out)
+
+
+pose_estimators = dict()
 
 
 def worker(inputs, results, gpu, detection_cfg, estimation_cfg, render_image):
