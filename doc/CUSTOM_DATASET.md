@@ -26,7 +26,7 @@ A few `.json` files will be stored under `data/dataset_example` if you did not c
     └── ta_chi.json
 
 All annotations share the same basic data structure like below:
-```
+```json
 {
     "info":
         {
@@ -70,7 +70,7 @@ and specify it by changing `processor_cfg.dataset_cfg.name` in your training con
 If you want to use mmskeleton on your own **video dataset**,
 just follow the above tutorial to build the skeleton-based dataset for videos.
 Note that, in the above example, the groundtruth of `category_id` is from [another annotation file](../resource/category_annotation_example.json) with the structure:
-```
+```json
 {
     "categories": [
         "skateboarding",
