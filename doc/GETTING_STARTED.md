@@ -44,3 +44,4 @@ mmskl $CONFIG_FILE -h
 ### Example:
 
 See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a model for skeleton-based action recognitoin.
+See [CUSTOM_DATASET](./doc/CUSTOM_DATASET.md) for building your own skeleton-based dataset.
