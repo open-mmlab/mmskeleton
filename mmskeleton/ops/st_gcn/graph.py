@@ -82,7 +82,7 @@ class Graph():
                               [5, 3], [4, 6], [5, 7]]
             neighbor_link = [(i - 1, j - 1) for (i, j) in neighbor_1base]
             self.edge = self_link + neighbor_link
-            self.center = 1
+            self.center = 0
         # elif layout=='customer settings'
         #     pass
         else:

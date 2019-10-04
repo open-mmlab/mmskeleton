@@ -10,9 +10,13 @@ class SkeletonDataset(torch.utils.data.Dataset):
     Arguments:
         data_path: the path to data folder
         random_choose: If true, randomly choose a portion of the input sequence
-        random_shift: If true, randomly pad zeros at the begining or end of sequence
+        random_move: If true, randomly perfrom affine transformation
         window_size: The length of the output sequence
-        debug: If true, only use the first 100 samples
+        repeat: times of repeating the dataset
+        data_subscripts: subscript expression of einsum operation.
+            In the default case, the shape of output data is `(channel, vertex, frames, person)`.
+            To permute the shape to `(channel, frames, vertex, person)`,
+            set `data_subscripts` to 'cvfm->cfvm'.
     """
     def __init__(self,
                  data_dir,
@@ -21,9 +25,8 @@ class SkeletonDataset(torch.utils.data.Dataset):
                  window_size=-1,
                  num_track=1,
                  data_subscripts=None,
-                 debug=False):
+                 repeat=1):
 
-        self.debug = debug
         self.data_dir = data_dir
         self.random_choose = random_choose
         self.random_move = random_move
@@ -32,7 +35,7 @@ class SkeletonDataset(torch.utils.data.Dataset):
         self.data_subscripts = data_subscripts
         self.files = [
             os.path.join(self.data_dir, f) for f in os.listdir(self.data_dir)
-        ]
+        ] * repeat
 
     def __len__(self):
         return len(self.files)
@@ -51,7 +54,8 @@ class SkeletonDataset(torch.utils.data.Dataset):
 
         # get data
         data = np.zeros(
-            (num_channel, num_keypoints, num_frame, self.num_track))
+            (num_channel, num_keypoints, num_frame, self.num_track),
+            dtype=np.float32)
         for a in annotations:
             person_id = a['id'] if a['person_id'] is None else a['person_id']
             frame_index = a['frame_index']

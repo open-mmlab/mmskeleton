@@ -22,7 +22,7 @@ processor_cfg:
     num_class: 3
     edge_importance_weighting: True
     graph_cfg:
-      layout: 'openpose'
+      layout: 'coco'
       strategy: 'spatial'
   loss_cfg:
     name: 'torch.nn.CrossEntropyLoss'
@@ -35,7 +35,8 @@ processor_cfg:
       random_choose: True
       random_move: True
       window_size: 150
-      data_subscripts: cvtm->ctvm
+      data_subscripts: cvfm->cfvm  # permute data
+      repeat: 20                   # repeat dataset
 
     # test set
     - name: '.datasets.recognition.SkeletonDataset'
@@ -43,7 +44,7 @@ processor_cfg:
       data_subscripts: cvtm->ctvm
 
   # dataloader setting
-  batch_size: 2
+  batch_size: 3
   gpus: 1
 
   # optimizer setting
