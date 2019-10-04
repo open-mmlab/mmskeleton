@@ -70,6 +70,7 @@ def build(detection_cfg,
         reader = mmcv.VideoReader(os.path.join(video_dir, video_file))
         video_frames = reader[:video_max_length]
         annotations = []
+        num_keypoints = -1
 
         for i, image in enumerate(video_frames):
             inputs.put((i, image))
@@ -83,17 +84,16 @@ def build(detection_cfg,
             assert len(t['person_bbox']) == num_person
 
             for j in range(num_person):
-                keypoints = np.concatenate(
-                    (t['joint_preds'][j], t['joint_scores'][j]), 1)
-                keypoints = keypoints.reshape(-1).round().astype(int).tolist()
-
+                keypoints = [[p[0], p[1], round(s[0], 2)] for p, s in zip(
+                    t['joint_preds'][j].round().astype(int).tolist(),
+                    t['joint_scores'][j].tolist())]
+                num_keypoints = len(keypoints)
                 person_info = dict(person_bbox=t['person_bbox']
                                    [j].round().astype(int).tolist(),
                                    frame_index=t['frame_index'],
                                    id=j,
                                    person_id=None,
-                                   keypoints=keypoints,
-                                   num_keypoints=t['joint_scores'].shape[1])
+                                   keypoints=keypoints)
 
                 annotations.append(person_info)
 
@@ -103,6 +103,9 @@ def build(detection_cfg,
             'category_id'] if video_file in video_categories else -1
         info = dict(video_name=video_file,
                     resolution=reader.resolution,
+                    num_frame=len(video_frames),
+                    num_keypoints=num_keypoints,
+                    keypoint_channels=['x', 'y', 'score'],
                     version='1.0')
         video_info = dict(info=info,
                           category_id=category_id,
