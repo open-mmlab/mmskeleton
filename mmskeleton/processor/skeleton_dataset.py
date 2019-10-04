@@ -33,6 +33,7 @@ def worker(inputs, results, gpu, detection_cfg, estimation_cfg):
 
 def build(detection_cfg,
           estimation_cfg,
+          tracker_cfg,
           video_dir,
           out_dir,
           gpus=1,
@@ -42,6 +43,9 @@ def build(detection_cfg,
 
     cache_checkpoint(detection_cfg.checkpoint_file)
     cache_checkpoint(estimation_cfg.checkpoint_file)
+    if tracker_cfg is not None:
+        raise NotImplementedError
+
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
