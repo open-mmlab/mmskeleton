@@ -92,8 +92,8 @@ Note that, in the above example, the groundtruth of `category_id` is from [anoth
 ```
 The `category_id` will be set to `-1` if the category annotations miss.
 
-You can extract skeleton data by:
+You can build dataset by:
 ```
 mmskl configs/utils/build_dataset_example.yaml --video_dir $VIDEO_DIR --category_annotation $VIDEO_ANNOTATION --out_dir $OUT_DIR [--gpus $GPUS]
 ```
-, and change person detector, pose estimator or other arguments by modifying `build_dataset_example.yaml`.
+To change the person detector, pose estimator or other arguments, modify the `build_dataset_example.yaml`.
