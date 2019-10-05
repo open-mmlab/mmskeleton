@@ -5,6 +5,7 @@ argparse_cfg:
   work_dir: 
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
+    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-dataset
   batch_size: 
     bind_to: processor_cfg.batch_size
   resume_from:
@@ -31,7 +32,7 @@ processor_cfg:
   # dataset setting
   dataset_cfg: 
     - name: '.datasets.recognition.SkeletonDataset'
-      data_dir: ./data/Kinetics/kinetics-skeleton-reformat/val
+      data_dir: ./data/Kinetics/skeleton-from-openpose/train
       random_choose: True
       random_move: True
       window_size: 150
@@ -39,10 +40,9 @@ processor_cfg:
       normalization: True
       num_track: 2
 
-
     - name: '.datasets.recognition.SkeletonDataset'
-      data_dir: ./data/Kinetics/kinetics-skeleton-reformat/val
-      data_subscripts: cvtm->ctvm
+      data_dir: ./data/Kinetics/skeleton-from-openpose/val
+      data_subscripts: cvtm->ctvm  # permute data
       normalization: True
       num_track: 2
 
@@ -61,7 +61,7 @@ processor_cfg:
 
   # runtime setting
   workflow: [['train', 5], ['val', 1]]
-  work_dir: ./work_dir/recognition/st_gcn/kinetics-skeleton-reformat
+  work_dir:
   workers: 32
   log_level: 0
   total_epochs: 50
@@ -70,7 +70,7 @@ processor_cfg:
       policy: 'step'
       step: [20, 30, 40, 50]
     log_config:
-      interval: 1
+      interval: 100
       hooks:
         - type: TextLoggerHook
     checkpoint_config:

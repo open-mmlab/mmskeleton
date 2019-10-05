@@ -11,7 +11,7 @@ import torch.nn as nn
 from torchvision import datasets, transforms
 
 # operation
-from .utils import skeleton
+from mmskeleton.datasets.utils import skeleton
 
 
 class KineticsFeeder(torch.utils.data.Dataset):

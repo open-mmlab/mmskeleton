@@ -27,12 +27,10 @@ processor_cfg:
   # dataset setting
   dataset_cfg:
     name: ".datasets.recognition.SkeletonDataset"
-    data_dir: ./data/Kinetics/kinetics-skeleton-reformat/val
+    data_dir: ./data/Kinetics/skeleton-from-openpose/val
     data_subscripts: cvtm->ctvm
     normalization: True
     num_track: 2
-
-    # debug: true
 
   # dataloader setting
   batch_size: 256

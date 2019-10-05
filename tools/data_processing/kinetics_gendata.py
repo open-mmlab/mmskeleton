@@ -8,7 +8,7 @@ from numpy.lib.format import open_memmap
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from mmskeleton.datasets.kinetics_feeder import KineticsFeeder
+from mmskeleton.deprecated.datasets.kinetics_feeder import KineticsFeeder
 toolbar_width = 30
 
 
