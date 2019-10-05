@@ -50,12 +50,14 @@ class SkeletonDataset(torch.utils.data.Dataset):
         annotations = data['annotations']
         num_frame = data['info']['num_frame']
         num_keypoints = data['info']['num_keypoints']
-        num_channel = len(data['info']['keypoint_channels'])
+        channel = data['info']['keypoint_channels']
+        num_channel = len(channel)
 
         # get data
         data = np.zeros(
             (num_channel, num_keypoints, num_frame, self.num_track),
             dtype=np.float32)
+
         for a in annotations:
             person_id = a['id'] if a['person_id'] is None else a['person_id']
             frame_index = a['frame_index']
