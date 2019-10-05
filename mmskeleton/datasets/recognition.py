@@ -24,6 +24,7 @@ class SkeletonDataset(torch.utils.data.Dataset):
                  random_move=False,
                  window_size=-1,
                  num_track=1,
+                 normalization=False,
                  data_subscripts=None,
                  repeat=1):
 
@@ -32,6 +33,7 @@ class SkeletonDataset(torch.utils.data.Dataset):
         self.random_move = random_move
         self.window_size = window_size
         self.num_track = num_track
+        self.normalization = normalization
         self.data_subscripts = data_subscripts
         self.files = [
             os.path.join(self.data_dir, f) for f in os.listdir(self.data_dir)
@@ -64,6 +66,19 @@ class SkeletonDataset(torch.utils.data.Dataset):
             if person_id < self.num_track and frame_index < num_frame:
                 data[:, :, frame_index, person_id] = np.array(
                     a['keypoints']).transpose()
+
+        # normalization
+        if self.normalization:
+            for i, c in enumerate(channel):
+                if c == 'x':
+                    data[i] = data[i] / resolution[0] - 0.5
+                if c == 'y':
+                    data[i] = data[i] / resolution[1] - 0.5
+                if c == 'score' or c == 'visibility':
+                    mask = (data[i] == 0)
+                    for j in range(num_channel):
+                        if c != j:
+                            data[j][mask] = 0
 
         # permute
         if self.data_subscripts is not None:

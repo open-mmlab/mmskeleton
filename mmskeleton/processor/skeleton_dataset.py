@@ -98,7 +98,6 @@ def build(detection_cfg,
                                    id=j,
                                    person_id=None,
                                    keypoints=keypoints)
-
                 annotations.append(person_info)
 
         # output results

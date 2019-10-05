@@ -7,28 +7,33 @@ argparse_cfg:
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
+    default: mmskeleton://st_gcn/kinetics-skeleton
 
 processor_cfg:
   name: ".processor.recognition.test"
-  workers: 16
   checkpoint:
+  workers: 32
 
   # model setting
   model_cfg:
     name: ".models.backbones.ST_GCN"
     in_channels: 3
-    num_class: 3
+    num_class: 400
     edge_importance_weighting: True
     graph_cfg:
-      layout: "coco"
+      layout: "openpose"
       strategy: "spatial"
 
   # dataset setting
   dataset_cfg:
     name: ".datasets.recognition.SkeletonDataset"
-    data_dir: ./data/dataset_example
+    data_dir: ./data/Kinetics/kinetics-skeleton-reformat/val
     data_subscripts: cvtm->ctvm
+    normalization: True
+    num_track: 2
+
+    # debug: true
 
   # dataloader setting
-  batch_size: 3
-  gpus: 1
+  batch_size: 256
+  gpus: 4

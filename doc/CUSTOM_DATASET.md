@@ -17,7 +17,7 @@ Run this command for building skeleton-based dataset for them:
 ```
 mmskl configs/utils/build_dataset_example.yaml [--gpus $GPUS]
 ```
-mmskeleton extracts skeleton sequences for each video via performing person detection and pose estimation on all frames.
+mmskeleton extracts skeleton sequences for each video via performing **person detection** and **pose estimation** on all frames.
 A few `.json` files will be stored under `data/dataset_example` if you did not change default arguments. The directory layout is shown here:
 
     data/dataset_example
