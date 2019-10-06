@@ -9,13 +9,13 @@ argparse_cfg:
     help: the checkpoint file to load from
 
 processor_cfg:
-  name: ".processor.recognition.test"
+  name: "processor.recognition.test"
   workers: 16
   checkpoint:
 
   # model setting
   model_cfg:
-    name: ".models.backbones.ST_GCN"
+    name: "models.backbones.ST_GCN"
     in_channels: 3
     num_class: 3
     edge_importance_weighting: True
@@ -25,9 +25,17 @@ processor_cfg:
 
   # dataset setting
   dataset_cfg:
-    name: ".datasets.recognition.SkeletonDataset"
-    data_dir: ./data/dataset_example
-    data_subscripts: cvtm->ctvm
+    name: "datasets.DataPipeline"
+    data_source:
+      name: "datasets.SkeletonLoader"
+      data_dir: ./data/dataset_example
+      num_track: 2
+    pipeline:
+      - name: "skeleton_process.normalize_by_resolution"
+      - name: "skeleton_process.mask_by_visibility"
+      - name: "skeleton_process.transpose"
+        order: [0, 2, 1, 3]
+      - name: "skeleton_process.to_tuple"
 
   # dataloader setting
   batch_size: 3

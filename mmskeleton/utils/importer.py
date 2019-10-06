@@ -19,7 +19,12 @@ def import_obj(name):
 
 
 def call_obj(name, **kwargs):
-    return import_obj(name)(**kwargs)
+    if isinstance(name, str):
+        return import_obj(name)(**kwargs)
+    elif callable(name):
+        return name(**kwargs)
+    else:
+        raise ValueError('name should be string all callable.')
 
 
 def set_attr(obj, name, value):

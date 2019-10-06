@@ -1,18 +1,18 @@
 argparse_cfg:
-  gpus: 
+  gpus:
     bind_to: processor_cfg.gpus
     help: number of gpus
-  work_dir: 
+  work_dir:
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
-  batch_size: 
+  batch_size:
     bind_to: processor_cfg.batch_size
   resume_from:
     bind_to: processor_cfg.resume_from
     help: the checkpoint file to resume from
 
 
-processor_cfg: 
+processor_cfg:
   name: '.processor.recognition.train'
   workers: 16
 
@@ -29,20 +29,32 @@ processor_cfg:
     name: 'torch.nn.CrossEntropyLoss'
 
   # dataset setting
-  dataset_cfg: 
+  dataset_cfg:
     # training set
-    - name: '.datasets.recognition.SkeletonDataset'
-      data_dir: ./data/dataset_example
-      random_choose: True
-      random_move: True
-      window_size: 150
-      data_subscripts: cvfm->cfvm  # permute data
-      repeat: 20                   # repeat dataset
+    - name: "datasets.DataPipeline"
+      data_source:
+        name: "datasets.SkeletonLoader"
+        data_dir: ./data/dataset_example
+        num_track: 2
+        repeat: 20
+      pipeline:
+        - name: "skeleton_process.normalize_by_resolution"
+        - name: "skeleton_process.mask_by_visibility"
+        - name: "skeleton_process.transpose"
+          order: [0, 2, 1, 3]
+        - name: "skeleton_process.to_tuple"
 
-    # test set
-    - name: '.datasets.recognition.SkeletonDataset'
-      data_dir: ./data/dataset_example
-      data_subscripts: cvtm->ctvm
+    - name: "datasets.DataPipeline"
+      data_source:
+        name: "datasets.SkeletonLoader"
+        data_dir: ./data/dataset_example
+        num_track: 2
+      pipeline:
+        - name: "skeleton_process.normalize_by_resolution"
+        - name: "skeleton_process.mask_by_visibility"
+        - name: "skeleton_process.transpose"
+          order: [0, 2, 1, 3]
+        - name: "skeleton_process.to_tuple"
 
   # dataloader setting
   batch_size: 3

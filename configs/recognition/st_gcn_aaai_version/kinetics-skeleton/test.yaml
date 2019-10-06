@@ -12,7 +12,6 @@ argparse_cfg:
 processor_cfg:
   name: "processor.recognition.test"
   checkpoint:
-  workers: 32
 
   # model setting
   model_cfg:
@@ -26,17 +25,10 @@ processor_cfg:
 
   # dataset setting
   dataset_cfg:
-    name: "datasets.DataPipeline"
-    data_source:
-      name: "datasets.SkeletonLoader"
-      data_dir: ./data/Kinetics/skeleton-from-openpose/val
-      num_track: 2
-    pipeline:
-      - name: "skeleton_process.normalize_by_resolution"
-      - name: "skeleton_process.mask_by_visibility"
-      - name: "skeleton_process.transpose"
-        order: [0, 2, 1, 3]
-      - name: "skeleton_process.to_tuple"
+    name: "deprecated.datasets.skeleton_feeder.SkeletonFeeder"
+    data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
+    label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
+    # debug: true
 
   # dataloader setting
   batch_size: 256

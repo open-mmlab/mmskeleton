@@ -25,8 +25,6 @@ class SkeletonDataset(torch.utils.data.Dataset):
                  window_size=-1,
                  num_track=1,
                  data_subscripts=None,
-                 mean=None,
-                 std=None,
                  repeat=1):
 
         self.data_dir = data_dir

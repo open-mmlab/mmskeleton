@@ -7,30 +7,28 @@ argparse_cfg:
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
-    default: mmskeleton://st_gcn/ntu-xsub
 
 processor_cfg:
-  name: ".processor.recognition.test"
+  name: "processor.recognition.test"
+  workers: 16
   checkpoint:
 
   # model setting
   model_cfg:
-    name: ".models.backbones.ST_GCN"
+    name: "models.backbones.ST_GCN"
     in_channels: 3
-    num_class: 60
-    dropout: 0.5
+    num_class: 3
     edge_importance_weighting: True
     graph_cfg:
-      layout: "ntu-rgb+d"
+      layout: "coco"
       strategy: "spatial"
 
   # dataset setting
   dataset_cfg:
-    name: ".datasets.SkeletonFeeder"
-    data_path: ./data/NTU-RGB-D/xsub/val_data.npy
-    label_path: ./data/NTU-RGB-D/xsub/val_label.pkl
-    # debug: true
+    name: "datasets.recognition.SkeletonDataset"
+    data_dir: ./data/dataset_example
+    data_subscripts: cvtm->ctvm
 
   # dataloader setting
-  batch_size: 256
-  gpus: 4
+  batch_size: 3
+  gpus: 1
