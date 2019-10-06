@@ -1,14 +1,19 @@
 import random
 import numpy as np
+import mmskeleton
 
 
 def stgcn_aaai18_dataprocess(data, window_size, random_choose=False, random_move=False):
     data = normalize_by_resolution(data)
     data = mask_by_visibility(data)
+    # processing
+    skeleton = mmskeleton.deprecated.datasets.utils.skeleton
     if random_choose:
-        data = temporal_repeat(data, size=window_size)
+        data['data'] = skeleton.random_choose(data['data'], window_size)
+    elif window_size > 0:
+        data['data'] = skeleton.auto_pading(data['data'], window_size)
     if random_move:
-        data = simulate_camera_moving(data)
+        data['data'] = skeleton.random_move(data['data'])
     data = transpose(data, order=[0,2,1,3])
     data = to_tuple(data)
     return data
