@@ -7,7 +7,7 @@ argparse_cfg:
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
-    default: mmskeleton://st_gcn/ntu-xview
+    default: mmskeleton://st_gcn/kinetics-skeleton
 
 processor_cfg:
   name: "processor.recognition.test"
@@ -15,20 +15,19 @@ processor_cfg:
 
   # model setting
   model_cfg:
-    name: "models.backbones.ST_GCN_AAAI"
+    name: "models.backbones.ST_GCN_AAAI18"
     in_channels: 3
-    num_class: 60
-    dropout: 0.5
+    num_class: 400
     edge_importance_weighting: True
     graph_cfg:
-      layout: "ntu-rgb+d"
+      layout: "openpose"
       strategy: "spatial"
 
   # dataset setting
   dataset_cfg:
     name: "deprecated.datasets.skeleton_feeder.SkeletonFeeder"
-    data_path: ./data/NTU-RGB-D/xview/val_data.npy
-    label_path: ./data/NTU-RGB-D/xview/val_label.pkl
+    data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
+    label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
     # debug: true
 
   # dataloader setting

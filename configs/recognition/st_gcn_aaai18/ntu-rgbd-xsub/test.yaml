@@ -15,7 +15,7 @@ processor_cfg:
 
   # model setting
   model_cfg:
-    name: "models.backbones.ST_GCN_AAAI"
+    name: "models.backbones.ST_GCN_AAAI18"
     in_channels: 3
     num_class: 60
     dropout: 0.5

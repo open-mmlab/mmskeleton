@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 
-def stgcn_aaai_version(data, window_size, random_choose=False, random_move=False):
+def stgcn_aaai18_dataprocess(data, window_size, random_choose=False, random_move=False):
     data = normalize_by_resolution(data)
     data = mask_by_visibility(data)
     if random_choose:
