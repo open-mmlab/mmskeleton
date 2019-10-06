@@ -24,8 +24,9 @@ class SkeletonDataset(torch.utils.data.Dataset):
                  random_move=False,
                  window_size=-1,
                  num_track=1,
-                 normalization=False,
                  data_subscripts=None,
+                 mean=None,
+                 std=None,
                  repeat=1):
 
         self.data_dir = data_dir
@@ -33,7 +34,6 @@ class SkeletonDataset(torch.utils.data.Dataset):
         self.random_move = random_move
         self.window_size = window_size
         self.num_track = num_track
-        self.normalization = normalization
         self.data_subscripts = data_subscripts
         self.files = [
             os.path.join(self.data_dir, f) for f in os.listdir(self.data_dir)

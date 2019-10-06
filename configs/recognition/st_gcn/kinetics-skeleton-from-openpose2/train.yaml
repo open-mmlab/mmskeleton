@@ -30,21 +30,32 @@ processor_cfg:
     name: 'torch.nn.CrossEntropyLoss'
 
   # dataset setting
-  dataset_cfg: 
-    - name: '.datasets.recognition.SkeletonDataset'
-      data_dir: ./data/Kinetics/skeleton-from-openpose/train
-      random_choose: True
-      random_move: True
-      window_size: 150
-      data_subscripts: cvfm->cfvm  # permute data
-      normalization: True
-      num_track: 2
+  dataset_cfg:
+    - name: "datasets.DataPipeline"
+      data_source:
+        name: "datasets.SkeletonLoader"
+        data_dir: ./data/Kinetics/skeleton-from-openpose/train
+        num_track: 2
+      pipeline:
+        - name: "datasets.skeleton_dataset.normalize_by_resolution"
+        - name: "datasets.skeleton_dataset.mask_by_visibility"
+        - name: "datasets.skeleton_dataset.temporal_repeat"
+        - name: "datasets.skeleton_dataset.simulate_camera_moving"
+        - name: "datasets.skeleton_dataset.transpose"
+          order: [0, 2, 1, 3]
+        - name: "datasets.skeleton_dataset.to_tuple"
 
-    - name: '.datasets.recognition.SkeletonDataset'
-      data_dir: ./data/Kinetics/skeleton-from-openpose/val
-      data_subscripts: cvtm->ctvm  # permute data
-      normalization: True
-      num_track: 2
+    - name: "datasets.DataPipeline"
+      data_source:
+        name: "datasets.SkeletonLoader"
+        data_dir: ./data/Kinetics/skeleton-from-openpose/val
+        num_track: 2
+      pipeline:
+        - name: "datasets.skeleton_dataset.normalize_by_resolution"
+        - name: "datasets.skeleton_dataset.mask_by_visibility"
+        - name: "datasets.skeleton_dataset.transpose"
+          order: [0, 2, 1, 3]
+        - name: "datasets.skeleton_dataset.to_tuple"
 
 
   # dataloader setting

@@ -9,10 +9,12 @@ def import_obj(name):
         name = 'mmskeleton' + name
 
     mod_str, _sep, class_str = name.rpartition('.')
-    __import__(mod_str)
     try:
+        __import__(mod_str)
         return getattr(sys.modules[mod_str], class_str)
-    except AttributeError:
+    except ModuleNotFoundError:
+        if name[0:11] != 'mmskeleton.':
+            return import_obj('mmskeleton.' + name)
         raise ImportError('Object {} cannot be found.'.format(class_str))
 
 
