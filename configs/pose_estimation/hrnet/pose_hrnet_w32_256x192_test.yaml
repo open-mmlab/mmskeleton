@@ -9,11 +9,11 @@ argparse_cfg:
     bind_to: processor_cfg.batch_size
 
 processor_cfg:
-  name: ".processor.twodimestimation.test"
+  name: "processor.twodimestimation.test"
   model_cfg:
-    name: ".models.estimator.HRPoseEstimator"
+    name: "models.estimator.HRPoseEstimator"
     backbone:
-      name: ".models.backbones.HRNet"
+      name: "models.backbones.HRNet"
       extra:
         target_type: gaussian
         stage1:
@@ -64,17 +64,17 @@ processor_cfg:
             - 256
           fuse_method: SUM
     skeleton_head:
-      name: ".models.skeleton_head.SimpleSkeletonHead"
+      name: "models.skeleton_head.SimpleSkeletonHead"
       num_convs: 1
       in_channels: 32
       kernel_size: 1
       num_joints: 17
       reg_loss:
-        name: ".models.loss.JointsMSELoss"
+        name: "models.loss.JointsMSELoss"
         use_target_weight: False
 
   dataset_cfg:
-    name: ".datasets.COCODataset"
+    name: "datasets.COCODataset"
     cfg:
       test:
         rank: 0

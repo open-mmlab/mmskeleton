@@ -1,2 +1,2 @@
-from .st_gcn import ST_GCN
+from .st_gcn_aaai import ST_GCN_AAAI
 from .hrnet import HRNet

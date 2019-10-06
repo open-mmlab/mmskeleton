@@ -1,5 +1,5 @@
 processor_cfg:
-  name: ".processor.pose_demo.inference"
+  name: "processor.pose_demo.inference"
   gpus: 1
   worker_per_gpu: 2
   video_file: resource/data_example/skateboarding.mp4

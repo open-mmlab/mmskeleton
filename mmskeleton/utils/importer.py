@@ -5,8 +5,8 @@ def import_obj(name):
     if not isinstance(name, str):
         raise ImportError('Object name should be a string.')
 
-    if name[0] == '.':
-        name = 'mmskeleton' + name
+    # if name[0] == '.':
+    #     name = 'mmskeleton' + name
 
     mod_str, _sep, class_str = name.rpartition('.')
     try:

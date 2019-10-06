@@ -5,10 +5,13 @@ import numpy as np
 def stgcn_aaai_version(data, window_size, random_choose=False, random_move=False):
     data = normalize_by_resolution(data)
     data = mask_by_visibility(data)
+    if random_choose:
+        data = temporal_repeat(data, size=window_size)
     if random_move:
         data = simulate_camera_moving(data)
     data = transpose(data, order=[0,2,1,3])
     data = to_tuple(data)
+    return data
 
 def normalize_by_resolution(data):
 

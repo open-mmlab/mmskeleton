@@ -1,5 +1,5 @@
 processor_cfg:
-  name: ".processor.skeleton_dataset.build"
+  name: "processor.skeleton_dataset.build"
   gpus: 1
   worker_per_gpu: 2
   video_dir: resource/data_example

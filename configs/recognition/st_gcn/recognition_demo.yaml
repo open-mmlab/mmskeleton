@@ -1,5 +1,5 @@
 processor_cfg:
-  name: ".processor.recognition_demo.inference"
+  name: "processor.recognition_demo.inference"
   gpus: 1
   worker_per_gpu: 2
   video_file: resource/data_example/skateboarding.mp4
@@ -31,7 +31,7 @@ processor_cfg:
   recognition_cfg:
     checkpoint_file: mmskeleton://st_gcn/kinetics-skeleton
     model_cfg:
-      name: ".models.backbones.ST_GCN"
+      name: "models.backbones.ST_GCN"
       in_channels: 3
       num_class: 400
       edge_importance_weighting: True
