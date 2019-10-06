@@ -15,11 +15,11 @@ argparse_cfg:
 
 
 processor_cfg:
-  name: '.processor.recognition.train'
+  name: 'processor.recognition.train'
 
   # model setting
   model_cfg:
-    name: '.models.backbones.ST_GCN_AAAI18'
+    name: 'models.backbones.ST_GCN_AAAI18'
     in_channels: 3
     num_class: 400
     edge_importance_weighting: True
