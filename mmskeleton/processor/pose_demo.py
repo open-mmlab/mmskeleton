@@ -6,16 +6,14 @@ import os
 from mmskeleton.apis.estimation import init_pose_estimator, inference_pose_estimator
 from multiprocessing import current_process, Process, Manager
 from mmskeleton.utils import cache_checkpoint
-from mmskeleton.processor.apis import save_batch_image_with_joints
 from mmcv.utils import ProgressBar
 
 
-def render(image, pred, person_bbox, bbox_thre):
+def render(image, pred, person_bbox, bbox_thre=0):
     if pred is None:
         return image
 
-    det_image = image.copy()
-    mmcv.imshow_det_bboxes(det_image,
+    mmcv.imshow_det_bboxes(image,
                            person_bbox,
                            np.zeros(len(person_bbox)).astype(int),
                            class_names=['person'],
@@ -23,18 +21,12 @@ def render(image, pred, person_bbox, bbox_thre):
                            show=False,
                            wait_time=0)
 
-    batch_size = pred.shape[0]
-    num_joints = pred.shape[1]
-    cimage = np.expand_dims(image, axis=0)
-    cimage = torch.from_numpy(cimage)
-    pred = torch.from_numpy(pred)
-    cimage = cimage.permute(0, 3, 1, 2)
-    pred_vis = torch.ones((batch_size, num_joints, 1))
-    ndrr = save_batch_image_with_joints(cimage, pred, pred_vis)
-    mask = ndrr[:, :, 0] == 255
-    mask = np.expand_dims(mask, axis=2)
-    out = ndrr * mask + det_image * (1 - mask)
-    return np.uint8(out)
+    for person_pred in pred:
+        for joint_pred in person_pred:
+            cv2.circle(image, (int(joint_pred[0]), int(joint_pred[1])), 2,
+                       [255, 0, 0], 2)
+
+    return np.uint8(image)
 
 
 pose_estimators = dict()

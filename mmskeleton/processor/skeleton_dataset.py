@@ -6,7 +6,6 @@ import ntpath
 from mmskeleton.apis.estimation import init_pose_estimator, inference_pose_estimator
 from multiprocessing import current_process, Process, Manager
 from mmskeleton.utils import cache_checkpoint
-from mmskeleton.processor.apis import save_batch_image_with_joints
 from mmcv.utils import ProgressBar
 
 pose_estimators = dict()

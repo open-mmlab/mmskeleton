@@ -5,7 +5,7 @@ import mmcv
 from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmskeleton.utils import get_mmskeleton_url
 from mmdet.apis import init_detector, inference_detector
-from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator, save_batch_image_with_joints
+from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator
 
 
 def init_pose_estimator(detection_cfg, estimation_cfg, device=None):
