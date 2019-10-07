@@ -157,7 +157,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--ignored_sample_path',
         default=
-        'tools/data_processing/nturgbd_samples_with_missing_skeletons.txt')
+        'deprecated/tools/data_processing/nturgbd_samples_with_missing_skeletons.txt'
+    )
     parser.add_argument('--out_folder', default='data/NTU-RGB-D')
 
     benchmark = ['xsub', 'xview']
