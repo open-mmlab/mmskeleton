@@ -12,11 +12,11 @@ argparse_cfg:
     help: the checkpoint file to resume from
 
 processor_cfg:
-  name: "processor.twodimestimation.train"
+  type: "processor.twodimestimation.train"
   model_cfg:
-    name: "models.estimator.HRPoseEstimator"
+    type: "models.estimator.HRPoseEstimator"
     backbone:
-      name: "models.backbones.HRNet"
+      type: "models.backbones.HRNet"
       extra:
         target_type: gaussian
         stage1:
@@ -67,17 +67,17 @@ processor_cfg:
             - 256
           fuse_method: SUM
     skeleton_head:
-      name: "models.skeleton_head.SimpleSkeletonHead"
+      type: "models.skeleton_head.SimpleSkeletonHead"
       num_convs: 1
       in_channels: 32
       kernel_size: 1
       num_joints: 17
       reg_loss:
-        name: "models.loss.JointsMSELoss"
+        type: "models.loss.JointsMSELoss"
         use_target_weight: False
     pretrained: "open-mmlab://msra/hrnetv2_w32"
   dataset_cfg:
-    name: "datasets.COCODataset"
+    type: "datasets.COCODataset"
     cfg:
       train:
         out_dir: "pass/"
@@ -105,7 +105,7 @@ processor_cfg:
   batch_size: 32
   gpus: 4
   optimizer_cfg:
-    name: "torch.optim.Adam"
+    type: "torch.optim.Adam"
     lr: 0.001
     weight_decay: 0.0001
   workflow: [["train", 5]]

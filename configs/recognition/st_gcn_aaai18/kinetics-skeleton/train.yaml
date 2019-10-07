@@ -14,11 +14,11 @@ argparse_cfg:
 
 
 processor_cfg:
-  name: 'processor.recognition.train'
+  type: 'processor.recognition.train'
 
   # model setting
   model_cfg:
-    name: 'models.backbones.ST_GCN_AAAI18'
+    type: 'models.backbones.ST_GCN_AAAI18'
     in_channels: 3
     num_class: 400
     edge_importance_weighting: True
@@ -26,18 +26,18 @@ processor_cfg:
       layout: 'openpose'
       strategy: 'spatial'
   loss_cfg:
-    name: 'torch.nn.CrossEntropyLoss'
+    type: 'torch.nn.CrossEntropyLoss'
 
   # dataset setting
   dataset_cfg:
-    - name: 'deprecated.datasets.skeleton_feeder.SkeletonFeeder'
+    - type: 'deprecated.datasets.skeleton_feeder.SkeletonFeeder'
       data_path: ./data/Kinetics/kinetics-skeleton/train_data.npy
       label_path: ./data/Kinetics/kinetics-skeleton/train_label.pkl
       random_choose: True
       random_move: True
       window_size: 150
       # debug: true
-    - name: 'deprecated.datasets.skeleton_feeder.SkeletonFeeder'
+    - type: 'deprecated.datasets.skeleton_feeder.SkeletonFeeder'
       data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
       label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
       # debug: true
@@ -48,7 +48,7 @@ processor_cfg:
 
   # optimizer setting
   optimizer_cfg:
-    name: 'torch.optim.SGD'
+    type: 'torch.optim.SGD'
     lr: 0.1
     momentum: 0.9
     nesterov: true

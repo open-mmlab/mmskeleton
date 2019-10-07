@@ -10,12 +10,12 @@ argparse_cfg:
     default: mmskeleton://st_gcn/ntu-xview
 
 processor_cfg:
-  name: "processor.recognition.test"
+  type: "processor.recognition.test"
   checkpoint:
 
   # model setting
   model_cfg:
-    name: "models.backbones.ST_GCN_AAAI18"
+    type: "models.backbones.ST_GCN_AAAI18"
     in_channels: 3
     num_class: 60
     dropout: 0.5
@@ -26,7 +26,7 @@ processor_cfg:
 
   # dataset setting
   dataset_cfg:
-    name: "deprecated.datasets.skeleton_feeder.SkeletonFeeder"
+    type: "deprecated.datasets.skeleton_feeder.SkeletonFeeder"
     data_path: ./data/NTU-RGB-D/xview/val_data.npy
     label_path: ./data/NTU-RGB-D/xview/val_label.pkl
     # debug: true

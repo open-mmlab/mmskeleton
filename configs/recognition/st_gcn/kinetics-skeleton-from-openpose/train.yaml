@@ -15,11 +15,11 @@ argparse_cfg:
 
 
 processor_cfg:
-  name: 'processor.recognition.train'
+  type: 'processor.recognition.train'
 
   # model setting
   model_cfg:
-    name: 'models.backbones.ST_GCN_AAAI18'
+    type: 'models.backbones.ST_GCN_AAAI18'
     in_channels: 3
     num_class: 400
     edge_importance_weighting: True
@@ -27,36 +27,36 @@ processor_cfg:
       layout: 'openpose'
       strategy: 'spatial'
   loss_cfg:
-    name: 'torch.nn.CrossEntropyLoss'
+    type: 'torch.nn.CrossEntropyLoss'
 
   # dataset setting
   dataset_cfg:
-    - name: "datasets.DataPipeline"
+    - type: "datasets.DataPipeline"
       data_source:
-        name: "datasets.SkeletonLoader"
+        type: "datasets.SkeletonLoader"
         data_dir: ./data/Kinetics/skeleton-from-openpose/train
         num_track: 2
       pipeline:
-        - name: "datasets.skeleton.normalize_by_resolution"
-        - name: "datasets.skeleton.mask_by_visibility"
-        - name: "datasets.skeleton.temporal_repeat"
+        - type: "datasets.skeleton.normalize_by_resolution"
+        - type: "datasets.skeleton.mask_by_visibility"
+        - type: "datasets.skeleton.temporal_repeat"
           size: 150
-        - name: "datasets.skeleton.simulate_camera_moving"
-        - name: "datasets.skeleton.transpose"
+        - type: "datasets.skeleton.simulate_camera_moving"
+        - type: "datasets.skeleton.transpose"
           order: [0, 2, 1, 3]
-        - name: "datasets.skeleton.to_tuple"
+        - type: "datasets.skeleton.to_tuple"
 
-    - name: "datasets.DataPipeline"
+    - type: "datasets.DataPipeline"
       data_source:
-        name: "datasets.SkeletonLoader"
+        type: "datasets.SkeletonLoader"
         data_dir: ./data/Kinetics/skeleton-from-openpose/val
         num_track: 2
       pipeline:
-        - name: "datasets.skeleton.normalize_by_resolution"
-        - name: "datasets.skeleton.mask_by_visibility"
-        - name: "datasets.skeleton.transpose"
+        - type: "datasets.skeleton.normalize_by_resolution"
+        - type: "datasets.skeleton.mask_by_visibility"
+        - type: "datasets.skeleton.transpose"
           order: [0, 2, 1, 3]
-        - name: "datasets.skeleton.to_tuple"
+        - type: "datasets.skeleton.to_tuple"
 
 
   # dataloader setting
@@ -65,7 +65,7 @@ processor_cfg:
 
   # optimizer setting
   optimizer_cfg:
-    name: 'torch.optim.SGD'
+    type: 'torch.optim.SGD'
     lr: 0.1
     momentum: 0.9
     nesterov: true
