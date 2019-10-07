@@ -15,7 +15,8 @@ def import_obj(name):
     except ModuleNotFoundError:
         if name[0:11] != 'mmskeleton.':
             return import_obj('mmskeleton.' + name)
-        raise ImportError('Object {} cannot be found.'.format(class_str))
+        raise ModuleNotFoundError('Object {} cannot be found in {}.'.format(
+            class_str, mod_str))
 
 
 def call_obj(name, **kwargs):

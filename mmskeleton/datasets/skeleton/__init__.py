@@ -1,3 +1,2 @@
 from .loader import SkeletonLoader
-from .cache_loader import SkeletonCacheLoader
 from .skeleton_process import *
