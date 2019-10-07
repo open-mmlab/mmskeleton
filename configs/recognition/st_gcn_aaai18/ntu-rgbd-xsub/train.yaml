@@ -5,6 +5,7 @@ argparse_cfg:
   work_dir:
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
+    default: ./work_dir/recognition/st_gcn_aaai18/ntu-rgbd-xsub
   batch_size:
     bind_to: processor_cfg.batch_size
   resume_from:
@@ -54,7 +55,7 @@ processor_cfg:
 
   # runtime setting
   workflow: [['train', 5], ['val', 1]]
-  work_dir: ./work_dir/recognition/st_gcn/ntu-rgbd-xsub
+  work_dir: 
   log_level: 0
   total_epochs: 80
   training_hooks:
