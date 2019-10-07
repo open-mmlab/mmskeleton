@@ -1,11 +1,14 @@
 import os
+import sys
 import platform
 import subprocess
 import time
 import numpy as np
 from setuptools import find_packages, setup, Extension
 from Cython.Build import cythonize  # noqa: E402
-from mmskeleton.ops.nms.setup_linux import custom_build_ext, CUDA
+
+sys.path.append('./src')
+from nms.setup_linux import custom_build_ext, CUDA
 
 
 def readme():
