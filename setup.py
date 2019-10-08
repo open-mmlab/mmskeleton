@@ -78,7 +78,9 @@ mmskl_home = '{}'
     MMSKELETON_HOME = os.path.dirname(os.path.realpath(__file__))
 
     with open(version_file, 'w') as f:
-        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION, MMSKELETON_HOME))
+        f.write(
+            content.format(time.asctime(), VERSION, SHORT_VERSION,
+                           MMSKELETON_HOME))
 
 
 def get_version():
