@@ -5,7 +5,7 @@ argparse_cfg:
   work_dir:
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
-    default: ./work_dir/recognition/st_gcn_aaai18/kinetics-skeleton
+    default: ./work_dir/recognition/ST_GCN_18/kinetics-skeleton
   batch_size:
     bind_to: processor_cfg.batch_size
   resume_from:
@@ -19,7 +19,7 @@ processor_cfg:
 
   # model setting
   model_cfg:
-    type: 'models.backbones.ST_GCN_AAAI18'
+    type: 'models.backbones.ST_GCN_18'
     in_channels: 3
     num_class: 400
     edge_importance_weighting: True

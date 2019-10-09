@@ -27,6 +27,7 @@ processor_cfg:
         - 0.224
         - 0.225
       post_process: true
+  tracker_cfg: null
 
 argparse_cfg:
   gpus:
