@@ -1,3 +1,0 @@
-## MMSkeleton Extension
-
-Coming soon...

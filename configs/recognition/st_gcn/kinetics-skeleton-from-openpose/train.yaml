@@ -34,7 +34,7 @@ processor_cfg:
     - type: "datasets.DataPipeline"
       data_source:
         type: "datasets.SkeletonLoader"
-        data_dir: ./data/Kinetics/skeleton-from-openpose/train
+        data_dir: ./data/Kinetics/skeleton-from-openpose/train2014
         num_track: 2
       pipeline:
         - type: "datasets.skeleton.normalize_by_resolution"
@@ -49,7 +49,7 @@ processor_cfg:
     - type: "datasets.DataPipeline"
       data_source:
         type: "datasets.SkeletonLoader"
-        data_dir: ./data/Kinetics/skeleton-from-openpose/val
+        data_dir: ./data/Kinetics/skeleton-from-openpose/val2014
         num_track: 2
       pipeline:
         - type: "datasets.skeleton.normalize_by_resolution"

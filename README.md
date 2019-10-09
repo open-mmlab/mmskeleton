@@ -11,6 +11,8 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 </p>
 
 ## Updates
+- [2019-10-09] MMSkeleton v0.6 is released.
+- [2019-10-08] Support model zoo.
 - [2019-10-02] Support custom dataset.
 - [2019-09-23] Add video-based pose estimation demo.
 - [2019-08-29] MMSkeleton v0.5 is released.
@@ -25,16 +27,17 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 - **Multiple tasks**
 
     MMSkeleton addresses to multiple tasks in human understanding, including but not limited to:
-    - [x] build custom skeleton-based dataset: [[CUSTOM_DATASET]](./doc/CUSTOM_DATASET.md)
-    - [x] skeleton-based action recognition: [[ST-GCN]](./doc/START_RECOGNITION.md)
-    - [x] 2D pose estimation: [[START_POSE_ESTIMATION.md]](./doc/START_POSE_ESTIMATION.md)
+    - [x] [skeleton-based action recognition (ST-GCN)](./doc/START_RECOGNITION.md)
+    - [x] [2D pose estimation](./doc/START_POSE_ESTIMATION.md)
     - [ ] skeleton-based action generation
     - [ ] 3D pose estimation
     - [ ] pose tracking
+    - [x] [build custom skeleton-based dataset](./doc/CUSTOM_DATASET.md)
+    - [x] [create your own applications](./doc/CREATE_APPLICATION.md)
 
 ## Getting Started
 
-Please see [GETTING_STARTED.md](./doc/GETTING_STARTED.md) and [START_RECOGNITION.md](./doc/START_RECOGNITION.md) for more details of MMSkeleton.
+Please see [GETTING_STARTED.md](./doc/GETTING_STARTED.md) for more details of MMSkeleton.
 
 ## License
 The project is release under the [Apache 2.0 license](./LICENSE).

@@ -6,3 +6,8 @@ def train(model_cfg, dataset_cfg, optimizer):
     dataset = call_obj(**dataset_cfg)
     print('train a pseudo model...')
     print('done.')
+
+
+def hello_world(times=10):
+    for i in range(times):
+        print('Hello World!')
