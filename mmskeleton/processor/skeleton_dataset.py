@@ -38,6 +38,7 @@ def build(detection_cfg,
           gpus=1,
           worker_per_gpu=1,
           video_max_length=10000,
+          num_keypoints=-1,
           category_annotation=None):
 
     cache_checkpoint(detection_cfg.checkpoint_file)
@@ -73,7 +74,6 @@ def build(detection_cfg,
         reader = mmcv.VideoReader(os.path.join(video_dir, video_file))
         video_frames = reader[:video_max_length]
         annotations = []
-        num_keypoints = -1
 
         for i, image in enumerate(video_frames):
             inputs.put((i, image))

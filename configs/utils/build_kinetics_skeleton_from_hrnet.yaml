@@ -3,9 +3,9 @@ processor_cfg:
   gpus: 1
   worker_per_gpu: 2
   video_dir: data/resized_340x256_videos_kinetics_val2014
-  out_dir: "data/kinetics_val2014"
+  out_dir: data/Kinetics/skeleton-from-openpose/val2014
   category_annotation: data/category_annotation_kinetics_val2014.json
-
+  num_keypoints: 17
   detection_cfg:
     model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
     checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e

@@ -16,10 +16,8 @@ class DataPipeline(torch.utils.data.Dataset):
         return len(self.data_source)
 
     def __getitem__(self, index):
-
         data = index
         data = self.data_source[index]
         for stage_args in self.pipeline:
             data = call_obj(data=data, **stage_args)
-
         return data

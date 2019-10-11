@@ -5,7 +5,7 @@ argparse_cfg:
   work_dir:
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
-    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose
+    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-hrnet
   batch_size:
     bind_to: processor_cfg.batch_size
   resume_from:
@@ -24,7 +24,7 @@ processor_cfg:
     num_class: 400
     edge_importance_weighting: True
     graph_cfg:
-      layout: 'openpose'
+      layout: 'coco'
       strategy: 'spatial'
   loss_cfg:
     type: 'torch.nn.CrossEntropyLoss'
@@ -34,7 +34,7 @@ processor_cfg:
     - type: "datasets.DataPipeline"
       data_source:
         type: "datasets.SkeletonLoader"
-        data_dir: ./data/Kinetics/skeleton-from-openpose/train2014
+        data_dir: ./data/Kinetics/skeleton-from-hrnet/val2014
         num_track: 2
       pipeline:
         - type: "datasets.skeleton.normalize_by_resolution"
@@ -49,7 +49,7 @@ processor_cfg:
     - type: "datasets.DataPipeline"
       data_source:
         type: "datasets.SkeletonLoader"
-        data_dir: ./data/Kinetics/skeleton-from-openpose/val2014
+        data_dir: ./data/Kinetics/skeleton-from-hrnet/val2014
         num_track: 2
       pipeline:
         - type: "datasets.skeleton.normalize_by_resolution"
