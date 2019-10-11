@@ -16,13 +16,13 @@ processor_cfg:
   dataset:
     type: <path to dataset module>
     data_path: ./data
-  ...
+  #more arguments for processor function...
 
 argparse_cfg:
   data:
     bind_to: processor_cfg.dataset.data_path
     help: the path of data
-  ...
+  #more option arguments for command line...
 ```
 
 The `processor_cfg` specifies a processor function and its dataset module
