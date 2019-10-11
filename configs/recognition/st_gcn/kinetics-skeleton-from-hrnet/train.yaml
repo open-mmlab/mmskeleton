@@ -35,6 +35,7 @@ processor_cfg:
       data_source:
         type: "datasets.SkeletonLoader"
         data_dir: ./data/Kinetics/skeleton-from-hrnet/val2014
+        repeat: 5
         num_keypoints: 17
         num_track: 2
       pipeline:
