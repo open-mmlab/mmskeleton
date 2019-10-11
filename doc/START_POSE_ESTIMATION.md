@@ -12,6 +12,32 @@ We also provide another demo `pose_demo_HD` with a slower but more powerful dete
 mmskl pose_demo_HD [--video $VIDEO_PATH] [--gpus $GPUS] [--$MORE_OPTIONS]
 ```
 
+
+### High-level APIs for testing images
+
+Here is an example of building the pose estimator and test given images.
+```python 
+import mmcv
+from mmskeleton.apis import init_pose_estimator, inference_pose_estimator
+
+cfg = mmcv.Config.fromfile('configs/apis/pose_estimator.cascade_rcnn+hrnet.yaml')
+video = mmcv.VideoReader('resource/data_example/skateboarding.mp4')
+
+model = init_pose_estimator(**cfg, device=0)
+for i, frame in enumerate(video):
+  result = inference_pose_estimator(model, frame)
+  print('Process the frame {}'.format(i))
+  
+  # process the result here
+
+```
+
+### Training and Test a Pose Estimator
+Comming soon...
+
+
+
+### Reference
 ```
 @inproceedings{cai2018cascade,
   title={Cascade r-cnn: Delving into high quality object detection},
