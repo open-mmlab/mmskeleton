@@ -30,10 +30,13 @@ processor_cfg:
     data_source:
       type: "datasets.SkeletonLoader"
       data_dir: ./data/Kinetics/skeleton-from-hrnet/val2014
+      num_keypoints: 17
       num_track: 2
     pipeline:
       - type: "datasets.skeleton.normalize_by_resolution"
       - type: "datasets.skeleton.mask_by_visibility"
+      - type: "datasets.skeleton.temporal_repeat"
+        size: 300
       - type: "datasets.skeleton.transpose"
         order: [0, 2, 1, 3]
       - type: "datasets.skeleton.to_tuple"

@@ -13,10 +13,11 @@ class SkeletonLoader(nc.SafeDataset):
         pad_value: the values for padding missed joint
         repeat: times of repeating the dataset
     """
-    def __init__(self, data_dir, num_track=1, repeat=1):
+    def __init__(self, data_dir, num_track=1, repeat=1, num_keypoints=-1):
 
         self.data_dir = data_dir
         self.num_track = num_track
+        self.num_keypoints = num_keypoints
         self.files = [
             os.path.join(self.data_dir, f) for f in os.listdir(self.data_dir)
         ] * repeat
@@ -30,11 +31,10 @@ class SkeletonLoader(nc.SafeDataset):
             data = json.load(f)
 
         info = data['info']
-        resolution = info['resolution']
-        category_id = data['category_id']
         annotations = data['annotations']
         num_frame = info['num_frame']
-        num_keypoints = info['num_keypoints']
+        num_keypoints = info[
+            'num_keypoints'] if self.num_keypoints <= 0 else self.num_keypoints
         channel = info['keypoint_channels']
         num_channel = len(channel)
 

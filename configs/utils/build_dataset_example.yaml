@@ -5,7 +5,6 @@ processor_cfg:
   video_dir: resource/data_example
   out_dir: "data/dataset_example"
   category_annotation: resource/category_annotation_example.json
-  num_keypoints: 17
   detection_cfg:
     model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
     checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e

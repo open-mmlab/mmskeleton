@@ -3,7 +3,10 @@ import numpy as np
 from mmskeleton.deprecated.datasets.utils import skeleton as skeleton_aaai18
 
 
-def stgcn_aaai18_dataprocess(data, window_size, random_choose=False, random_move=False):
+def stgcn_aaai18_dataprocess(data,
+                             window_size,
+                             random_choose=False,
+                             random_move=False):
     data = normalize_by_resolution(data)
     data = mask_by_visibility(data)
     # processing
@@ -13,9 +16,10 @@ def stgcn_aaai18_dataprocess(data, window_size, random_choose=False, random_move
         data['data'] = skeleton_aaai18.auto_pading(data['data'], window_size)
     if random_move:
         data['data'] = skeleton_aaai18.random_move(data['data'])
-    data = transpose(data, order=[0,2,1,3])
+    data = transpose(data, order=[0, 2, 1, 3])
     data = to_tuple(data)
     return data
+
 
 def normalize_by_resolution(data):
 
@@ -58,7 +62,7 @@ def to_tuple(data, keys=['data', 'category_id']):
     return tuple([data[k] for k in keys])
 
 
-def temporal_repeat(data, size, crop=False):
+def temporal_repeat(data, size, random_crop=False):
     """
     repeat on the time axis.
     """
@@ -67,7 +71,7 @@ def temporal_repeat(data, size, crop=False):
     T = np_array.shape[2]
 
     if T >= size:
-        if crop:
+        if random_crop:
             np_array = np_array[:, :, random.randint(0, T -
                                                      size):][:, :, :size]
         else:

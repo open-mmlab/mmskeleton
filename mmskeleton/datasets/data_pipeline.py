@@ -7,13 +7,15 @@ from .utils import skeleton
 
 
 class DataPipeline(torch.utils.data.Dataset):
-    def __init__(self, data_source, pipeline=[]):
+    def __init__(self, data_source, pipeline=[], num_sample=-1):
 
         self.data_source = call_obj(**data_source)
         self.pipeline = pipeline
+        self.num_sample = num_sample if num_sample > 0 else len(
+            self.data_source)
 
     def __len__(self):
-        return len(self.data_source)
+        return self.num_sample
 
     def __getitem__(self, index):
         data = index
