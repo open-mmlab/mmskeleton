@@ -12,6 +12,8 @@ cd mmskeleton
 python setup.py develop
 ```
 
+Sometimes `mmdet` may be not installed successfully. In that case, please install [mmdet](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
+
 To **verify** that mmskeleton installed correctly, use:
 ```shell
 python mmskl.py pose_demo [--gpus $GPUS]

@@ -2,7 +2,7 @@ processor_cfg:
   type: "processor.skeleton_dataset.build"
   gpus: 1
   worker_per_gpu: 2
-  video_dir: data/resized_videos_kinetics_val2014
+  video_dir: data/resized_340x256_videos_kinetics_val2014
   out_dir: "data/kinetics_val2014"
   category_annotation: data/category_annotation_kinetics_val2014.json
 
