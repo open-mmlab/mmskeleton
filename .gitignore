@@ -11,6 +11,7 @@ model/*
 cache/
 checkpoints/*
 save/*
+configs_private/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
