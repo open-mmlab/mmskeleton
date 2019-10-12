@@ -82,7 +82,7 @@ def save_batch_image_with_joints(batch_image,
 
     grid = torchvision.utils.make_grid(batch_image, nrow, padding, True)
     ndarr = grid.mul(255).clamp(0, 255).byte().permute(1, 2, 0).cpu().numpy()
-    ndarr = ndarr.copy()
+    ndarr = ndarr.copy() * 0
 
     nmaps = batch_image.size(0)
     xmaps = min(nrow, nmaps)

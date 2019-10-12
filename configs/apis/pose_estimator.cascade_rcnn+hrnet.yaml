@@ -1,0 +1,21 @@
+detection_cfg:
+  model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
+  checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
+  bbox_thre: 0.8
+estimation_cfg:
+  model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
+  checkpoint_file: mmskeleton://pose_estimation/pose_hrnet_w32_256x192
+  data_cfg:
+    image_size:
+      - 192
+      - 256
+    pixel_std: 200
+    image_mean:
+      - 0.485
+      - 0.456
+      - 0.406
+    image_std:
+      - 0.229
+      - 0.224
+      - 0.225
+    post_process: true

@@ -1,11 +1,14 @@
 import os
+import sys
 import platform
 import subprocess
 import time
 import numpy as np
 from setuptools import find_packages, setup, Extension
 from Cython.Build import cythonize  # noqa: E402
-from mmskeleton.ops.nms.setup_linux import custom_build_ext, CUDA
+
+sys.path.append('./src')
+from nms.setup_linux import custom_build_ext, CUDA
 
 
 def readme():
@@ -75,7 +78,9 @@ mmskl_home = '{}'
     MMSKELETON_HOME = os.path.dirname(os.path.realpath(__file__))
 
     with open(version_file, 'w') as f:
-        f.write(content.format(time.asctime(), VERSION, SHORT_VERSION, MMSKELETON_HOME))
+        f.write(
+            content.format(time.asctime(), VERSION, SHORT_VERSION,
+                           MMSKELETON_HOME))
 
 
 def get_version():

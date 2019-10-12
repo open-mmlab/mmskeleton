@@ -5,7 +5,7 @@ import mmcv
 from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmskeleton.utils import get_mmskeleton_url
 from mmdet.apis import init_detector, inference_detector
-from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator, save_batch_image_with_joints
+from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator
 
 
 def init_pose_estimator(detection_cfg, estimation_cfg, device=None):
@@ -50,8 +50,8 @@ def inference_pose_estimator(pose_estimator, image):
         has_return = False
         preds, maxvals, meta = None, None, None
 
-    result = dict(position_preds=preds,
-                  position_maxvals=maxvals,
+    result = dict(joint_preds=preds,
+                  joint_scores=maxvals,
                   meta=meta,
                   has_return=has_return,
                   person_bbox=person_bbox)

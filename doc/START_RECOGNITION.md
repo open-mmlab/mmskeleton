@@ -29,9 +29,9 @@ If you want to process data by yourself, please refer to [SKELETON_DATA.md](./SK
 The evaluation of pre-trained models on three datasets can be achieved by:
 
 ``` shell
-mmskl configs/st_gcn/recognition/st_gcn/$DATASET/test.yaml
+mmskl configs/recognition/st_gcn_aaai18/$DATASET/test.yaml
 ```
-where the `$DATASET` must be `ntu-xsub`, `ntu-xview` or `kinetics-skeleton`.
+where the `$DATASET` must be `ntu-rgbd-xsub`, `ntu-rgbd-xview` or `kinetics-skeleton`.
 Models will be downloaded automatically before testing.
 The expected accuracies are shown here:
 
@@ -47,7 +47,7 @@ The expected accuracies are shown here:
 To train a ST-GCN model, run
 
 ``` shell
-mmskl configs/st_gcn/recognition/st_gcn/$DATASET/train.yaml [optional arguments]
+mmskl configs/recognition/st_gcn_aaai18/$DATASET/train.yaml [optional arguments]
 ```
 
 The usage of optional arguments can be checked via adding `--help` argument.
@@ -58,5 +58,5 @@ or adding a optional argument `--work_dir $WORKING_DIRECTORY` in the command lin
 After that, evaluate your models by:
 
 ``` shell
-mmskl configs/st_gcn/recognition/st_gcn/$DATASET/test.yaml --checkpoint $CHECKPOINT_FILE
+mmskl configs/recognition/st_gcn_aaai18/$DATASET/test.yaml --checkpoint $CHECKPOINT_FILE
 ```

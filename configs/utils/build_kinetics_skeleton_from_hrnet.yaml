@@ -1,0 +1,48 @@
+processor_cfg:
+  type: "processor.skeleton_dataset.build"
+  gpus: 1
+  worker_per_gpu: 2
+  video_dir: data/resized_340x256_videos_kinetics_val2014
+  out_dir: data/Kinetics/skeleton-from-openpose/val2014
+  category_annotation: data/category_annotation_kinetics_val2014.json
+  detection_cfg:
+    model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
+    checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
+    bbox_thre: 0.8
+  estimation_cfg:
+    model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml
+    checkpoint_file: mmskeleton://pose_estimation/pose_hrnet_w32_256x192
+    data_cfg:
+      image_size:
+        - 192
+        - 256
+      pixel_std: 200
+      image_mean:
+        - 0.485
+        - 0.456
+        - 0.406
+      image_std:
+        - 0.229
+        - 0.224
+        - 0.225
+      post_process: true
+  tracker_cfg: null
+
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  video_dir:
+    bind_to: processor_cfg.video_dir
+    help: folder for videos
+  worker_per_gpu:
+    bind_to: processor_cfg.worker_per_gpu
+    help: number of workers for each gpu
+  skeleton_model:
+    bind_to: processor_cfg.estimation_cfg.model_cfg
+  skeleton_checkpoint:
+    bind_to: processor_cfg.estimation_cfg.checkpoint_file
+  detection_model:
+    bind_to: processor_cfg.detection_cfg.model_cfg
+  detection_checkpoint:
+    bind_to: processor_cfg.detection_cfg.checkpoint_file

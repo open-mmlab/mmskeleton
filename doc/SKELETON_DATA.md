@@ -9,13 +9,13 @@ the processed data directly from [GoogleDrive](https://drive.google.com/open?id=
 
 After uncompressing, build the database for mmskeleton by this command:
 ```
-python tools/data_processing/kinetics_gendata.py --data_path <path to kinetics-skeleton>
+python deprecated/tools/data_processing/kinetics_gendata.py --data_path <path to kinetics-skeleton>
 ```
 
 #### NTU RGB+D
 NTU RGB+D can be downloaded from [their website](http://rose1.ntu.edu.sg/datasets/actionrecognition.asp).
 Only the **3D skeletons**(5.8GB) modality is required in our experiments. After that, this command should be used to build the database for training or evaluation on mmskeleton:
 ```
-python tools/data_processing/ntu_gendata.py --data_path <path to nturgbd+d_skeletons>
+python deprecated/tools/data_processing/ntu_gendata.py --data_path <path to nturgbd+d_skeletons>
 ```
 where the ```<path to nturgbd+d_skeletons>``` is the directory path of 3D skeletons annotations of the NTU RGB+D dataset you download.

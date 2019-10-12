@@ -12,6 +12,8 @@ cd mmskeleton
 python setup.py develop
 ```
 
+Sometimes `mmdet` may be not installed successfully. In that case, please install [mmdet](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
+
 To **verify** that mmskeleton installed correctly, use:
 ```shell
 python mmskl.py pose_demo [--gpus $GPUS]
@@ -44,3 +46,10 @@ mmskl $CONFIG_FILE -h
 ### Example:
 
 See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a model for skeleton-based action recognitoin.
+
+See [CUSTOM_DATASET](./doc/CUSTOM_DATASET.md) for building your own skeleton-based dataset.
+
+See [CREATE_APPLICATION](./doc/CREATE_APPLICATION.md) for creating your own mmskeleton application.
+
+
+

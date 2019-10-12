@@ -1,0 +1,75 @@
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  work_dir:
+    bind_to: processor_cfg.work_dir
+    help: the dir to save logs and models
+    default: ./work_dir/recognition/ST_GCN_18/kinetics-skeleton
+  batch_size:
+    bind_to: processor_cfg.batch_size
+  resume_from:
+    bind_to: processor_cfg.resume_from
+    help: the checkpoint file to resume from
+
+
+
+processor_cfg:
+  type: 'processor.recognition.train'
+
+  # model setting
+  model_cfg:
+    type: 'models.backbones.ST_GCN_18'
+    in_channels: 3
+    num_class: 400
+    edge_importance_weighting: True
+    graph_cfg:
+      layout: 'openpose'
+      strategy: 'spatial'
+  loss_cfg:
+    type: 'torch.nn.CrossEntropyLoss'
+
+  # dataset setting
+  dataset_cfg:
+    - type: 'deprecated.datasets.skeleton_feeder.SkeletonFeeder'
+      data_path: ./data/Kinetics/kinetics-skeleton/train_data.npy
+      label_path: ./data/Kinetics/kinetics-skeleton/train_label.pkl
+      random_choose: True
+      random_move: True
+      window_size: 150
+      # debug: true
+    - type: 'deprecated.datasets.skeleton_feeder.SkeletonFeeder'
+      data_path: ./data/Kinetics/kinetics-skeleton/val_data.npy
+      label_path: ./data/Kinetics/kinetics-skeleton/val_label.pkl
+      # debug: true
+
+  # dataloader setting
+  batch_size: 256
+  gpus: 4
+
+  # optimizer setting
+  optimizer_cfg:
+    type: 'torch.optim.SGD'
+    lr: 0.1
+    momentum: 0.9
+    nesterov: true
+    weight_decay: 0.0001
+
+  # runtime setting
+  workflow: [['train', 5], ['val', 1]]
+  work_dir: 
+  log_level: 0
+  total_epochs: 50
+  training_hooks:
+    lr_config:
+      policy: 'step'
+      step: [20, 30, 40, 50]
+    log_config:
+      interval: 100
+      hooks:
+        - type: TextLoggerHook
+    checkpoint_config:
+      interval: 5
+    optimizer_config:
+  resume_from:
+  load_from:

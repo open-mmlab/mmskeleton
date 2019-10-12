@@ -1,0 +1,36 @@
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  batch_size:
+    bind_to: processor_cfg.batch_size
+  checkpoint:
+    bind_to: processor_cfg.checkpoint
+    help: the checkpoint file to load from
+    default: mmskeleton://st_gcn/ntu-xview
+
+processor_cfg:
+  type: "processor.recognition.test"
+  checkpoint:
+
+  # model setting
+  model_cfg:
+    type: "models.backbones.ST_GCN_18"
+    in_channels: 3
+    num_class: 60
+    dropout: 0.5
+    edge_importance_weighting: True
+    graph_cfg:
+      layout: "ntu-rgb+d"
+      strategy: "spatial"
+
+  # dataset setting
+  dataset_cfg:
+    type: "deprecated.datasets.skeleton_feeder.SkeletonFeeder"
+    data_path: ./data/NTU-RGB-D/xview/val_data.npy
+    label_path: ./data/NTU-RGB-D/xview/val_label.pkl
+    # debug: true
+
+  # dataloader setting
+  batch_size: 256
+  gpus: 4

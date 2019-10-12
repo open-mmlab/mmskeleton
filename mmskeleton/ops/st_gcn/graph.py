@@ -40,6 +40,8 @@ class Graph():
         return self.A
 
     def get_edge(self, layout):
+        # edge is a list of [child, parent] paris
+
         if layout == 'openpose':
             self.num_node = 18
             self_link = [(i, i) for i in range(self.num_node)]
@@ -71,6 +73,16 @@ class Graph():
             neighbor_link = [(i - 1, j - 1) for (i, j) in neighbor_1base]
             self.edge = self_link + neighbor_link
             self.center = 2
+        elif layout == 'coco':
+            self.num_node = 17
+            self_link = [(i, i) for i in range(self.num_node)]
+            neighbor_1base = [[16, 14], [14, 12], [17, 15], [15, 13], [12, 13],
+                              [6, 12], [7, 13], [6, 7], [8, 6], [9, 7],
+                              [10, 8], [11, 9], [2, 3], [2, 1], [3, 1], [4, 2],
+                              [5, 3], [4, 6], [5, 7]]
+            neighbor_link = [(i - 1, j - 1) for (i, j) in neighbor_1base]
+            self.edge = self_link + neighbor_link
+            self.center = 0
         # elif layout=='customer settings'
         #     pass
         else:
