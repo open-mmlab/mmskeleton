@@ -5,6 +5,7 @@ argparse_cfg:
   work_dir:
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
+    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose.rc
   batch_size:
     bind_to: processor_cfg.batch_size
   resume_from:
@@ -12,53 +13,53 @@ argparse_cfg:
     help: the checkpoint file to resume from
 
 
+
 processor_cfg:
   type: 'processor.recognition.train'
-  workers: 16
 
   # model setting
   model_cfg:
-    type: 'models.backbones.ST_GCN_AAAI18'
+    type: 'models.backbones.ST_GCN_18'
     in_channels: 3
-    num_class: 3
+    num_class: 400
     edge_importance_weighting: True
     graph_cfg:
-      layout: 'coco'
+      layout: 'openpose'
       strategy: 'spatial'
   loss_cfg:
     type: 'torch.nn.CrossEntropyLoss'
 
   # dataset setting
   dataset_cfg:
-    # training set
     - type: "datasets.DataPipeline"
       data_source:
         type: "datasets.SkeletonLoader"
-        data_dir: ./data/dataset_example
+        data_dir: ./data/Kinetics/skeleton-from-openpose/train2014
         num_track: 2
-        repeat: 20
       pipeline:
-        - type: "datasets.skeleton.normalize_by_resolution"
-        - type: "datasets.skeleton.mask_by_visibility"
-        - type: "datasets.skeleton.transpose"
-          order: [0, 2, 1, 3]
-        - type: "datasets.skeleton.to_tuple"
+        - {type: "datasets.skeleton.normalize_by_resolution"}
+        - {type: "datasets.skeleton.mask_by_visibility"}
+        - {type: "datasets.skeleton.pad_zero", size: 300}
+        - {type: "datasets.skeleton.random_crop", size: 150}
+        - {type: "datasets.skeleton.simulate_camera_moving"}
+        - {type: "datasets.skeleton.transpose", order: [0, 2, 1, 3]}
+        - {type: "datasets.skeleton.to_tuple"}
 
     - type: "datasets.DataPipeline"
       data_source:
         type: "datasets.SkeletonLoader"
-        data_dir: ./data/dataset_example
+        data_dir: ./data/Kinetics/skeleton-from-openpose/val2014
         num_track: 2
       pipeline:
-        - type: "datasets.skeleton.normalize_by_resolution"
-        - type: "datasets.skeleton.mask_by_visibility"
-        - type: "datasets.skeleton.transpose"
-          order: [0, 2, 1, 3]
-        - type: "datasets.skeleton.to_tuple"
+        - {type: "datasets.skeleton.normalize_by_resolution"}
+        - {type: "datasets.skeleton.mask_by_visibility"}
+        - {type: "datasets.skeleton.transpose", order: [0, 2, 1, 3]}
+        - {type: "datasets.skeleton.to_tuple"}
+
 
   # dataloader setting
-  batch_size: 3
-  gpus: 1
+  batch_size: 256
+  gpus: 4
 
   # optimizer setting
   optimizer_cfg:
@@ -70,7 +71,9 @@ processor_cfg:
 
   # runtime setting
   workflow: [['train', 5], ['val', 1]]
-  work_dir: ./work_dir/recognition/st_gcn/dataset_example
+  work_dir:
+  workers: 32
+  log_level: 0
   total_epochs: 50
   training_hooks:
     lr_config:

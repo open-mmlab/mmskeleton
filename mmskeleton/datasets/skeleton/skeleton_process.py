@@ -3,22 +3,22 @@ import numpy as np
 from mmskeleton.deprecated.datasets.utils import skeleton as skeleton_aaai18
 
 
-def stgcn_aaai18_dataprocess(data,
-                             window_size,
-                             random_choose=False,
-                             random_move=False):
-    data = normalize_by_resolution(data)
-    data = mask_by_visibility(data)
-    # processing
-    if random_choose:
-        data['data'] = skeleton_aaai18.random_choose(data['data'], window_size)
-    elif window_size > 0:
-        data['data'] = skeleton_aaai18.auto_pading(data['data'], window_size)
-    if random_move:
-        data['data'] = skeleton_aaai18.random_move(data['data'])
-    data = transpose(data, order=[0, 2, 1, 3])
-    data = to_tuple(data)
-    return data
+# def stgcn_aaai18_dataprocess(data,
+#                              window_size,
+#                              random_choose=False,
+#                              random_move=False):
+#     data = normalize_by_resolution(data)
+#     data = mask_by_visibility(data)
+#     # processing
+#     if random_choose:
+#         data['data'] = skeleton_aaai18.random_choose(data['data'], window_size)
+#     elif window_size > 0:
+#         data['data'] = skeleton_aaai18.auto_pading(data['data'], window_size)
+#     if random_move:
+#         data['data'] = skeleton_aaai18.random_move(data['data'])
+#     data = transpose(data, order=[0, 2, 1, 3])
+#     data = to_tuple(data)
+#     return data
 
 
 def normalize_by_resolution(data):
@@ -36,6 +36,17 @@ def normalize_by_resolution(data):
     data['data'] = np_array
     return data
 
+def get_mask(data, channel, value=0):
+    data['mask'] = data['data'][[channel]] != value
+    return data
+
+def mask(data):
+    data['data'] = data['data'] * data['mask']
+    return data
+
+def normalize(data, mean, std):
+    data['data'] = (data['data'] - mean)/std
+    return data
 
 def mask_by_visibility(data):
 
@@ -89,6 +100,24 @@ def temporal_repeat(data, size, random_crop=False):
     data['data'] = np_array
     return data
 
+def pad_zero(data, size):
+    np_array = data['data']
+    T = np_array.shape[2]
+    if T < size:
+        pad_shape = np_array.shape
+        pad_shape[2] = size
+        np_array_paded = np.zeros(pad_shape, dtype=np_array.dtype)
+        np_array_paded[:, :, :T, :] = np_array
+        data['data'] = np_array_paded
+    return data
+
+def random_crop(data, size):
+    np_array = data['data']
+    T = np_array.shape[2]
+    if T > size:
+        begin = random.randint(0, T - size)
+        data['data'] = np_array[:, :, begin:begin + size, :]
+    return data
 
 def simulate_camera_moving(data,
                            angle_candidate=[-10., -5., 0., 5., 10.],
