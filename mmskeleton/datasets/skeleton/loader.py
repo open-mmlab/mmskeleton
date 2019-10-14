@@ -2,10 +2,9 @@ import os
 import numpy as np
 import json
 import torch
-import nonechucks as nc
 
 
-class SkeletonLoader(nc.SafeDataset):
+class SkeletonLoader(torch.utils.data.Dataset):
     """ Feeder for skeleton-based action recognition
     Arguments:
         data_path: the path to data folder
