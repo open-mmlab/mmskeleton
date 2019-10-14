@@ -34,9 +34,12 @@ def set_attr(obj, type, value):
 
     attr, _sep, others = type.partition('.')
     if others == '':
-        setattr(obj, attr, value)
+        attr = int(attr) if attr.isdigit() else attr
+        obj[attr] = value
+        # setattr(obj, attr, value)
     else:
-        set_attr(getattr(obj, attr), others, value)
+        attr = int(attr) if attr.isdigit() else attr
+        set_attr(obj[attr], others, value)
 
 
 def get_attr(obj, type):
@@ -44,7 +47,9 @@ def get_attr(obj, type):
         raise ImportError('Attribute type should be string.')
 
     attr, _sep, others = type.partition('.')
-    if others == '':
-        return getattr(obj, attr)
+
+    if attr == '':
+        return obj
     else:
-        return get_attr(getattr(obj, attr), others)
+        attr = int(attr) if attr.isdigit() else attr
+        return get_attr(obj[attr], others)

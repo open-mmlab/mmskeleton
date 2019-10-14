@@ -8,10 +8,8 @@ argparse_cfg:
     default: ./work_dir/recognition/st_gcn/Diving48
   batch_size:
     bind_to: processor_cfg.batch_size
-  resume_from:
-    bind_to: processor_cfg.resume_from
-    help: the checkpoint file to resume from
-
+  data_repeat:
+    bind_to: processor_cfg.dataset_cfg.0.data_source.repeat
 
 
 processor_cfg:
