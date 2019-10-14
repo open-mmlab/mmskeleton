@@ -7,7 +7,7 @@ argparse_cfg:
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
-    default: mmskeleton://st_gcn/kinetics-skeleton
+    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose/latest.pth
 
 processor_cfg:
   type: "processor.recognition.test"

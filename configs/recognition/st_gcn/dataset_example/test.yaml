@@ -11,7 +11,7 @@ argparse_cfg:
 processor_cfg:
   type: "processor.recognition.test"
   workers: 16
-  checkpoint:
+  checkpoint: ./work_dir/recognition/st_gcn/dataset_example/latest.pth
 
   # model setting
   model_cfg:
