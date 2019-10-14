@@ -32,11 +32,10 @@ processor_cfg:
       data_dir: ./data/Kinetics/skeleton-from-openpose/val2014
       num_track: 2
     pipeline:
-      - type: "datasets.skeleton.normalize_by_resolution"
-      - type: "datasets.skeleton.mask_by_visibility"
-      - type: "datasets.skeleton.transpose"
-        order: [0, 2, 1, 3]
-      - type: "datasets.skeleton.to_tuple"
+      - { type: "datasets.skeleton.normalize_by_resolution" }
+      - { type: "datasets.skeleton.mask_by_visibility" }
+      - { type: "datasets.skeleton.transpose", order: [0, 2, 1, 3] }
+      - { type: "datasets.skeleton.to_tuple" }
 
   # dataloader setting
   batch_size: 256
