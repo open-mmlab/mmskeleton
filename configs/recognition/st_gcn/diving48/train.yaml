@@ -21,10 +21,10 @@ processor_cfg:
   model_cfg:
     type: 'models.backbones.ST_GCN_18'
     in_channels: 3
-    num_class: 400
+    num_class: 48
     edge_importance_weighting: True
     graph_cfg:
-      layout: 'openpose'
+      layout: 'coco'
       strategy: 'spatial'
   loss_cfg:
     type: 'torch.nn.CrossEntropyLoss'
