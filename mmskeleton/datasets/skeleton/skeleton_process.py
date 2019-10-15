@@ -36,8 +36,8 @@ def normalize_by_resolution(data):
     return data
 
 
-def get_mask(data, channel, value=0):
-    data['mask'] = data['data'][[channel]] != value
+def get_mask(data, mask_channel, neg_value=0):
+    data['mask'] = data['data'][[mask_channel]] != neg_value
     return data
 
 

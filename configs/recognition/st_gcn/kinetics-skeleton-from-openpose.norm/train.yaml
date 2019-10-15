@@ -5,7 +5,7 @@ argparse_cfg:
   work_dir:
     bind_to: processor_cfg.work_dir
     help: the dir to save logs and models
-    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose.norm
+    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose
   batch_size:
     bind_to: processor_cfg.batch_size
   resume_from:
@@ -38,7 +38,9 @@ processor_cfg:
         num_track: 2
       pipeline:
         - {type: "datasets.skeleton.normalize_by_resolution"}
-        - {type: "datasets.skeleton.mask_by_visibility"}
+        - {type: "datasets.skeleton.get_mask", mask_channel: 2}
+        - {type: "datasets.skeleton.normalize", mean:[0, 0, 0], std:[0, 0, 0] }
+        - {type: "datasets.skeleton.mask"}
         - {type: "datasets.skeleton.pad_zero", size: 150}
         - {type: "datasets.skeleton.random_crop", size: 150}
         - {type: "datasets.skeleton.simulate_camera_moving"}
@@ -52,7 +54,9 @@ processor_cfg:
         num_track: 2
       pipeline:
         - {type: "datasets.skeleton.normalize_by_resolution"}
-        - {type: "datasets.skeleton.mask_by_visibility"}
+        - {type: "datasets.skeleton.get_mask", mask_channel: 2}
+        - {type: "datasets.skeleton.normalize", mean:[0, 0, 0], std:[0, 0, 0] }
+        - {type: "datasets.skeleton.mask"}
         - {type: "datasets.skeleton.pad_zero", size: 300}
         - {type: "datasets.skeleton.random_crop", size: 300}
         - {type: "datasets.skeleton.transpose", order: [0, 2, 1, 3]}
