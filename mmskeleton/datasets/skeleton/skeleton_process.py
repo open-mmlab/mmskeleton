@@ -36,8 +36,8 @@ def normalize_by_resolution(data):
     return data
 
 
-def get_mask(data, mask_channel, neg_value=0):
-    data['mask'] = data['data'][[mask_channel]] != neg_value
+def get_mask(data, mask_channel, mask_threshold=0):
+    data['mask'] = data['data'][[mask_channel]] > mask_threshold
     return data
 
 
@@ -47,7 +47,19 @@ def mask(data):
 
 
 def normalize(data, mean, std):
-    data['data'] = (data['data'] - mean) / std
+    np_array = data['data']
+    mean = np.array(mean, dtype=np_array.dtype)
+    std = np.array(std, dtype=np_array.dtype)
+    mean = mean.reshape(mean.shape + (1, ) * (np_array.ndim - mean.ndim))
+    std = std.reshape(std.shape + (1, ) * (np_array.ndim - std.ndim))
+    data['data'] = (np_array - mean) / std
+    return data
+
+
+def normalize_with_mask(data, mean, std, mask_channel, mask_threshold=0):
+    data = get_mask(data, mask_channel, mask_threshold)
+    data = normalize(data, mean, std)
+    data = mask(data)
     return data
 
 

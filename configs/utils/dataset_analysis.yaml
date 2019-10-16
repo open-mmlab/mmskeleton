@@ -1,0 +1,17 @@
+processor_cfg:
+  type: "processor.skeleton_dataset.dataset_analysis"
+  workers: 32
+  batch_size: 32
+  dataset_cfg:
+    type: "datasets.DataPipeline"
+    data_source:
+      type: "datasets.SkeletonLoader"
+      data_dir: ./data/Kinetics/skeleton-from-openpose/train2014
+      num_track: 2
+    pipeline:
+      - {type: datasets.skeleton.get_mask, mask_channel: 2}
+      - {type: datasets.skeleton.to_tuple, keys: [data, mask]}
+
+argparse_cfg:
+  data_dir:
+    bind_to: processor_cfg.dataset_cfg.data_source.data_dir

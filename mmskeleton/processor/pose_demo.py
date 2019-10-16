@@ -114,6 +114,8 @@ def inference(detection_cfg,
     if (len(all_result) == len(video_frames)) and (save_dir is not None):
         print('\n\nGenerate video:')
         video_name = video_file.strip('/n').split('/')[-1]
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
         video_path = os.path.join(save_dir, video_name)
         vwriter = cv2.VideoWriter(video_path,
                                   mmcv.video.io.VideoWriter_fourcc(*('mp4v')),

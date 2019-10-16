@@ -7,7 +7,7 @@ argparse_cfg:
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
-    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose.norm.nobn/latest.pth
+    default: ./work_dir/recognition/st_gcn/kinetics-skeleton-from-openpose.norm/latest.pth
 
 processor_cfg:
   type: "processor.recognition.test"
@@ -20,6 +20,7 @@ processor_cfg:
     in_channels: 3
     num_class: 400
     edge_importance_weighting: True
+    data_bn: False
     graph_cfg:
       layout: "openpose"
       strategy: "spatial"

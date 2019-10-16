@@ -25,34 +25,32 @@ class ST_GCN_18(nn.Module):
             :math:`V_{in}` is the number of graph nodes,
             :math:`M_{in}` is the number of instance in a frame.
     """
+
     def __init__(self,
                  in_channels,
                  num_class,
                  graph_cfg,
                  edge_importance_weighting=True,
+                 data_bn=True,
                  **kwargs):
         super().__init__()
 
         # load graph
         self.graph = Graph(**graph_cfg)
-        A = torch.tensor(self.graph.A,
-                         dtype=torch.float32,
-                         requires_grad=False)
+        A = torch.tensor(
+            self.graph.A, dtype=torch.float32, requires_grad=False)
         self.register_buffer('A', A)
 
         # build networks
         spatial_kernel_size = A.size(0)
         temporal_kernel_size = 9
         kernel_size = (temporal_kernel_size, spatial_kernel_size)
-        self.data_bn = nn.BatchNorm1d(in_channels * A.size(1))
+        self.data_bn = nn.BatchNorm1d(
+            in_channels * A.size(1)) if data_bn else lambda x: x
         kwargs0 = {k: v for k, v in kwargs.items() if k != 'dropout'}
         self.st_gcn_networks = nn.ModuleList((
-            st_gcn_block(in_channels,
-                         64,
-                         kernel_size,
-                         1,
-                         residual=False,
-                         **kwargs0),
+            st_gcn_block(
+                in_channels, 64, kernel_size, 1, residual=False, **kwargs0),
             st_gcn_block(64, 64, kernel_size, 1, **kwargs),
             st_gcn_block(64, 64, kernel_size, 1, **kwargs),
             st_gcn_block(64, 64, kernel_size, 1, **kwargs),
@@ -150,6 +148,7 @@ class st_gcn_block(nn.Module):
             :math:`V` is the number of graph nodes.
 
     """
+
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -188,10 +187,11 @@ class st_gcn_block(nn.Module):
 
         else:
             self.residual = nn.Sequential(
-                nn.Conv2d(in_channels,
-                          out_channels,
-                          kernel_size=1,
-                          stride=(stride, 1)),
+                nn.Conv2d(
+                    in_channels,
+                    out_channels,
+                    kernel_size=1,
+                    stride=(stride, 1)),
                 nn.BatchNorm2d(out_channels),
             )
 
