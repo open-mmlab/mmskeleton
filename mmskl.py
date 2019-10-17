@@ -39,12 +39,29 @@ def parse_cfg():
         args = parser.parse_args()
         return
 
+    # pop positional args
+    config_args = []
+    tmp = []
+    for i, arg in enumerate(sys.argv):
+        if i > 1 and arg[0] != '-':
+            tmp.append(i)
+    for i in tmp[::-1]:
+        config_args.append(sys.argv.pop(i))
+    branch = config_args
+
     # load argument setting from configuration file
     if sys.argv[1] in config_shortcut:
         sys.argv[1] = config_shortcut[sys.argv[1]]
 
-    cfg = Config.fromfile(sys.argv[1])
     print('Load configuration information from {}'.format(sys.argv[1]))
+    cfg = Config.fromfile(sys.argv[1])
+    for b in branch:
+        if b in cfg:
+            cfg = get_attr(cfg, b)
+        else:
+            print('The branch "{}" can not be found in {}.'.format(
+                '-'.join(branch), sys.argv[1]))
+            return dict()
     if 'description' in cfg:
         parser.description = cfg.description
     if 'argparse_cfg' not in cfg:
@@ -68,12 +85,33 @@ def parse_cfg():
         value = getattr(args, key)
         set_attr(cfg, info['bind_to'], value)
 
+    # replace pre_defined arguments in configuration files
+    def replace(cfg, **format_args):
+        if isinstance(cfg, str):
+            return cfg.format(**format_args)
+        if isinstance(cfg, dict):
+            for k, v in cfg.items():
+                set_attr(cfg, k, replace(v, **format_args))
+        elif isinstance(cfg, list):
+            for k in range(len(cfg)):
+                cfg[k] = replace(cfg[k], **format_args)
+        return cfg
+
+    format_args = dict()
+    format_args['config_path'] = args.config
+    format_args['config_name'] = os.path.basename(format_args['config_path'])
+    format_args['config_prefix'] = format_args['config_name'].split('.')[0]
+    cfg = replace(cfg, **format_args)
     return cfg
 
 
 def main():
     cfg = parse_cfg()
-    call_obj(**cfg.processor_cfg)
+    print(cfg)
+    # if 'processor_cfg' in cfg:
+    #     call_obj(**cfg.processor_cfg)
+    # else:
+    #     print('No processor specified.')
 
 
 if __name__ == "__main__":
