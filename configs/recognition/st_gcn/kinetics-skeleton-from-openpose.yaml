@@ -1,0 +1,150 @@
+argparse_cfg:
+  gpus:
+    bind_to: processor_cfg.gpus
+    help: number of gpus
+  work_dir:
+    bind_to: processor_cfg.work_dir
+    help: the dir to save logs and models
+    default: ./work_dir/recognition/st_gcn/{config_prefix}
+  batch_size:
+    bind_to: processor_cfg.batch_size
+  resume_from:
+    bind_to: processor_cfg.resume_from
+    help: the checkpoint file to resume from
+
+processor_cfg:
+  type: "processor.recognition.train"
+
+  # model setting
+  model_cfg:
+    type: "models.backbones.ST_GCN_18"
+    in_channels: 3
+    num_class: 400
+    edge_importance_weighting: True
+    data_bn: False
+    graph_cfg:
+      layout: "openpose"
+      strategy: "spatial"
+  loss_cfg:
+    type: "torch.nn.CrossEntropyLoss"
+
+  # dataset setting
+  dataset_cfg:
+    - type: "datasets.DataPipeline"
+      data_source:
+        type: "datasets.SkeletonLoader"
+        data_dir: ./data/Kinetics/skeleton-from-openpose/train2014
+        num_track: 2
+      pipeline:
+        - {
+            type: "datasets.skeleton.normalize_with_mask",
+            mean: [176, 122, 0.46],
+            std: [58, 46, 0.21],
+            mask_channel: 2,
+          }
+        - { type: "datasets.skeleton.pad_zero", size: 150 }
+        - { type: "datasets.skeleton.random_crop", size: 150 }
+        - { type: "datasets.skeleton.simulate_camera_moving" }
+        - { type: "datasets.skeleton.transpose", order: [0, 2, 1, 3] }
+        - { type: "datasets.skeleton.to_tuple" }
+
+    - type: "datasets.DataPipeline"
+      data_source:
+        type: "datasets.SkeletonLoader"
+        data_dir: ./data/Kinetics/skeleton-from-openpose/val2014
+        num_track: 2
+      pipeline:
+        - {
+            type: "datasets.skeleton.normalize_with_mask",
+            mean: [176, 122, 0.46],
+            std: [58, 46, 0.21],
+            mask_channel: 2,
+          }
+        - { type: "datasets.skeleton.pad_zero", size: 300 }
+        - { type: "datasets.skeleton.random_crop", size: 300 }
+        - { type: "datasets.skeleton.transpose", order: [0, 2, 1, 3] }
+        - { type: "datasets.skeleton.to_tuple" }
+
+  # dataloader setting
+  batch_size: 256
+  gpus: 4
+
+  # optimizer setting
+  optimizer_cfg:
+    type: "torch.optim.SGD"
+    lr: 0.1
+    momentum: 0.9
+    nesterov: true
+    weight_decay: 0.0001
+
+  # runtime setting
+  workflow: [["train", 5], ["val", 1]]
+  work_dir:
+  workers: 32
+  log_level: 0
+  total_epochs: 65
+  training_hooks:
+    lr_config:
+      policy: "step"
+      step: [45, 55]
+    log_config:
+      interval: 100
+      hooks:
+        - type: TextLoggerHook
+    checkpoint_config:
+      interval: 5
+    optimizer_config:
+  resume_from:
+  load_from:
+
+# ================================ test branch ================================
+test:
+  argparse_cfg:
+    gpus:
+      bind_to: processor_cfg.gpus
+      help: number of gpus
+    batch_size:
+      bind_to: processor_cfg.batch_size
+    checkpoint:
+      bind_to: processor_cfg.checkpoint
+      help: the checkpoint file to load from
+      default: ./work_dir/recognition/st_gcn/{config_prefix}/latest.pth
+
+  processor_cfg:
+    type: "processor.recognition.test"
+    checkpoint:
+    workers: 32
+
+    # model setting
+    model_cfg:
+      type: "models.backbones.ST_GCN_18"
+      in_channels: 3
+      num_class: 400
+      edge_importance_weighting: True
+      data_bn: False
+      graph_cfg:
+        layout: "openpose"
+        strategy: "spatial"
+
+    # dataset setting
+    dataset_cfg:
+      type: "datasets.DataPipeline"
+      data_source:
+        type: "datasets.SkeletonLoader"
+        data_dir: ./data/Kinetics/skeleton-from-openpose/val2014
+        num_track: 2
+      pipeline:
+        - {
+            type: "datasets.skeleton.normalize_with_mask",
+            mean: [176, 122, 0.46],
+            std: [58, 46, 0.21],
+            mask_channel: 2,
+          }
+        - { type: "datasets.skeleton.pad_zero", size: 300 }
+        - { type: "datasets.skeleton.random_crop", size: 300 }
+        - { type: "datasets.skeleton.transpose", order: [0, 2, 1, 3] }
+        - { type: "datasets.skeleton.to_tuple" }
+
+    # dataloader setting
+    batch_size: 256
+    gpus: 4

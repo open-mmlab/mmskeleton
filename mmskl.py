@@ -43,8 +43,12 @@ def parse_cfg():
     config_args = []
     tmp = []
     for i, arg in enumerate(sys.argv):
-        if i > 1 and arg[0] != '-':
-            tmp.append(i)
+        if i > 1:
+            if arg[0] != '-':
+                tmp.append(i)
+            else:
+                break
+
     for i in tmp[::-1]:
         config_args.append(sys.argv.pop(i))
     branch = config_args
