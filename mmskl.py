@@ -107,11 +107,10 @@ def parse_cfg():
 
 def main():
     cfg = parse_cfg()
-    print(cfg)
-    # if 'processor_cfg' in cfg:
-    #     call_obj(**cfg.processor_cfg)
-    # else:
-    #     print('No processor specified.')
+    if 'processor_cfg' in cfg:
+        call_obj(**cfg.processor_cfg)
+    else:
+        print('No processor specified.')
 
 
 if __name__ == "__main__":
