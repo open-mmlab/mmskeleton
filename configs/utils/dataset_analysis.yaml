@@ -6,7 +6,7 @@ processor_cfg:
     type: "datasets.DataPipeline"
     data_source:
       type: "datasets.SkeletonLoader"
-      data_dir: ./data/Kinetics/skeleton-from-openpose/train2014
+      data_dir: ./data/dataset_example
       num_track: 2
     pipeline:
       - { type: datasets.skeleton.get_mask, mask_channel: 2 }
