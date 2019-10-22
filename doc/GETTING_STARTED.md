@@ -1,5 +1,13 @@
 ## Getting Started
 
+[Option] **Create** a conda virtual environment and activate it:
+
+``` shell
+pip install conda
+conda create -n open-mmlab python=3.7 -y
+conda activate open-mmlab
+```
+
 **Clone** mmskeleton from github:
 
 ``` shell
@@ -8,11 +16,13 @@ cd mmskeleton
 ```
 
 **Install** the mmskeleton:
+
 ``` shell
 python setup.py develop
 ```
 
 Sometimes `mmdet` may be not installed successfully. In that case, please install [mmdet](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
+Then run above command again.
 
 To **verify** that mmskeleton installed correctly, use:
 ```shell
