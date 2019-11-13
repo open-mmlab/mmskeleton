@@ -57,9 +57,9 @@ mmskl $CONFIG_FILE -h
 
 See [START_RECOGNITION.md](../doc/START_RECOGNITION.md) for learning how to train a model for skeleton-based action recognitoin.
 
-See [CUSTOM_DATASET](./doc/CUSTOM_DATASET.md) for building your own skeleton-based dataset.
+See [CUSTOM_DATASET](../doc/CUSTOM_DATASET.md) for building your own skeleton-based dataset.
 
-See [CREATE_APPLICATION](./doc/CREATE_APPLICATION.md) for creating your own mmskeleton application.
+See [CREATE_APPLICATION](../doc/CREATE_APPLICATION.md) for creating your own mmskeleton application.
 
 
 
