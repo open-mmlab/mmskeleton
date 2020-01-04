@@ -15,6 +15,11 @@ import xml.etree.ElementTree as ET
 import cv2
 import numpy as np
 
+try:
+    xrange. # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 _im_zfile = []
 _xml_path_zip = []
 _xml_zfile = []
