@@ -16,7 +16,7 @@ import cv2
 import numpy as np
 
 try:
-    xrange. # Python 2
+    xrange # Python 2
 except NameError:
     xrange = range  # Python 3
 
