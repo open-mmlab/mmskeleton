@@ -5,7 +5,7 @@ import subprocess
 import time
 import numpy as np
 from setuptools import find_packages, setup, Extension
-from Cython.Build import cythonize  # noqa: E402
+# from Cython.Build import cythonize  # noqa: E402
 
 sys.path.append('./src')
 from nms.setup_linux import custom_build_ext, CUDA
@@ -96,19 +96,19 @@ def get_requirements(filename='requirements.txt'):
     return requires
 
 
-def make_cython_ext(name, module, sources):
-    extra_compile_args = None
-    if platform.system() != 'Windows':
-        extra_compile_args = {
-            'cxx': ['-Wno-unused-function', '-Wno-write-strings']
-        }
-    extension = Extension('{}.{}'.format(
-        module, name), [os.path.join(*module.split('.'), p) for p in sources],
-                          include_dirs=[np.get_include()],
-                          language='c++',
-                          extra_compile_args=extra_compile_args)
-    extension, = cythonize(extension)
-    return extension
+# def make_cython_ext(name, module, sources):
+#     extra_compile_args = None
+#     if platform.system() != 'Windows':
+#         extra_compile_args = {
+#             'cxx': ['-Wno-unused-function', '-Wno-write-strings']
+#         }
+#     extension = Extension('{}.{}'.format(
+#         module, name), [os.path.join(*module.split('.'), p) for p in sources],
+#                           include_dirs=[np.get_include()],
+#                           language='c++',
+#                           extra_compile_args=extra_compile_args)
+#     extension, = cythonize(extension)
+#     return extension
 
 
 if __name__ == '__main__':
