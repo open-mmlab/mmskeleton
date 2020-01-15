@@ -5,10 +5,6 @@ import subprocess
 import time
 
 from setuptools import find_packages, setup, Extension, dist
-
-import torch
-from torch.utils.cpp_extension import BuildExtension, CUDAExtension
-
 dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
 
 import numpy as np
@@ -118,28 +114,6 @@ def make_cython_ext(name, module, sources):
     return extension
 
 
-def make_cuda_ext(name, module, sources):
-
-    define_macros = []
-
-    if torch.cuda.is_available() or os.getenv('FORCE_CUDA', '0') == '1':
-        define_macros += [("WITH_CUDA", None)]
-    else:
-        raise EnvironmentError('CUDA is required to compile MMDetection!')
-
-    return CUDAExtension(
-        name='{}.{}'.format(module, name),
-        sources=[os.path.join(*module.split('.'), p) for p in sources],
-        define_macros=define_macros,
-        extra_compile_args={
-            'cxx': [],
-            'nvcc': [
-                '-D__CUDA_NO_HALF_OPERATORS__',
-                '-D__CUDA_NO_HALF_CONVERSIONS__',
-                '-D__CUDA_NO_HALF2_OPERATORS__',
-            ]
-        })
-
 if __name__ == '__main__':
     write_version_py()
     setup(
@@ -166,9 +140,9 @@ if __name__ == '__main__':
         license='Apache License 2.0',
         setup_requires=['pytest-runner'],
         tests_require=['pytest'],
-        # dependency_links=[
-        #     'git+https://github.com/open-mmlab/mmdetection#egg=mmdet'
-        # ],
+        dependency_links=[
+            'git+https://github.com/open-mmlab/mmdetection#egg=mmdet'
+        ],
         install_requires=get_requirements(),
         ext_modules=[
             Extension("mmskeleton.ops.nms.cpu_nms",
