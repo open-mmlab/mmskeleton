@@ -1,4 +1,3 @@
 torch
 mmcv
-mmdet
 lazy_import
