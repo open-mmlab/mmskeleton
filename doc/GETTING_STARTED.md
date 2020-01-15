@@ -3,7 +3,6 @@
 [Option] **Create** a conda virtual environment and activate it:
 
 ``` shell
-pip install conda
 conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 ```
