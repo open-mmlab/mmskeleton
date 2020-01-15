@@ -6,6 +6,7 @@ import time
 
 from setuptools import find_packages, setup, Extension, dist
 dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
+
 import numpy as np
 from Cython.Build import cythonize  # noqa: E402
 
