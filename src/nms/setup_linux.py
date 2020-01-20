@@ -7,8 +7,10 @@
 
 import os
 from os.path import join as pjoin
-from setuptools import setup
+from setuptools import setup, dist
 from distutils.extension import Extension
+dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
+
 from Cython.Distutils import build_ext
 import numpy as np
 
