@@ -4,7 +4,8 @@ import platform
 import subprocess
 import time
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, dist
+dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
 
 
 def readme():
