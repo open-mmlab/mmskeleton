@@ -1,5 +1,4 @@
 pillow<7
-pillow<7
 torch
 torchvision
 mmcv
