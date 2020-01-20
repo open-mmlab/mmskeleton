@@ -5,7 +5,7 @@ import subprocess
 import time
 
 from setuptools import find_packages, setup, Extension, dist
-dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1'])
+dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1', 'torch'])
 
 import numpy as np
 from Cython.Build import cythonize  # noqa: E402
@@ -141,7 +141,7 @@ if __name__ == '__main__':
         setup_requires=['pytest-runner'],
         tests_require=['pytest'],
         dependency_links=[
-            'git+https://github.com/open-mmlab/mmdetection#egg=mmdet'
+            'git+https://github.com/open-mmlab/mmdetection/tarball/master/#egg=mmdet'
         ],
         install_requires=get_requirements() + ['mmdet'],
         ext_modules=[
@@ -151,27 +151,22 @@ if __name__ == '__main__':
                           'gcc': ["-Wno-cpp", "-Wno-unused-function"]
                       },
                       include_dirs=[np.get_include()]),
-            Extension(
-                'mmskeleton.ops.nms.gpu_nms',
-                [
-                    'mmskeleton/ops/nms/nms_kernel.cu',
-                    'mmskeleton/ops/nms/gpu_nms.pyx'
-                ],
-                library_dirs=[CUDA['lib64']],
-                libraries=['cudart'],
-                language='c++',
-                runtime_library_dirs=[CUDA['lib64']],
-                # this syntax is specific to this build system
-                # we're only going to use certain compiler args with nvcc and not with
-                # gcc the implementation of this trick is in customize_compiler() below
-                extra_compile_args={
-                    'gcc': ["-Wno-unused-function"],
-                    'nvcc': [
-                        '-arch=sm_35', '--ptxas-options=-v', '-c',
-                        '--compiler-options', "'-fPIC'"
-                    ]
-                },
-                include_dirs=[np.get_include(), CUDA['include']]),
+            Extension('mmskeleton.ops.nms.gpu_nms', [
+                'mmskeleton/ops/nms/nms_kernel.cu',
+                'mmskeleton/ops/nms/gpu_nms.pyx'
+            ],
+                      library_dirs=[CUDA['lib64']],
+                      libraries=['cudart'],
+                      language='c++',
+                      runtime_library_dirs=[CUDA['lib64']],
+                      extra_compile_args={
+                          'gcc': ["-Wno-unused-function"],
+                          'nvcc': [
+                              '-arch=sm_35', '--ptxas-options=-v', '-c',
+                              '--compiler-options', "'-fPIC'"
+                          ]
+                      },
+                      include_dirs=[np.get_include(), CUDA['include']]),
         ],
         cmdclass={'build_ext': custom_build_ext},
         zip_safe=False)

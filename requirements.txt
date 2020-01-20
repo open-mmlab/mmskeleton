@@ -1,5 +1,4 @@
-pillow<7
+pillow
 torch
 torchvision
-mmcv
 lazy_import

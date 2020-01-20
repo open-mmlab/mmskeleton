@@ -1,10 +1,15 @@
 ## Getting Started
 
-[Option] **Create** a conda virtual environment and activate it:
+**Create** a [conda](www.anaconda.com/distribution/) virtual environment and activate it:
 
 ``` shell
 conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
+```
+
+Install **PyTorch** and torchvision following the [official instructions](https://pytorch.org/), e.g.,
+``` shell
+conda install pytorch torchvision -c pytorch
 ```
 
 **Clone** mmskeleton from github:
