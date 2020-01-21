@@ -23,7 +23,7 @@ def readme():
 MAJOR = 0
 MINOR = 7
 PATCH = ''
-SUFFIX = 'rc0'
+SUFFIX = 'rc1'
 SHORT_VERSION = '{}.{}.{}{}'.format(MAJOR, MINOR, PATCH, SUFFIX)
 
 version_file = 'mmskeleton/version.py'
