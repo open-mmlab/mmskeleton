@@ -2,10 +2,12 @@ import os
 import numpy as np
 import torch
 import mmcv
-import mmdet
+
 from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmskeleton.utils import get_mmskeleton_url
 from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator
+
+import mmdet.apis
 
 
 def init_pose_estimator(detection_cfg, estimation_cfg, device=None):

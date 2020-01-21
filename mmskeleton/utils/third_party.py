@@ -4,6 +4,7 @@ pycocotools = lazy_import.lazy_module("pycocotools")
 COCO = lazy_import.lazy_module("pycocotools.COCO")
 COCOeval = lazy_import.lazy_module("pycocotools.COCOeval")
 mmdet = lazy_import.lazy_module("mmdet")
+lazy_import.lazy_module("mmdet.apis")
 
 
 def is_exist(module_name):
