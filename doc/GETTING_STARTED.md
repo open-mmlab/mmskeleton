@@ -2,7 +2,7 @@
 
 ### Installation
 
-a. Create a [conda](www.anaconda.com/distribution/) virtual environment and activate it:
+a. [Optional] Create a [conda](www.anaconda.com/distribution/) virtual environment and activate it:
 
 ``` shell
 conda create -n open-mmlab python=3.7 -y
@@ -27,7 +27,7 @@ d. Install mmskeleton:
 python setup.py develop
 ```
 
-e. Install mmdetection for person detection [Option]:
+e. [Optional] Install mmdetection for person detection:
 ``` shell
 python setup.py develop --mmdet
 ```
