@@ -1,37 +1,39 @@
 ## Getting Started
 
-**Create** a [conda](www.anaconda.com/distribution/) virtual environment and activate it:
+### Installation
+
+a. Create a [conda](www.anaconda.com/distribution/) virtual environment and activate it:
 
 ``` shell
 conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 ```
 
-Install **PyTorch** and torchvision following the [official instructions](https://pytorch.org/), e.g.,
+b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/), e.g.,
 ``` shell
 conda install pytorch torchvision -c pytorch
 ```
 
-**Clone** mmskeleton from github:
+c. Clone mmskeleton from github:
 
 ``` shell
 git clone https://github.com/open-mmlab/mmskeleton.git
 cd mmskeleton
 ```
 
-**Install** mmskeleton:
+d. Install mmskeleton:
 
 ``` shell
 python setup.py develop
 ```
 
-[Option] **Install** mmdetection for person detection:
+e. Install mmdetection for person detection [Option]:
 ``` shell
 python setup.py develop --mmdet
 ```
-Sometimes `mmdetection` can not be installed successfully. In that case, please install [mmdet](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
+In the event of a failure installation, please install [mmdetection](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
 
-To **verify** that mmskeleton and mmdetection installed correctly, use:
+f. To verify that mmskeleton and mmdetection installed correctly, use:
 ```shell
 python mmskl.py pose_demo [--gpus $GPUS]
 # or "python mmskl.py pose_demo_HD [--gpus $GPUS]" for a higher accuracy

@@ -5,6 +5,7 @@ import subprocess
 import time
 
 from setuptools import find_packages, setup, Extension, dist
+from setuptools.command.install import install
 dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1', 'torch'])
 
 import numpy as np
@@ -144,6 +145,9 @@ if __name__ == '__main__':
         sys.argv.remove("--mmdet")
         install_requires += ['mmdet']
 
+        import subprocess
+        subprocess.check_call([sys.executable, "-m", "pip", "install", 'https://github.com/open-mmlab/mmdetection/archive/v1.0rc1.zip', '-v'])
+
     write_version_py()
     setup(
         name='mmskeleton',
@@ -170,7 +174,7 @@ if __name__ == '__main__':
         setup_requires=['pytest-runner'],
         tests_require=['pytest'],
         dependency_links=[
-            'https://github.com/open-mmlab/mmdetection/tarball/master/#egg=mmdet'
+            'https://github.com/open-mmlab/mmdetection/tarball/v1.0rc1/#egg=mmdet-v1.0rc1'
         ],
         install_requires=install_requires,
         ext_modules=[
