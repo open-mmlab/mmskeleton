@@ -11,6 +11,7 @@ MMSkeleton is developed on our research project [ST-GCN](https://github.com/yysi
 </p>
 
 ## Updates
+- [2020-01-21] MMSkeleton v0.7 is released.
 - [2019-10-09] MMSkeleton v0.6 is released.
 - [2019-10-08] Support model zoo.
 - [2019-10-02] Support custom dataset.
