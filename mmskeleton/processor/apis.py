@@ -13,7 +13,6 @@ from collections import OrderedDict
 from mmskeleton.datasets.utils.coco_transform import flip_back
 from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmskeleton.utils import get_mmskeleton_url
-from mmdet.apis import init_detector, inference_detector
 
 flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14],
               [15, 16]]

@@ -2,9 +2,9 @@ import os
 import numpy as np
 import torch
 import mmcv
+import mmdet
 from mmskeleton.datasets.utils.video_demo import VideoDemo
 from mmskeleton.utils import get_mmskeleton_url
-from mmdet.apis import init_detector, inference_detector
 from mmskeleton.processor.apis import init_twodimestimator, inference_twodimestimator
 
 
@@ -13,9 +13,9 @@ def init_pose_estimator(detection_cfg, estimation_cfg, device=None):
     detection_model_file = detection_cfg.model_cfg
     detection_checkpoint_file = get_mmskeleton_url(
         detection_cfg.checkpoint_file)
-    detection_model = init_detector(detection_model_file,
-                                    detection_checkpoint_file,
-                                    device='cpu')
+    detection_model = mmdet.apis.init_detector(detection_model_file,
+                                               detection_checkpoint_file,
+                                               device='cpu')
 
     skeleton_model_file = estimation_cfg.model_cfg
     skeletion_checkpoint_file = estimation_cfg.checkpoint_file
@@ -35,7 +35,7 @@ def init_pose_estimator(detection_cfg, estimation_cfg, device=None):
 
 def inference_pose_estimator(pose_estimator, image):
     detection_model, skeleton_model, detection_cfg, estimation_cfg = pose_estimator
-    bbox_result = inference_detector(detection_model, image)
+    bbox_result = mmdet.apis.inference_detector(detection_model, image)
     person_bbox, labels = VideoDemo.bbox_filter(bbox_result,
                                                 detection_cfg.bbox_thre)
     if len(person_bbox) > 0:

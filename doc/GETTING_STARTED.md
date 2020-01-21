@@ -19,16 +19,19 @@ git clone https://github.com/open-mmlab/mmskeleton.git
 cd mmskeleton
 ```
 
-**Install** the mmskeleton:
+**Install** mmskeleton:
 
 ``` shell
 python setup.py develop
 ```
 
-Sometimes `mmdet` may be not installed successfully. In that case, please install [mmdet](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
-Then run above command again.
+[Option] **Install** mmdetection for person detection:
+``` shell
+python setup.py develop --mmdet
+```
+Sometimes `mmdetection` can not be installed successfully. In that case, please install [mmdet](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
 
-To **verify** that mmskeleton installed correctly, use:
+To **verify** that mmskeleton and mmdetection installed correctly, use:
 ```shell
 python mmskl.py pose_demo [--gpus $GPUS]
 # or "python mmskl.py pose_demo_HD [--gpus $GPUS]" for a higher accuracy

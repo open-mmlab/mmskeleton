@@ -138,6 +138,12 @@ def make_cuda_ext(name, module, sources, include_dirs=[]):
 
 
 if __name__ == '__main__':
+
+    install_requires = get_requirements()
+    if "--mmdet" in sys.argv:
+        sys.argv.remove("--mmdet")
+        install_requires += ['mmdet']
+
     write_version_py()
     setup(
         name='mmskeleton',
@@ -164,9 +170,9 @@ if __name__ == '__main__':
         setup_requires=['pytest-runner'],
         tests_require=['pytest'],
         dependency_links=[
-            'git+https://github.com/open-mmlab/mmdetection/tarball/master/#egg=mmdet'
+            'https://github.com/open-mmlab/mmdetection/tarball/master/#egg=mmdet'
         ],
-        install_requires=get_requirements() + ['mmdet'],
+        install_requires=install_requires,
         ext_modules=[
             make_cython_ext(name='cpu_nms',
                             module='mmskeleton.ops.nms',
@@ -176,5 +182,7 @@ if __name__ == '__main__':
                           sources=['nms_kernel.cu', 'gpu_nms.pyx'],
                           include_dirs=[np.get_include()]),
         ],
-        cmdclass={'build_ext': BuildExtension},
+        cmdclass={
+            'build_ext': BuildExtension,
+        },
         zip_safe=False)

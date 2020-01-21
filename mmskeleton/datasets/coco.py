@@ -12,18 +12,13 @@ from collections import defaultdict
 from collections import OrderedDict
 import logging
 import os
-
-import lazy_import
-COCO = lazy_import.lazy_module("pycocotools.coco")
-COCOeval = lazy_import.lazy_module("pycocotools.cocoeval")
 import json
 import numpy as np
 
 from .estimation import EstiamtionDataset
-# oks_nms = lazy_import.lazy_module("mmskeleton.ops.nms.nms.oks_nms")
-# soft_oks_nms = lazy_import.lazy_module("mmskeleton.ops.nms.nms.soft_oks_nms")
 from ..ops.nms.nms import oks_nms
 from ..ops.nms.nms import soft_oks_nms
+from pycocotools import COCO, COCOeval
 
 logger = logging.getLogger(__name__)
 

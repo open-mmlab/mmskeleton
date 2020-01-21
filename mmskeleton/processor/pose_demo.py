@@ -5,7 +5,7 @@ import cv2
 import os
 from mmskeleton.apis.estimation import init_pose_estimator, inference_pose_estimator
 from multiprocessing import current_process, Process, Manager
-from mmskeleton.utils import cache_checkpoint
+from mmskeleton.utils import cache_checkpoint, third_party
 from mmcv.utils import ProgressBar
 
 
@@ -61,6 +61,12 @@ def inference(detection_cfg,
               gpus=1,
               worker_per_gpu=1,
               save_dir=None):
+
+    if not third_party.is_exist('mmdet'):
+        print(
+            '\nERROR: This demo requires mmdet for detecting bounding boxes of person. Please install mmdet first.'
+        )
+        exit(1)
 
     video_frames = mmcv.VideoReader(video_file)
     all_result = []
