@@ -52,6 +52,7 @@ def worker(inputs, results, gpu, detection_cfg, estimation_cfg, render_image):
             res['render_image'] = render(image, res['joint_preds'],
                                          res['person_bbox'],
                                          detection_cfg.bbox_thre)
+
         results.put(res)
 
 

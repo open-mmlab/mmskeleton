@@ -1,7 +1,7 @@
 processor_cfg:
   type: "processor.pose_demo.inference"
   gpus: 1
-  worker_per_gpu: 2
+  worker_per_gpu: 1
   video_file: resource/data_example/skateboarding.mp4
   save_dir: "work_dir/pose_demo"
 
