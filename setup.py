@@ -9,9 +9,8 @@ dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1', 'torch'])
 
 import numpy as np
 from Cython.Build import cythonize  # noqa: E402
-
-sys.path.append('./src')
-from nms.setup_linux import custom_build_ext, CUDA
+import torch
+from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 
 def readme():
@@ -114,6 +113,30 @@ def make_cython_ext(name, module, sources):
     return extension
 
 
+def make_cuda_ext(name, module, sources, include_dirs=[]):
+
+    define_macros = []
+
+    if torch.cuda.is_available() or os.getenv('FORCE_CUDA', '0') == '1':
+        define_macros += [("WITH_CUDA", None)]
+    else:
+        raise EnvironmentError('CUDA is required to compile MMSkeleton!')
+
+    return CUDAExtension(
+        name='{}.{}'.format(module, name),
+        sources=[os.path.join(*module.split('.'), p) for p in sources],
+        define_macros=define_macros,
+        include_dirs=include_dirs,
+        extra_compile_args={
+            'cxx': [],
+            'nvcc': [
+                '-D__CUDA_NO_HALF_OPERATORS__',
+                '-D__CUDA_NO_HALF_CONVERSIONS__',
+                '-D__CUDA_NO_HALF2_OPERATORS__',
+            ]
+        })
+
+
 if __name__ == '__main__':
     write_version_py()
     setup(
@@ -145,28 +168,13 @@ if __name__ == '__main__':
         ],
         install_requires=get_requirements() + ['mmdet'],
         ext_modules=[
-            Extension("mmskeleton.ops.nms.cpu_nms",
-                      ["mmskeleton/ops/nms/cpu_nms.pyx"],
-                      extra_compile_args={
-                          'gcc': ["-Wno-cpp", "-Wno-unused-function"]
-                      },
-                      include_dirs=[np.get_include()]),
-            Extension('mmskeleton.ops.nms.gpu_nms', [
-                'mmskeleton/ops/nms/nms_kernel.cu',
-                'mmskeleton/ops/nms/gpu_nms.pyx'
-            ],
-                      library_dirs=[CUDA['lib64']],
-                      libraries=['cudart'],
-                      language='c++',
-                      runtime_library_dirs=[CUDA['lib64']],
-                      extra_compile_args={
-                          'gcc': ["-Wno-unused-function"],
-                          'nvcc': [
-                              '-arch=sm_35', '--ptxas-options=-v', '-c',
-                              '--compiler-options', "'-fPIC'"
-                          ]
-                      },
-                      include_dirs=[np.get_include(), CUDA['include']]),
+            make_cython_ext(name='cpu_nms',
+                            module='mmskeleton.ops.nms',
+                            sources=['cpu_nms.pyx']),
+            make_cuda_ext(name='gpu_nms',
+                          module='mmskeleton.ops.nms',
+                          sources=['nms_kernel.cu', 'gpu_nms.pyx'],
+                          include_dirs=[np.get_include()]),
         ],
-        cmdclass={'build_ext': custom_build_ext},
+        cmdclass={'build_ext': BuildExtension},
         zip_safe=False)
