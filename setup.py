@@ -74,7 +74,7 @@ def write_version_py():
 # TIME: {}
 __version__ = '{}'
 short_version = '{}'
-mmskl_home = '{}'
+mmskl_home = r'{}'
 """
     sha = get_hash()
     VERSION = SHORT_VERSION + '+' + sha
