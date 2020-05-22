@@ -177,15 +177,15 @@ if __name__ == '__main__':
             'https://github.com/open-mmlab/mmdetection/tarball/v1.0rc1/#egg=mmdet-v1.0rc1'
         ],
         install_requires=install_requires,
-        ext_modules=[
-            make_cython_ext(name='cpu_nms',
-                            module='mmskeleton.ops.nms',
-                            sources=['cpu_nms.pyx']),
-            make_cuda_ext(name='gpu_nms',
-                          module='mmskeleton.ops.nms',
-                          sources=['nms_kernel.cu', 'gpu_nms.pyx'],
-                          include_dirs=[np.get_include()]),
-        ],
+        # ext_modules=[
+        #     make_cython_ext(name='cpu_nms',
+        #                     module='mmskeleton.ops.nms',
+        #                     sources=['cpu_nms.pyx']),
+        #     make_cuda_ext(name='gpu_nms',
+        #                   module='mmskeleton.ops.nms',
+        #                   sources=['nms_kernel.cu', 'gpu_nms.pyx'],
+        #                   include_dirs=[np.get_include()]),
+        # ],
         cmdclass={
             'build_ext': BuildExtension,
         },

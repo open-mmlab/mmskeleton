@@ -27,13 +27,20 @@ d. Install mmskeleton:
 python setup.py develop
 ```
 
-e. [Optional] Install mmdetection for person detection:
+e. [Optional] Install nms for person estimation:
+``` shell
+cd mmskeleton/ops/nms/
+python setup_linux.py develop
+cd ../../../
+```
+
+f. [Optional] Install mmdetection for person detection:
 ``` shell
 python setup.py develop --mmdet
 ```
 In the event of a failure installation, please install [mmdetection](https://github.com/open-mmlab/mmdetection/blob/master/docs/INSTALL.md) manually.
 
-f. To verify that mmskeleton and mmdetection installed correctly, use:
+g. To verify that mmskeleton and mmdetection installed correctly, use:
 ```shell
 python mmskl.py pose_demo [--gpus $GPUS]
 # or "python mmskl.py pose_demo_HD [--gpus $GPUS]" for a higher accuracy
