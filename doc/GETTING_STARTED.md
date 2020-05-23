@@ -27,7 +27,7 @@ d. Install mmskeleton:
 python setup.py develop
 ```
 
-e. [Optional] Install nms for person estimation:
+e. Install nms for person estimation:
 ``` shell
 cd mmskeleton/ops/nms/
 python setup_linux.py develop
@@ -35,6 +35,7 @@ cd ../../../
 ```
 
 f. [Optional] Install mmdetection for person detection:
+
 ``` shell
 python setup.py develop --mmdet
 ```
