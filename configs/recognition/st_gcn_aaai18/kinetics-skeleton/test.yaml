@@ -31,5 +31,5 @@ processor_cfg:
     # debug: true
 
   # dataloader setting
-  batch_size: 256
-  gpus: 4
+  batch_size: 64
+  gpus: 1

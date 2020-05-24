@@ -9,10 +9,11 @@ conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 ```
 
-b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/), e.g.,
+b. Install PyTorch and torchvision:
 ``` shell
-conda install pytorch torchvision -c pytorch
+conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
 ```
+The higher versions are not covered by tests.
 
 c. Clone mmskeleton from github:
 

@@ -30,7 +30,9 @@ def test(model_cfg, dataset_cfg, checkpoint, batch_size=64, gpus=1, workers=4):
     prog_bar = ProgressBar(len(dataset))
     for data, label in data_loader:
         with torch.no_grad():
+            output = model(data)
             output = model(data).data.cpu().numpy()
+
         results.append(output)
         labels.append(label)
         for i in range(len(data)):
@@ -77,7 +79,9 @@ def train(
     else:
         model = call_obj(**model_cfg)
     model.apply(weights_init)
+    print(111, len(model.edge_importance))
     model = MMDataParallel(model, device_ids=range(gpus)).cuda()
+    print(222, len(model.module.edge_importance))
     loss = call_obj(**loss_cfg)
 
     # build runner
@@ -92,6 +96,7 @@ def train(
 
     # run
     workflow = [tuple(w) for w in workflow]
+    print(222, len(model.module.edge_importance))
     runner.run(data_loaders, workflow, total_epochs, loss=loss)
 
 
