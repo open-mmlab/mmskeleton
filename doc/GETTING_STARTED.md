@@ -9,9 +9,13 @@ conda create -n open-mmlab python=3.7 -y
 conda activate open-mmlab
 ```
 
-b. Install PyTorch and torchvision:
+b. Install PyTorch and torchvision (CUDA is required):
 ``` shell
-conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
+# CUDA 9.2
+conda install pytorch==1.2.0 torchvision==0.4.0 cudatoolkit=9.2 -c pytorch
+
+# CUDA 10.0
+conda install pytorch==1.2.0 torchvision==0.4.0 cudatoolkit=10.0 -c pytorch
 ```
 The higher versions are not covered by tests.
 
