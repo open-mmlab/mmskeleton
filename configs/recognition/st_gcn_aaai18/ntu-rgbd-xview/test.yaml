@@ -4,6 +4,9 @@ argparse_cfg:
     help: number of gpus
   batch_size:
     bind_to: processor_cfg.batch_size
+    type: int
+  gpu_batch_size:
+    bind_to: processor_cfg.gpu_batch_size
   checkpoint:
     bind_to: processor_cfg.checkpoint
     help: the checkpoint file to load from
@@ -32,5 +35,6 @@ processor_cfg:
     # debug: true
 
   # dataloader setting
-  batch_size: 64
-  gpus: 1
+  batch_size: null
+  gpu_batch_size: 64
+  gpus: -1

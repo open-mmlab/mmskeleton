@@ -8,7 +8,21 @@ from mmcv import Config, ProgressBar
 from mmcv.parallel import MMDataParallel
 
 
-def test(model_cfg, dataset_cfg, checkpoint, batch_size=64, gpus=1, workers=4):
+def test(model_cfg,
+         dataset_cfg,
+         checkpoint,
+         batch_size=None,
+         gpu_batch_size=None,
+         gpus=-1,
+         workers=4):
+
+    # calculate batch size
+    if gpus < 0:
+        gpus = torch.cuda.device_count()
+    if (batch_size is None) and (gpu_batch_size is not None):
+        batch_size = gpu_batch_size * gpus
+    assert batch_size is not None, 'Please appoint batch_size or gpu_batch_size.'
+
     dataset = call_obj(**dataset_cfg)
     data_loader = torch.utils.data.DataLoader(dataset=dataset,
                                               batch_size=batch_size,
@@ -50,16 +64,24 @@ def train(
         loss_cfg,
         dataset_cfg,
         optimizer_cfg,
-        batch_size,
         total_epochs,
         training_hooks,
+        batch_size=None,
+        gpu_batch_size=None,
         workflow=[('train', 1)],
-        gpus=1,
+        gpus=-1,
         log_level=0,
         workers=4,
         resume_from=None,
         load_from=None,
 ):
+
+    # calculate batch size
+    if gpus < 0:
+        gpus = torch.cuda.device_count()
+    if (batch_size is None) and (gpu_batch_size is not None):
+        batch_size = gpu_batch_size * gpus
+    assert batch_size is not None, 'Please appoint batch_size or gpu_batch_size.'
 
     # prepare data loaders
     if isinstance(dataset_cfg, dict):
@@ -79,9 +101,8 @@ def train(
     else:
         model = call_obj(**model_cfg)
     model.apply(weights_init)
-    print(111, len(model.edge_importance))
+
     model = MMDataParallel(model, device_ids=range(gpus)).cuda()
-    print(222, len(model.module.edge_importance))
     loss = call_obj(**loss_cfg)
 
     # build runner
@@ -96,7 +117,6 @@ def train(
 
     # run
     workflow = [tuple(w) for w in workflow]
-    print(222, len(model.module.edge_importance))
     runner.run(data_loaders, workflow, total_epochs, loss=loss)
 
 
