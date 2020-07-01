@@ -4,9 +4,8 @@ import platform
 import subprocess
 import time
 
-from setuptools import find_packages, setup, Extension, dist
+from setuptools import find_packages, setup, Extension
 from setuptools.command.install import install
-dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1', 'torch'])
 
 import numpy as np
 from Cython.Build import cythonize  # noqa: E402
