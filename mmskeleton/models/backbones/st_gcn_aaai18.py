@@ -6,6 +6,14 @@ from torch.autograd import Variable
 from mmskeleton.ops.st_gcn import ConvTemporalGraphical, Graph
 
 
+def zero(x):
+    return 0
+
+
+def iden(x):
+    return x
+
+
 class ST_GCN_18(nn.Module):
     r"""Spatial temporal graph convolutional networks.
 
@@ -46,7 +54,7 @@ class ST_GCN_18(nn.Module):
         temporal_kernel_size = 9
         kernel_size = (temporal_kernel_size, spatial_kernel_size)
         self.data_bn = nn.BatchNorm1d(in_channels *
-                                      A.size(1)) if data_bn else lambda x: x
+                                      A.size(1)) if data_bn else iden
         kwargs0 = {k: v for k, v in kwargs.items() if k != 'dropout'}
         self.st_gcn_networks = nn.ModuleList((
             st_gcn_block(in_channels,
@@ -182,10 +190,10 @@ class st_gcn_block(nn.Module):
         )
 
         if not residual:
-            self.residual = lambda x: 0
+            self.residual = zero
 
         elif (in_channels == out_channels) and (stride == 1):
-            self.residual = lambda x: x
+            self.residual = iden
 
         else:
             self.residual = nn.Sequential(
