@@ -4,14 +4,24 @@ import platform
 import subprocess
 import time
 
-from setuptools import find_packages, setup, Extension, dist
+from setuptools import find_packages, setup, Extension
 from setuptools.command.install import install
-dist.Distribution().fetch_build_eggs(['Cython', 'numpy>=1.11.1', 'torch'])
 
 import numpy as np
 from Cython.Build import cythonize  # noqa: E402
 import torch
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
+
+
+class torch_and_cython_build_ext(BuildExtension):
+    def finalize_options(self):
+        if self.distribution.ext_modules:
+            nthreads = getattr(self, 'parallel', None)  # -j option in Py3.5+
+            nthreads = int(nthreads) if nthreads else None
+            from Cython.Build.Dependencies import cythonize
+            self.distribution.ext_modules[:] = cythonize(
+                self.distribution.ext_modules, nthreads=nthreads, force=self.force)
+        super().finalize_options()
 
 
 def readme():
@@ -177,16 +187,16 @@ if __name__ == '__main__':
             'https://github.com/open-mmlab/mmdetection/tarball/v1.0rc1/#egg=mmdet-v1.0rc1'
         ],
         install_requires=install_requires,
-        # ext_modules=[
-        #     make_cython_ext(name='cpu_nms',
-        #                     module='mmskeleton.ops.nms',
-        #                     sources=['cpu_nms.pyx']),
-        #     make_cuda_ext(name='gpu_nms',
-        #                   module='mmskeleton.ops.nms',
-        #                   sources=['nms_kernel.cu', 'gpu_nms.pyx'],
-        #                   include_dirs=[np.get_include()]),
-        # ],
+        ext_modules=[
+            make_cython_ext(name='cpu_nms',
+                            module='mmskeleton.ops.nms',
+                            sources=['cpu_nms.pyx']),
+            make_cuda_ext(name='gpu_nms',
+                          module='mmskeleton.ops.nms',
+                          sources=['nms_kernel.cu', 'gpu_nms.pyx'],
+                          include_dirs=[np.get_include()]),
+        ],
         cmdclass={
-            'build_ext': BuildExtension,
+            'build_ext': torch_and_cython_build_ext,
         },
         zip_safe=False)
