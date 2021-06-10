@@ -7,6 +7,7 @@ from mmcv.runner import Runner
 from mmcv import Config, ProgressBar
 from mmcv.parallel import MMDataParallel
 
+LOSS = None
 
 def test(model_cfg,
          dataset_cfg,
@@ -44,8 +45,7 @@ def test(model_cfg,
     prog_bar = ProgressBar(len(dataset))
     for data, label in data_loader:
         with torch.no_grad():
-            output = model(data)
-            output = model(data).data.cpu().numpy()
+            output = model(data).cpu().numpy()
 
         results.append(output)
         labels.append(label)
@@ -104,10 +104,12 @@ def train(
 
     model = MMDataParallel(model, device_ids=range(gpus)).cuda()
     loss = call_obj(**loss_cfg)
+    logger = logging.getLogger('mmskeleton')
+    logger.setLevel(log_level)
 
     # build runner
     optimizer = call_obj(params=model.parameters(), **optimizer_cfg)
-    runner = Runner(model, batch_processor, optimizer, work_dir, log_level)
+    runner = Runner(model, batch_processor, optimizer, work_dir, logger)
     runner.register_training_hooks(**training_hooks)
 
     if resume_from:
@@ -117,12 +119,16 @@ def train(
 
     # run
     workflow = [tuple(w) for w in workflow]
+    global LOSS
+    LOSS = loss
     runner.run(data_loaders, workflow, total_epochs, loss=loss)
 
 
 # process a batch of data
-def batch_processor(model, datas, train_mode, loss):
+def batch_processor(model, datas, train_mode, loss=None):
 
+    if loss is None:
+        loss = LOSS
     data, label = datas
     data = data.cuda()
     label = label.cuda()

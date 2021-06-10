@@ -7,7 +7,7 @@ processor_cfg:
 
   detection_cfg:
     model_cfg: configs/mmdet/cascade_rcnn_r50_fpn_1x.py
-    checkpoint_file: mmskeleton://mmdet/cascade_rcnn_r50_fpn_20e
+    checkpoint_file: http://download.openmmlab.com/mmdetection/v2.0/cascade_rcnn/cascade_rcnn_r50_fpn_1x_coco/cascade_rcnn_r50_fpn_1x_coco_20200316-3dc56deb.pth
     bbox_thre: 0.8
   estimation_cfg:
     model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml

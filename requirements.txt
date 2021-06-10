@@ -1,4 +1,7 @@
-mmcv
-torch>=1.1
-torchvision
+cython
+torch>=1.8.1
+torchvision>=0.9.1
+pycocotools
+mmcv-full==1.3.3
+mmdet==2.12.0
 lazy_import
