@@ -1,6 +1,5 @@
 import random
 import numpy as np
-from mmskeleton.deprecated.datasets.utils import skeleton as skeleton_aaai18
 
 # def stgcn_aaai18_dataprocess(data,
 #                              window_size,
