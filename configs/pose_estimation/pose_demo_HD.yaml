@@ -7,7 +7,7 @@ processor_cfg:
 
   detection_cfg:
     model_cfg: configs/mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e.py
-    checkpoint_file: mmskeleton://mmdet/htc_dconv_c3-c5_mstrain_400_1400_x101_64x4d_fpn_20e
+    checkpoint_file: http://download.openmmlab.com/mmdetection/v2.0/htc/htc_x101_64x4d_fpn_dconv_c3-c5_mstrain_400_1400_16x1_20e_coco/htc_x101_64x4d_fpn_dconv_c3-c5_mstrain_400_1400_16x1_20e_coco_20200312-946fd751.pth
     bbox_thre: 0.8
   estimation_cfg:
     model_cfg: configs/pose_estimation/hrnet/pose_hrnet_w32_256x192_test.yaml

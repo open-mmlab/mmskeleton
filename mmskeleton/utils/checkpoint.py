@@ -1,5 +1,9 @@
+import os
+
+import torch
 from mmcv.runner import load_checkpoint as mmcv_load_checkpoint
-from mmcv.runner.checkpoint import load_url_dist
+from mmcv.runner.dist_utils import get_dist_info
+from torch.utils import model_zoo
 import urllib
 
 
@@ -30,6 +34,18 @@ def get_mmskeleton_url(filename):
 
 
 def cache_checkpoint(filename):
+    def load_url_dist(url, model_dir=None):
+        """In distributed setting, this function only download checkpoint at local
+        rank 0."""
+        rank, world_size = get_dist_info()
+        rank = int(os.environ.get('LOCAL_RANK', rank))
+        if rank == 0:
+            checkpoint = model_zoo.load_url(url, model_dir=model_dir)
+        if world_size > 1:
+            torch.distributed.barrier()
+            if rank > 0:
+                checkpoint = model_zoo.load_url(url, model_dir=model_dir)
+        return checkpoint
     try:
         filename = get_mmskeleton_url(filename)
         load_url_dist(get_mmskeleton_url(filename))
